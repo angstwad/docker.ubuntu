@@ -1,0 +1,21 @@
+---
+# tasks file for docker.ubuntu
+- name: Get uname -r
+  command: uname -r
+  register: uname_r
+
+- name: Install latest kernel extras (for AUFS)
+  apt:
+    pkg: "linux-image-extra-{{ uname_r.stdout }}"
+    state: latest
+    update_cache: yes
+    cache_valid_time: 600
+
+- name: Add Docker repository key
+  apt-key: url="https://get.docker.io/gpg"
+
+- name: Add Docker repository
+  apt_repository: repo='deb http://get.docker.io/ubuntu docker main'
+
+- name: Install Docker
+  apt: pkg=lxc-docker update_cache=yes

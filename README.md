@@ -22,3 +22,8 @@ License
 -------
 
 Apache v2.0
+=======
+docker.ubuntu
+=============
+
+Docker role for Ansible

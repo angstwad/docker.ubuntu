@@ -1,4 +1,4 @@
-Role Name
+docker_ubuntu
 ========
 
 Installs Docker on a version higher than Ubuntu 13.04.
@@ -22,8 +22,3 @@ License
 -------
 
 Apache v2.0
-=======
-docker.ubuntu
-=============
-
-Docker role for Ansible

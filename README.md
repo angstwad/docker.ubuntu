@@ -1,7 +1,7 @@
 docker_ubuntu
 ========
 
-Installs Docker on a version higher than Ubuntu 13.04.
+Installs Docker on a version higher than Ubuntu 12.04
 
 Requirements
 ------------

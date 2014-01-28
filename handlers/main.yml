@@ -1,4 +1,4 @@
 ---
 # handlers file for docker.ubuntu
-name: Start Docker
-service: name=docker state=started
+- name: Start Docker
+  service: name=docker state=started

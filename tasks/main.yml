@@ -1,15 +1,46 @@
 ---
 # tasks file for docker.ubuntu
-- name: Get uname -r
-  command: uname -r
-  register: uname_r
+- name: Fail if not a new release of Ubuntu
+  fail: msg="{{ ansible_distribution_version }} is not an acceptable version of Ubuntu for this role"
+  when: "ansible_distribution_version not in ['12.04', '13.04', '13.10', '14.04']"
 
-- name: Install latest kernel extras (for AUFS)
+- name: Install linux-image-generic-lts-raring for 12.04
   apt:
-    pkg: "linux-image-extra-{{ uname_r.stdout }}"
+    pkg: "linux-image-generic-lts-raring"
     state: latest
     update_cache: yes
     cache_valid_time: 600
+  when: "ansible_distribution_version == '12.04'"
+
+- name: Install linux-headers-generic-lts-raring for 12.04
+  apt:
+    pkg: "linux-headers-generic-lts-raring"
+    state: latest
+    update_cache: yes
+    cache_valid_time: 600
+  when: "ansible_distribution_version == '12.04'"
+
+- name: Install latest kernel extras for Ubuntu 13.04+
+  apt:
+    pkg: "linux-image-extra-{{ ansible_kernel }}"
+    state: latest
+    update_cache: yes
+    cache_valid_time: 600
+  when: "ansible_distribution_version != '12.04'"
+
+- name: Reboot instance
+  command: /sbin/shutdown -r now
+  when: "ansible_distribution_version == '12.04'"
+
+- name: Wait for instance to come online
+  local_action:
+    module: wait_for
+    host: "{{ hostvars[server_name]['ansible_ssh_host'] }}"
+    port: 22
+    delay: 30
+    timeout: 600
+    state: started
+  when: "ansible_distribution_version == '12.04'"
 
 - name: Add Docker repository key
   apt_key: url="https://get.docker.io/gpg"
@@ -19,3 +50,4 @@
 
 - name: Install Docker
   apt: pkg=lxc-docker update_cache=yes
+  notify: "Start Docker"

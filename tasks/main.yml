@@ -4,20 +4,15 @@
   fail: msg="{{ ansible_distribution_version }} is not an acceptable version of Ubuntu for this role"
   when: "ansible_distribution_version not in ['12.04', '13.04', '13.10', '14.04']"
 
-- name: Install linux-image-generic-lts-raring for 12.04
+- name: Install raring kernel onto 12.04
   apt:
-    pkg: "linux-image-generic-lts-raring"
+    pkg: "{{ item }}"
     state: latest
     update_cache: yes
     cache_valid_time: 600
-  when: "ansible_distribution_version == '12.04'"
-
-- name: Install linux-headers-generic-lts-raring for 12.04
-  apt:
-    pkg: "linux-headers-generic-lts-raring"
-    state: latest
-    update_cache: yes
-    cache_valid_time: 600
+  with_items:
+    - linux-image-generic-lts-raring
+    - linux-headers-generic-lts-raring
   when: "ansible_distribution_version == '12.04'"
 
 - name: Install latest kernel extras for Ubuntu 13.04+

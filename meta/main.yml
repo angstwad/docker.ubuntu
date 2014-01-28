@@ -52,10 +52,10 @@ galaxy_info:
   #  - 9.1
   #  - 9.2
   - name: Ubuntu
-   versions:
-   - raring
-   - saucy
-   - trusty
+    versions:
+      - raring
+      - saucy
+      - trusty
   #- name: SLES
   #  versions:
   #  - all

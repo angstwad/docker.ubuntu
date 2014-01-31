@@ -13,6 +13,7 @@
   with_items:
     - linux-image-generic-lts-raring
     - linux-headers-generic-lts-raring
+  register: kernel_result
   when: "ansible_distribution_version == '12.04'"
 
 - name: Install latest kernel extras for Ubuntu 13.04+
@@ -25,7 +26,8 @@
 
 - name: Reboot instance
   command: /sbin/shutdown -r now
-  when: "ansible_distribution_version == '12.04'"
+  register: reboot_result
+  when: "ansible_distribution_version == '12.04' and kernel_result|changed"
 
 - name: Wait for instance to come online
   local_action:
@@ -35,14 +37,16 @@
     delay: 30
     timeout: 600
     state: started
-  when: "ansible_distribution_version == '12.04'"
+  when: "ansible_distribution_version == '12.04' and reboot_result|success"
 
 - name: Add Docker repository key
   apt_key: url="https://get.docker.io/gpg"
 
 - name: Add Docker repository
-  apt_repository: repo='deb http://get.docker.io/ubuntu docker main'
+  apt_repository:
+    repo: 'deb http://get.docker.io/ubuntu docker main'
+    update_cache: yes
 
 - name: Install Docker
-  apt: pkg=lxc-docker update_cache=yes
+  apt: pkg=lxc-docker
   notify: "Start Docker"

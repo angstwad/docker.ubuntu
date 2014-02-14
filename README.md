@@ -4,6 +4,8 @@ docker_ubuntu
 Installs Docker on a version higher than Ubuntu 12.04.
 This role differs from other roles in that it specifically follows docker.io installation instructions for each Ubuntu version, 12.04 or 13.04+.
 
+**Please see [this playbook](https://github.com/angstwad/ansible-docker-rackspace) for an example of how to utilize this role.**
+
 This is an example playbook in which I call two playbooks to launch and display information about a Rackspace Cloud server, on top of which I use the *docker_ubuntu* role to install Docker.
 ```
 # Install to an instance running Ubuntu 12.04

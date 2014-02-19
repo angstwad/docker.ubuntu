@@ -32,7 +32,7 @@
 - name: Wait for instance to come online
   local_action:
     module: wait_for
-    host: "{{ hostvars[server_name]['ansible_ssh_host'] }}"
+    host: "{{ ansible_ssh_host|default(inventory_hostname) }}"
     port: 22
     delay: 30
     timeout: 600

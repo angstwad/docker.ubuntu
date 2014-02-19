@@ -32,12 +32,12 @@
 - name: Wait for instance to come online
   local_action:
     module: wait_for
-    host: "{{ hostvars[server_name]['ansible_ssh_host'] }}"
+    host: "{{ ansible_ssh_host|default(inventory_hostname) }}"
     port: 22
     delay: 30
     timeout: 600
     state: started
-  when: "ansible_distribution_version == '12.04' and reboot_result|success"
+  when: "ansible_distribution_version == '12.04' and reboot_result|changed"
 
 - name: Add Docker repository key
   apt_key: url="https://get.docker.io/gpg"

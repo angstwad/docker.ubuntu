@@ -24,10 +24,21 @@
     cache_valid_time: 600
   when: "ansible_distribution_version != '12.04'"
 
+# Fix for https://github.com/dotcloud/docker/issues/4568
+- name: Install cgroup-lite for Ubuntu 13.10
+  apt:
+    pkg: cgroup-lite
+    state: latest
+    update_cache: yes
+    cache_valid_time: 600
+  register: cgroup_lite_result
+  when: "ansible_distribution_version == '13.10'"
+
 - name: Reboot instance
   command: /sbin/shutdown -r now
   register: reboot_result
-  when: "ansible_distribution_version == '12.04' and kernel_result|changed"
+  when: "(ansible_distribution_version == '12.04' and kernel_result|changed)
+      or (ansible_distribution_version == '13.10' and cgroup_lite_result|changed)"
 
 - name: Wait for instance to come online
   local_action:
@@ -37,7 +48,8 @@
     delay: 30
     timeout: 600
     state: started
-  when: "ansible_distribution_version == '12.04' and reboot_result|changed"
+  when: "(ansible_distribution_version == '12.04' and reboot_result|changed)
+      or (ansible_distribution_version == '13.10' and cgroup_lite_result|changed)"
 
 - name: Add Docker repository key
   apt_key: url="https://get.docker.io/gpg"

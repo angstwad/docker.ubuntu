@@ -36,7 +36,12 @@ Requires python-pycurl for apt modules.
 Role Variables
 --------------
 
-None.
+These are the defaults, which can be set to present to prevent a reboot if the latest linux-image-extra, cgroup-lite packages are already installed
+
+kernel_pkg_state: latest
+
+cgroup_lite_pkg_state: latest
+
 
 Dependencies
 ------------

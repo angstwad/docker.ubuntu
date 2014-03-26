@@ -19,7 +19,7 @@
 - name: Install latest kernel extras for Ubuntu 13.04+
   apt:
     pkg: "linux-image-extra-{{ ansible_kernel }}"
-    state: latest
+    state: "{{ kernel_pkg_state }}"
     update_cache: yes
     cache_valid_time: 600
   when: "ansible_distribution_version != '12.04'"
@@ -28,7 +28,7 @@
 - name: Install cgroup-lite for Ubuntu 13.10
   apt:
     pkg: cgroup-lite
-    state: latest
+    state: "{{ cgroup_lite_pkg_state }}"
     update_cache: yes
     cache_valid_time: 600
   register: cgroup_lite_result

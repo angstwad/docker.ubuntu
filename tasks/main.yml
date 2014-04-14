@@ -51,6 +51,9 @@
   when: "(ansible_distribution_version == '12.04' and reboot_result|changed)
       or (ansible_distribution_version == '13.10' and cgroup_lite_result|changed)"
 
+- name: Install pycurl
+  action: apt pkg=python-pycurl
+
 - name: Add Docker repository key
   apt_key: url="https://get.docker.io/gpg"
 

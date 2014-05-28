@@ -41,6 +41,7 @@
       or (ansible_distribution_version == '13.10' and cgroup_lite_result|changed)"
 
 - name: Wait for instance to come online
+  sudo: false
   local_action:
     module: wait_for
     host: "{{ ansible_ssh_host|default(inventory_hostname) }}"

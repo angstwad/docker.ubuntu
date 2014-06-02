@@ -1,5 +1,3 @@
 ---
 kernel_pkg_state: latest
 cgroup_lite_pkg_state: latest
-ssh_port: 22
-

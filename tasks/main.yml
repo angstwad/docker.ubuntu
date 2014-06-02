@@ -44,7 +44,7 @@
   local_action:
     module: wait_for
     host: "{{ ansible_ssh_host|default(inventory_hostname) }}"
-    port: {{ ssh_port }}
+    port: "{{ ssh_port|default(ansible_ssh_port) }}"
     delay: 30
     timeout: 600
     state: started

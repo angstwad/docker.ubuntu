@@ -44,7 +44,7 @@ The following role variables are defined:
 kernel_pkg_state: latest
 # Set to present to prevent a reboot if the latest cgroup-lite is already installed
 cgroup_lite_pkg_state: latest
-# Set to the port that ssh is running on.  Defaults to ansible_ssh_port.
+# Set to the default port that ssh is running on.  Only used if ansible_ssh_port is not defined.
 ssh_port: 22
 ```
 

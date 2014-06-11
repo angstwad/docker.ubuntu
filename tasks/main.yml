@@ -52,7 +52,7 @@
       or (ansible_distribution_version == '13.10' and cgroup_lite_result|changed)"
 
 - name: Add Docker repository key
-  apt_key: url="https://get.docker.io/gpg"
+  apt_key: url="https://get.docker.io/gpg" id="A88D21E9"
 
 - name: Add Docker repository
   apt_repository:

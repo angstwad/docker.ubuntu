@@ -62,3 +62,12 @@
 - name: Install Docker
   apt: pkg=lxc-docker
   notify: "Start Docker"
+
+- name: Check if /etc/default/ufw exists
+  stat: path=/etc/default/ufw
+  register: ufw_default_exists
+
+- name: Change ufw default forward policy from drop to accept
+  lineinfile: dest=/etc/default/ufw regexp="^DEFAULT_FORWARD_POLICY=" line=DEFAULT_FORWARD_POLICY=\"ACCEPT\"
+  when: ufw_default_exists.stat.exists
+

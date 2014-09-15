@@ -22,7 +22,7 @@
     state: "{{ kernel_pkg_state }}"
     update_cache: yes
     cache_valid_time: 600
-  when: "ansible_distribution_version == '13.04'" or "ansible_distribution_version == '13.10'"
+  when: "ansible_distribution_version == '13.04' or ansible_distribution_version == '13.10'"
 
 # Fix for https://github.com/dotcloud/docker/issues/4568
 - name: Install cgroup-lite for Ubuntu 13.10

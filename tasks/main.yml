@@ -3,7 +3,7 @@
 - name: Fail if not a new release of Ubuntu
   fail: msg="{{ ansible_distribution_version }} is not an acceptable version of Ubuntu for this role"
   when: "ansible_distribution_version not in ['12.04', '13.04', '13.10', '14.04']"
-
+  
 - name: Install raring kernel onto 12.04
   apt:
     pkg: "{{ item }}"
@@ -22,7 +22,7 @@
     state: "{{ kernel_pkg_state }}"
     update_cache: yes
     cache_valid_time: 600
-  when: "ansible_distribution_version != '12.04'"
+  when: "ansible_distribution_version == '13.04'" or "ansible_distribution_version == '13.10'"
 
 # Fix for https://github.com/dotcloud/docker/issues/4568
 - name: Install cgroup-lite for Ubuntu 13.10
@@ -52,16 +52,74 @@
       or (ansible_distribution_version == '13.10' and cgroup_lite_result|changed)"
 
 - name: Add Docker repository key
-  apt_key: url="https://get.docker.io/gpg" id="A88D21E9"
+  apt_key:
+    id: "{{ apt_key_sig }}"
+    url: "{{ apt_key_url }}"
+    state: present
+  when: "ansible_distribution_version != '14.04'"    
 
 - name: Add Docker repository
   apt_repository:
-    repo: 'deb http://get.docker.io/ubuntu docker main'
+    repo: "{{ apt_repository }}"
     update_cache: yes
+    state: present
+  when: "ansible_distribution_version != '14.04'"    
 
+- name: Install (or update) docker.io
+  apt: 
+    name: "{{ docker_io_pkg }}"
+    state: latest
+    update_cache: yes
+  when: "ansible_distribution_version == '14.04'"
+      
 - name: Install Docker
-  apt: pkg=lxc-docker
+  apt: pkg={{ docker_lxc_pkg }}
   notify: "Start Docker"
+  when: "ansible_distribution_version != '14.04'"  
+
+- name: Link docker binaries
+  file: 
+    src: /usr/bin/docker.io 
+    dest: /usr/local/bin/docker 
+    owner: root 
+    group: root 
+    state: link
+  when: "ansible_distribution_version == '14.04'"
+
+- name: Check if docker installed
+  command: /usr/bin/test -e /etc/default/docker.io
+  register: docker_installed
+  when: "ansible_distribution_version == '14.04'"  
+
+- name: Enable bash completion
+  lineinfile:
+    dest=/etc/bash_completion.d/docker.io
+    regexp='THAT STRING WILL NOT BE FOUND'
+    line="complete -F _docker docker"
+  when: docker_installed
+  when: "ansible_distribution_version == '14.04'"  
+
+- name: Expose docker host
+  lineinfile: 
+    dest=/etc/default/docker.io
+    regexp="^#DOCKER_OPTS.*"
+    line="DOCKER_OPTS=\"{{ docker_opts }}\""
+  notify:
+    - Restart docker io
+  when: "docker_installed and export_docker_host"
+  when: "ansible_distribution_version == '14.04'"    
+  
+- name: Expose docker host
+  copy:
+    content: "DOCKER_OPTS=\"{{ docker_opts }}\""
+    dest: /etc/default/docker
+    owner: root
+    group: root
+    mode: 0744
+  notify:
+    - Reload docker
+  when: "export_docker_host"    
+  when: "ansible_distribution_version != '14.04'"  
 
 - name: Check if /etc/default/ufw exists
   stat: path=/etc/default/ufw
@@ -70,4 +128,3 @@
 - name: Change ufw default forward policy from drop to accept
   lineinfile: dest=/etc/default/ufw regexp="^DEFAULT_FORWARD_POLICY=" line="DEFAULT_FORWARD_POLICY=\"ACCEPT\""
   when: ufw_default_exists.stat.exists
-

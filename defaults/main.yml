@@ -2,3 +2,15 @@
 kernel_pkg_state: latest
 cgroup_lite_pkg_state: latest
 ssh_port: 22
+apt_key_url: http://get.docker.io/gpg
+apt_key_sig: A88D21E9
+apt_repository: deb http://get.docker.io/ubuntu docker main
+docker_opts: ""
+docker_opts: "-H unix:// -H tcp://{{ docker_host_ip }}:{{ docker_host_port }}"
+#docker_version: 1.2.0
+#docker_lxc_pkg: lxc-docker={{ docker_version }}
+docker_lxc_pkg: lxc-docker
+docker_io_pkg: docker.io
+export_docker_host: true
+docker_host_ip: 0.0.0.0
+docker_host_port: 2375

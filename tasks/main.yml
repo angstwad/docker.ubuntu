@@ -120,6 +120,20 @@
     - Reload docker
   when: "export_docker_host"    
   when: "ansible_distribution_version != '14.04'"  
+  
+- name: Install pip python package
+  apt:
+    pkg: "{{ item }}"
+    state: latest
+    update_cache: yes
+    cache_valid_time: 600
+  with_items:
+    - python-dev
+    - python-pip
+  register: kernel_result
+
+- name: Install Docker-py
+  pip: name=docker-py   
 
 - name: Check if /etc/default/ufw exists
   stat: path=/etc/default/ufw

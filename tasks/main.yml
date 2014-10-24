@@ -79,5 +79,8 @@
     - python-dev
 
 - name: Install docker client
-  pip: name=docker-py
+  pip: name={{item}}
+  with_items:
+    - docker-py
+    - httplib2
 

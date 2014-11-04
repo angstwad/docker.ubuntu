@@ -63,6 +63,15 @@
   apt: pkg=lxc-docker
   notify: "Start Docker"
 
+- name: Check if /etc/updatedb.conf exists
+  stat: path=/etc/updatedb.conf
+  register: updatedb_conf_exists
+
+- name: Ensure updatedb does not index /var/lib/docker
+  shell: >
+    ex -s -c '/PRUNEPATHS=/v:/var/lib/docker:s:"$: /var/lib/docker"' -c 'wq' /etc/updatedb.conf
+  when: updatedb_conf_exists.stat.exists
+
 - name: Check if /etc/default/ufw exists
   stat: path=/etc/default/ufw
   register: ufw_default_exists

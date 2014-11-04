@@ -4,29 +4,26 @@ docker_ubuntu
 Installs Docker on a version higher than Ubuntu 12.04.
 This role differs from other roles in that it specifically follows docker.io installation instructions for each Ubuntu version, 12.04 or 13.04+.
 
-**Please see [this playbook](https://github.com/angstwad/ansible-docker-rackspace) for an example of how to utilize this role.**
+**Please see [this playbook](https://github.com/angstwad/ansible-docker-rackspace) as an example of how to utilize this role.**
 
-This is an example playbook in which I call two playbooks to launch and display information about a Rackspace Cloud server, on top of which I use the *docker_ubuntu* role to install Docker.
+Applying the role to servers is pretty simple:
 ```
-# Install to an instance running Ubuntu 12.04
-- include: rax-servers.yml
-  vars:
-    image: "ubuntu-1204-lts-precise-pangolin"
-
-- name: Install pycurl
-  hosts: docker
-  gather_facts: no
-  tasks:
-    - name: Install pycurl
-      apt: pkg=python-pycurl update_cache=yes cache_valid_time=600
-
 - name: Install Docker on Rax Server
-  hosts: docker
+  hosts: all
   roles:
     - angstwad.docker_ubuntu
-
-- include: rax-servers-info.yml
 ```
+
+Overriding the role's default variables is also pretty straightforward:
+```
+- name: Install Docker on Rax Server
+  hosts: all
+  roles:
+    - role: angstwad.docker_ubuntu
+      ssh_port: 2222
+      kernel_pkg_state: present
+```
+
 
 Requirements
 ------------
@@ -46,6 +43,17 @@ kernel_pkg_state: latest
 cgroup_lite_pkg_state: latest
 # Set to the default port that ssh is running on.  Only used if ansible_ssh_port is not defined.
 ssh_port: 22
+# URL from which to get apt key:
+apt_key_url: http://get.docker.io/gpg
+# apt key signatures
+apt_key_sig: A88D21E9
+# apt repository from which to get package
+apt_repository: deb http://get.docker.io/ubuntu docker main
+# Name of lxc-docker package to install
+docker_lxc_pkg: lxc-docker
+# Name of docker package to install
+docker_io_pkg: docker.io
+
 ```
 
 Dependencies

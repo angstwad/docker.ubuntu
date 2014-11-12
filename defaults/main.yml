@@ -14,3 +14,4 @@ docker_opts: ""
 #docker_lxc_pkg: lxc-docker={{ docker_version }}
 docker_lxc_pkg: lxc-docker
 docker_io_pkg: docker.io
+docker_binary: docker.io #may vary from docker.io to docker in case of lxc-docker

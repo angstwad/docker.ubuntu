@@ -79,7 +79,7 @@
 
 - name: Link docker binaries
   file: 
-    src: /usr/bin/docker.io 
+    src: /usr/bin/{{ docker_binary }} 
     dest: /usr/local/bin/docker 
     owner: root 
     group: root 
@@ -87,13 +87,13 @@
   when: "ansible_distribution_version == '14.04'"
 
 - name: Check if docker installed
-  command: /usr/bin/test -e /etc/default/docker.io
+  command: /usr/bin/test -e /etc/default/{{ docker_binary }}
   register: docker_installed
   when: "ansible_distribution_version == '14.04'"  
 
 - name: Enable bash completion
   lineinfile:
-    dest=/etc/bash_completion.d/docker.io
+    dest=/etc/bash_completion.d/{{ docker_binary }}
     regexp='THAT STRING WILL NOT BE FOUND'
     line="complete -F _docker docker"
   when: docker_installed
@@ -101,7 +101,7 @@
 
 - name: Expose docker host
   lineinfile: 
-    dest=/etc/default/docker.io
+    dest=/etc/default/{{ docker_binary }}
     regexp="^#DOCKER_OPTS.*"
     line="DOCKER_OPTS=\"{{ docker_opts }}\""
   notify:

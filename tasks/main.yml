@@ -56,59 +56,23 @@
     id: "{{ apt_key_sig }}"
     url: "{{ apt_key_url }}"
     state: present
-  when: "ansible_distribution_version != '14.04'"    
 
 - name: Add Docker repository
   apt_repository:
     repo: "{{ apt_repository }}"
     update_cache: yes
     state: present
-  when: "ansible_distribution_version != '14.04'"    
 
 - name: Install (or update) docker.io
   apt: 
     name: "{{ docker_io_pkg }}"
     state: latest
     update_cache: yes
-  when: "ansible_distribution_version == '14.04'"
       
 - name: Install Docker
   apt: pkg={{ docker_lxc_pkg }}
   notify: "Start Docker"
-  when: "ansible_distribution_version != '14.04'"  
 
-- name: Link docker binaries
-  file: 
-    src: /usr/bin/docker.io 
-    dest: /usr/local/bin/docker 
-    owner: root 
-    group: root 
-    state: link
-  when: "ansible_distribution_version == '14.04'"
-
-- name: Check if docker installed
-  command: /usr/bin/test -e /etc/default/docker.io
-  register: docker_installed
-  when: "ansible_distribution_version == '14.04'"  
-
-- name: Enable bash completion
-  lineinfile:
-    dest=/etc/bash_completion.d/docker.io
-    regexp='THAT STRING WILL NOT BE FOUND'
-    line="complete -F _docker docker"
-  when: docker_installed
-  when: "ansible_distribution_version == '14.04'"  
-
-- name: Expose docker host
-  lineinfile: 
-    dest=/etc/default/docker.io
-    regexp="^#DOCKER_OPTS.*"
-    line="DOCKER_OPTS=\"{{ docker_opts }}\""
-  notify:
-    - Restart docker io
-  when: "docker_installed and export_docker_host"
-  when: "ansible_distribution_version == '14.04'"    
-  
 - name: Expose docker host
   copy:
     content: "DOCKER_OPTS=\"{{ docker_opts }}\""
@@ -119,7 +83,6 @@
   notify:
     - Reload docker
   when: "export_docker_host"    
-  when: "ansible_distribution_version != '14.04'"  
   
 - name: Install pip python package
   apt:

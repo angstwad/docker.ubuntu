@@ -2,7 +2,7 @@
 # tasks file for docker.ubuntu
 - name: Fail if not a new release of Ubuntu
   fail: msg="{{ ansible_distribution_version }} is not an acceptable version of Ubuntu for this role"
-  when: "ansible_distribution_version not in ['12.04', '13.04', '13.10', '14.04']"
+  when: "ansible_distribution_version not in ['12.04', '13.04', '13.10', '14.04', '14.10']"
   
 - name: Install raring kernel onto 12.04
   apt:

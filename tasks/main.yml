@@ -1,9 +1,9 @@
 ---
-# tasks file for docker.ubuntu
+# tasks file for docker
 - name: Fail if not a new release of Ubuntu
   fail: msg="{{ ansible_distribution_version }} is not an acceptable version of Ubuntu for this role"
   when: "ansible_distribution_version not in ['12.04', '13.04', '13.10', '14.04', '14.10']"
-  
+
 - name: Install raring kernel onto 12.04
   apt:
     pkg: "{{ item }}"
@@ -64,11 +64,11 @@
     state: present
 
 - name: Install (or update) docker.io
-  apt: 
+  apt:
     name: "{{ docker_io_pkg }}"
     state: latest
     update_cache: yes
-      
+
 - name: Install Docker
   apt: pkg={{ docker_lxc_pkg }}
   notify: "Start Docker"
@@ -82,8 +82,8 @@
     mode: 0744
   notify:
     - Reload docker
-  when: "export_docker_host"    
-  
+  when: "export_docker_host"
+
 - name: Install pip python package
   apt:
     pkg: "{{ item }}"
@@ -96,7 +96,7 @@
   register: kernel_result
 
 - name: Install Docker-py
-  pip: name=docker-py   
+  pip: name=docker-py
 
 - name: Check if /etc/updatedb.conf exists
   stat: path=/etc/updatedb.conf

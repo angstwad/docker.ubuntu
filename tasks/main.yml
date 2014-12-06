@@ -133,3 +133,15 @@
     regexp: "^DEFAULT_FORWARD_POLICY=" 
     line: "DEFAULT_FORWARD_POLICY=\"ACCEPT\""
   when: ufw_default_exists.stat.exists
+
+- name: Start docker-lxc
+  service:
+    name: docker
+    state: started
+  when: docker_pkg_name == 'lxc-docker'
+
+- name: Start docker.io
+  service:
+    name: docker.io
+    state: started
+  when: docker_pkg_name == 'docker.io'

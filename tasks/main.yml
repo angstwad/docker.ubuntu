@@ -41,7 +41,7 @@
   when: "(ansible_distribution_version == '12.04' and kernel_result|changed)
       or (ansible_distribution_version == '13.10' and cgroup_lite_result|changed)"
 
-- name: Wait for instance to come online
+- name: Wait for instance to come online (10 minute timeout)
   local_action:
     module: wait_for
     host: "{{ ansible_ssh_host|default(inventory_hostname) }}"
@@ -58,13 +58,13 @@
     url: "{{ apt_key_url }}"
     state: present
 
-- name: Add Docker repository
+- name: Add Docker repository and update apt cache
   apt_repository:
     repo: "{{ apt_repository }}"
     update_cache: yes
     state: present
 
-- name: Install (or update) docker
+- name: Install (or update) docker package
   apt: 
     name: "{{ docker_pkg_name }}"
     state: latest
@@ -91,7 +91,6 @@
   with_items:
     - python-dev
     - python-pip
-  register: kernel_result
 
 - name: Install Docker-py
   pip: 

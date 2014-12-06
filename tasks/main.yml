@@ -63,15 +63,12 @@
     update_cache: yes
     state: present
 
-- name: Install (or update) docker.io
+- name: Install (or update) docker
   apt: 
-    name: "{{ docker_io_pkg }}"
+    name: "{{ docker_pkg_name }}"
     state: latest
     update_cache: yes
-      
-- name: Install Docker
-  apt: pkg={{ docker_lxc_pkg }}
-  notify: "Start Docker"
+    cache_valid_time: 600
 
 - name: Expose docker host
   copy:

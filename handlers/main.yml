@@ -6,6 +6,5 @@
 - name: Reload docker
   service: name=docker state=reloaded
 
-- name: Restart docker io
+- name: Restart dockerio
   service: name=docker.io state=restarted
-

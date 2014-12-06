@@ -81,6 +81,22 @@
   notify:
     - Reload docker
   when: "export_docker_host"
+
+- name: Fix DNS in docker.io
+  lineinfile: 
+    dest: /etc/default/docker 
+    regexp: "DOCKER_OPTS=" 
+    line: 'DOCKER_OPTS="--dns {{ ansible_docker0.ipv4.address }}"'
+  register: dns_fix
+  notify: Restart dockerio
+  when: docker_pkg_name == 'docker.io'
+
+- meta: flush_handlers
+  when: "dns_fix|changed"
+
+- pause: 
+    seconds: 1
+  when: "dns_fix|changed"
   
 - name: Install pip python package
   apt:

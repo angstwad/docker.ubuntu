@@ -79,7 +79,7 @@
     mode: 0744
   notify:
     - Reload docker
-  when: "export_docker_host"    
+  when: "export_docker_host"
   
 - name: Install pip python package
   apt:

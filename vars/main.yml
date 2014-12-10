@@ -1,2 +1,15 @@
 ---
 # vars file for docker
+docker_backported_kernel_packages:
+  - linux-image-generic-lts-raring
+  - linux-headers-generic-lts-raring
+docker_apt_https_transport_file: /usr/lib/apt/methods/https
+docker_apt_key:
+  - id: A88D21E9
+    url: https://get.docker.com/gpg
+docker_repository:
+  - type: deb
+    url: "https://get.docker.com/ubuntu docker"
+    component: main
+docker_ufw_default_file: /etc/default/ufw
+docker_updatedb_file: /etc/updatedb.conf

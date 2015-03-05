@@ -35,6 +35,11 @@ Vagrant.configure("2") do |config|
       end
 
       vms.vm.network :private_network, ip: box[:ip]
+
+      vms.vm.provision :ansible do |ansible|
+        ansible.playbook = "tests/vagrant.yml"
+        ansible.verbose = "vv"
+      end
     end
   end
 end

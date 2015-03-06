@@ -20,5 +20,3 @@ apt_repository: deb http://get.docker.io/ubuntu docker main
 docker_opts: ""
 #docker_opts: "-H unix:// -H tcp://{{ docker_host_ip }}:{{ docker_host_port }}"
 #docker_version: 1.2.0
-# Want to export the docker host?  You'll need to uncomment the docker_host_ip, port, opts
-export_docker_host: false

@@ -79,6 +79,15 @@ Dependencies
 
 None.
 
+Testing
+-------
+
+To test the role in a Vagrant environment just run `vagrant up`.  This will
+create two VMs, one based on Ubuntu 12.04 and second based on Ubuntu 14.04,
+and it will provision them by applying this role with Ansible.
+
+Requires `ansible-playbook` to be in the path.
+
 License
 -------
 

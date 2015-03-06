@@ -8,7 +8,7 @@
 - name: Install raring kernel onto 12.04
   apt:
     pkg: "{{ item }}"
-    state: latest
+    state: "{{ kernel_pkg_state }}"
     update_cache: yes
     cache_valid_time: 600
   with_items:

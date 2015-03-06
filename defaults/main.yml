@@ -13,10 +13,13 @@ apt_key_url: http://get.docker.io/gpg
 apt_key_sig: A88D21E9
 # Name of the apt repository for docker
 apt_repository: deb http://get.docker.io/ubuntu docker main
-# The following help expose a docker port or to add additional options when running docker
-# The default is to not use any special options; see docker_opts
-#docker_host_ip: 0.0.0.0
-#docker_host_port: 2375
+
+# The following help expose a docker port or to add additional options when
+# running docker daemon.  The default is to not use any special options.
+#docker_opts: >
+#  -H unix://
+#  -H tcp://0.0.0.0:2375
+#  --log-level=debug
 docker_opts: ""
-#docker_opts: "-H unix:// -H tcp://{{ docker_host_ip }}:{{ docker_host_port }}"
+
 #docker_version: 1.2.0

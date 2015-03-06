@@ -71,16 +71,16 @@
     update_cache: yes
     cache_valid_time: 600
 
-- name: Expose docker host
+- name: Set docker daemon options
   copy:
-    content: "DOCKER_OPTS=\"{{ docker_opts }}\""
+    content: "DOCKER_OPTS=\"{{ docker_opts.rstrip('\n') }}\""
     dest: /etc/default/docker
     owner: root
     group: root
-    mode: 0744
+    mode: 0644
   notify:
     - Reload docker
-  when: "export_docker_host"
+  when: docker_opts
 
 - name: Fix DNS in docker.io
   lineinfile: 

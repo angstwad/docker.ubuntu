@@ -73,7 +73,7 @@
 
 - name: Set docker daemon options
   copy:
-    content: "DOCKER_OPTS=\"{{ docker_opts }}\""
+    content: "DOCKER_OPTS=\"{{ docker_opts.rstrip('\n') }}\""
     dest: /etc/default/docker
     owner: root
     group: root

@@ -80,7 +80,7 @@
     mode: 0644
   notify:
     - Reload docker
-  when: docker_opts
+  when: docker_opts != ""
 
 - name: Fix DNS in docker.io
   lineinfile: 

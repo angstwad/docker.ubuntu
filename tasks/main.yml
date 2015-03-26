@@ -4,7 +4,7 @@
   fail: 
     msg: "{{ ansible_distribution_version }} is not an acceptable version of Ubuntu for this role"
   when: "ansible_distribution_version not in ['12.04', '13.04', '13.10', '14.04', '14.10']"
-  
+
 - name: Install raring kernel onto 12.04
   apt:
     pkg: "{{ item }}"
@@ -97,8 +97,9 @@
 - pause: 
     seconds: 1
   when: "dns_fix|changed"
-  
-- name: Install pip python package
+
+# We must install pip via apt before we can use the pip module below
+- name: Install pip, python-dev package with apt
   apt:
     pkg: "{{ item }}"
     state: latest
@@ -108,9 +109,15 @@
     - python-dev
     - python-pip
 
-- name: Install Docker-py
+# Upgrade pip with pip to fix angstwad/docker.ubuntu/pull/35 and docker-py/issues/525
+- name: Upgrade latest pip, setuptools, and docker-py with pip
   pip: 
-    name: docker-py
+    name: "{{ item }}"
+    state: latest
+  with_items:
+    - pip
+    - setuptools
+    - docker-py
 
 - name: Check if /etc/updatedb.conf exists
   stat: 

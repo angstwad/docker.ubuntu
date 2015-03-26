@@ -105,8 +105,11 @@
     update_cache: yes
     cache_valid_time: 600
   with_items:
+    - python-setuptools
     - python-dev
-    - python-pip
+
+- name: Upgrade pip
+  shell: easy_install --upgrade pip
 
 - name: Install Docker-py
   pip: 

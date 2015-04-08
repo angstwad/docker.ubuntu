@@ -1,0 +1,7 @@
+---
+# test file for docker.ubuntu role on vagrant
+- hosts: all
+  remote_user: vagrant
+  sudo: true
+  roles:
+    - docker.ubuntu

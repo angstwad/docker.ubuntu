@@ -3,7 +3,7 @@
 - name: Fail if not a new release of Ubuntu
   fail: 
     msg: "{{ ansible_distribution_version }} is not an acceptable version of Ubuntu for this role"
-  when: "ansible_distribution_version not in ['12.04', '13.04', '13.10', '14.04', '14.10']"
+  when: "ansible_distribution_version in ['1.04', '1.10', '2.04', '2.10', '3.04', '3.10', '4.04', '4.10', '5.04', '5.10', '6.04', '6.10', '7.04', '7.10', '8.04', '8.10', '9.04', '9.10', '10.04', '10.10', '11.04', '11.10']"
 
 - name: Install raring kernel onto 12.04
   apt:

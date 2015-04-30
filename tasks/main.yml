@@ -15,7 +15,19 @@
     - linux-image-generic-lts-trusty
     - linux-headers-generic-lts-trusty
   register: kernel_result
-  when: "ansible_distribution_version == '12.04'"
+  when: "ansible_distribution_version|version_compare(12.04, '=')"
+
+- name: Install Xorg packages for backported kernels (very optional)
+  apt:
+    pkg: "{{ item }}"
+    state: installed
+    update_cache: yes
+    cache_valid_time: 600
+  with_items:
+    - xserver-xorg-lts-trusty
+    - libgl1-mesa-glx-lts-trusty
+  register: xorg_pkg_result
+  when: "install_xorg_pkgs and (kernel_result|changed or kernel_result|success)"
 
 - name: Install latest kernel extras for Ubuntu 13.04+
   apt:

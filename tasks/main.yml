@@ -47,13 +47,14 @@
     update_cache: yes
     cache_valid_time: 600
   register: cgroup_lite_result
-  when: "ansible_distribution_version == '13.10'"
+  when: "ansible_distribution_version|version_compare(13.10, '=')"
 
 - name: Reboot instance
   command: /sbin/shutdown -r now
   register: reboot_result
-  when: "(ansible_distribution_version == '12.04' and kernel_result|changed)
-      or (ansible_distribution_version == '13.10' and cgroup_lite_result|changed)"
+  when: "(ansible_distribution_version|version_compare(12.04, '=') and kernel_result|changed)
+      or (ansible_distribution_version|version_compare(13.10, '=') and cgroup_lite_result|changed)
+      or xorg_pkg_result|changed"
 
 - name: Wait for instance to come online (10 minute timeout)
   local_action:

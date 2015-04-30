@@ -13,7 +13,6 @@ apt_key_url: http://get.docker.io/gpg
 apt_key_sig: A88D21E9
 # Name of the apt repository for docker
 apt_repository: deb http://get.docker.io/ubuntu docker main
-
 # The following help expose a docker port or to add additional options when
 # running docker daemon.  The default is to not use any special options.
 #docker_opts: >
@@ -21,5 +20,11 @@ apt_repository: deb http://get.docker.io/ubuntu docker main
 #  -H tcp://0.0.0.0:2375
 #  --log-level=debug
 docker_opts: ""
-
-#docker_version: 1.2.0
+# Install Xorg packages for backported kernels.  This is usually unnecessary except for environments
+# where an X/Unit desktop is actively being used. If you're not using an X/Unity on 12.04, you
+# won't need to enable this.
+install_xorg_pkgs: false
+# Force an install of the kernel extras, in case you're suffering from some issue related to the
+# static binary provided by upstream Docker.  For example, see this GitHub Issue in Docker:
+# https://github.com/docker/docker/issues/12750
+install_kernel_extras: false

@@ -1,9 +1,9 @@
 ---
 # tasks file for docker.ubuntu
 - name: Fail if not a new release of Ubuntu
-  fail: 
+  fail:
     msg: "{{ ansible_distribution_version }} is not an acceptable version of Ubuntu for this role"
-  when: ansible_distribution_version | version_compare(12.04, '<') or ansible_distribution_version | version_compare(12.10, '=')
+  when: ansible_distribution_version|version_compare(12.04, '<') or ansible_distribution_version|version_compare(12.10, '=')
 
 - name: Install raring kernel onto 12.04
   apt:
@@ -49,8 +49,8 @@
     delay: 30
     timeout: 600
     state: started
-  when: "(ansible_distribution_version == '12.04' and reboot_result|changed)
-      or (ansible_distribution_version == '13.10' and cgroup_lite_result|changed)"
+  when: "(ansible_distribution_version|version_compare(12.04, '=') and reboot_result|changed)
+      or (ansible_distribution_version|version_compare(13.10, '=') and cgroup_lite_result|changed)"
 
 - name: Add Docker repository key
   apt_key:
@@ -65,7 +65,7 @@
     state: present
 
 - name: Install (or update) docker package
-  apt: 
+  apt:
     name: "{{ docker_pkg_name }}"
     state: latest
     update_cache: yes
@@ -83,9 +83,9 @@
   when: docker_opts != ""
 
 - name: Fix DNS in docker.io
-  lineinfile: 
-    dest: /etc/default/docker 
-    regexp: "DOCKER_OPTS=" 
+  lineinfile:
+    dest: /etc/default/docker
+    regexp: "DOCKER_OPTS="
     line: 'DOCKER_OPTS="--dns {{ ansible_docker0.ipv4.address }}"'
   register: dns_fix
   notify: Restart dockerio
@@ -94,7 +94,7 @@
 - meta: flush_handlers
   when: "dns_fix|changed"
 
-- pause: 
+- pause:
     seconds: 1
   when: "dns_fix|changed"
 
@@ -111,7 +111,7 @@
 
 # Upgrade pip with pip to fix angstwad/docker.ubuntu/pull/35 and docker-py/issues/525
 - name: Upgrade latest pip, setuptools, and docker-py with pip
-  pip: 
+  pip:
     name: "{{ item }}"
     state: latest
   with_items:
@@ -120,7 +120,7 @@
     - docker-py
 
 - name: Check if /etc/updatedb.conf exists
-  stat: 
+  stat:
     path: /etc/updatedb.conf
   register: updatedb_conf_exists
 
@@ -130,14 +130,14 @@
   when: updatedb_conf_exists.stat.exists
 
 - name: Check if /etc/default/ufw exists
-  stat: 
+  stat:
     path: /etc/default/ufw
   register: ufw_default_exists
 
 - name: Change ufw default forward policy from drop to accept
-  lineinfile: 
-    dest: /etc/default/ufw 
-    regexp: "^DEFAULT_FORWARD_POLICY=" 
+  lineinfile:
+    dest: /etc/default/ufw
+    regexp: "^DEFAULT_FORWARD_POLICY="
     line: "DEFAULT_FORWARD_POLICY=\"ACCEPT\""
   when: ufw_default_exists.stat.exists
 

@@ -5,15 +5,15 @@
     msg: "{{ ansible_distribution_version }} is not an acceptable version of Ubuntu for this role"
   when: ansible_distribution_version|version_compare(12.04, '<') or ansible_distribution_version|version_compare(12.10, '=')
 
-- name: Install raring kernel onto 12.04
+- name: Install backported trusty kernel onto 12.04
   apt:
     pkg: "{{ item }}"
     state: "{{ kernel_pkg_state }}"
     update_cache: yes
     cache_valid_time: 600
   with_items:
-    - linux-image-generic-lts-raring
-    - linux-headers-generic-lts-raring
+    - linux-image-generic-lts-trusty
+    - linux-headers-generic-lts-trusty
   register: kernel_result
   when: "ansible_distribution_version == '12.04'"
 

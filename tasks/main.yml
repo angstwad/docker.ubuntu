@@ -35,7 +35,7 @@
     state: "{{ kernel_pkg_state }}"
     update_cache: yes
     cache_valid_time: 600
-  when: "ansible_distribution_version|version_compare(13.04, '=')'
+  when: "ansible_distribution_version|version_compare(13.04, '=')
       or ansible_distribution_version|version_compare(13.10, '=')
       or install_kernel_extras"
 

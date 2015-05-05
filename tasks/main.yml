@@ -126,14 +126,28 @@
     - python-pip
 
 # Upgrade pip with pip to fix angstwad/docker.ubuntu/pull/35 and docker-py/issues/525
+# Install latest version when no specific release is set.
 - name: Upgrade latest pip, setuptools, and docker-py with pip
   pip:
-    name: "{{ item }}"
+    name: "{{ item.name }}"
     state: latest
   with_items:
-    - pip
-    - setuptools
-    - docker-py
+    - { name: pip, version: "{{ pip_version_pip }}" }
+    - { name: setuptools, version: "{{ pip_version_setuptools }}" }
+    - { name: docker-py, version: "{{ pip_version_docker_py }}" }
+  when: item.version=="latest"
+
+# Install specific version when set in the variables
+- name: Install specific pip, setuptools, and docker-py with pip
+  pip:
+    name: "{{ item.name }}"
+    state: present
+    version: "{{ item.version }}"
+  with_items:
+    - { name: pip, version: "{{ pip_version_pip }}" }
+    - { name: setuptools, version: "{{ pip_version_setuptools }}" }
+    - { name: docker-py, version: "{{ pip_version_docker_py }}" }
+  when: item.version!="latest"
 
 - name: Check if /etc/updatedb.conf exists
   stat:

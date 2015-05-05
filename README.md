@@ -78,6 +78,10 @@ install_xorg_pkgs: false
 # static binary provided by upstream Docker.  For example, see this GitHub Issue in Docker:
 # https://github.com/docker/docker/issues/12750
 install_kernel_extras: false
+# Versions for the python packages that are installed installed
+pip_version_pip: latest
+pip_version_setuptools: latest
+pip_version_docker_py: latest
 
 ```
 

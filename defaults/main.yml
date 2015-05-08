@@ -1,7 +1,7 @@
 ---
 # lxc-docker is the default
 docker_pkg_name: lxc-docker
-# docker_pgk_name: docker.io
+# docker_pkg_name: docker.io
 # Change these to 'present' if you're running Ubuntu 12.04-13.10 and are fine with less-than-latest packages
 kernel_pkg_state: latest
 cgroup_lite_pkg_state: latest

@@ -32,3 +32,5 @@ install_kernel_extras: false
 pip_version_pip: latest
 pip_version_setuptools: latest
 pip_version_docker_py: latest
+# If this variable is set to true kernel updates and host restarts are permitted. Use with caution in production environments.
+kernel_update_and_reboot_permitted: no

@@ -3,7 +3,7 @@
 
 role = File.basename(File.expand_path(File.dirname(__FILE__)))
 
-File.open(File.dirname(__FILE__) + '/ansible.cfg', 'w') { |f| f.write("[defaults]\nroles_path = ../") }
+ENV['ANSIBLE_ROLES_PATH'] = "../../roles"
 
 boxes = [
   {

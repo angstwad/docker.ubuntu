@@ -5,9 +5,9 @@
     msg: "{{ ansible_distribution_version }} is not an acceptable version of Ubuntu for this role"
   when: ansible_distribution_version|version_compare(12.04, '<') or ansible_distribution_version|version_compare(12.10, '=')
 
-- name: update kernel
+- name: Update kernel, kernel extras, Xorg pkgs, and related tasks
   include: kernel_check_and_update.yml
-  when: kernel_update_and_reboot_permitted
+  when: kernel_update_and_reboot_permitted or install_kernel_extras
 
 - name: Add Docker repository key
   apt_key:

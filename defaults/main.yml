@@ -9,7 +9,7 @@ apt_key_url: http://get.docker.io/gpg
 # apt repository key signature
 apt_key_sig: A88D21E9
 # Name of the apt repository for docker
-apt_repository: deb http://get.docker.io/ubuntu docker main
+apt_repository: deb https://get.docker.com/ubuntu docker main
 # The following help expose a docker port or to add additional options when
 # running docker daemon.  The default is to not use any special options.
 #docker_opts: >

@@ -96,8 +96,12 @@
   register: updatedb_conf_exists
 
 - name: Ensure updatedb does not index /var/lib/docker
-  shell: >
-    ex -s -c '/PRUNEPATHS=/v:/var/lib/docker:s:"$: /var/lib/docker"' -c 'wq' /etc/updatedb.conf
+  lineinfile:
+    dest: /etc/updatedb.conf
+    state: present
+    backrefs: yes
+    regexp: '^PRUNEPATHS="(/var/lib/docker )?(.*)"$'
+    line: 'PRUNEPATHS="/var/lib/docker \2"'
   when: updatedb_conf_exists.stat.exists
 
 - name: Check if /etc/default/ufw exists

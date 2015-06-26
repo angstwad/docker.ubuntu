@@ -67,10 +67,11 @@ apt_repository: deb https://get.docker.com/ubuntu docker main
 #  -H tcp://0.0.0.0:2375
 #  --log-level=debug
 docker_opts: ""
-# Versions for the python packages that are installed installed
+# Versions for the python packages that are installed
 pip_version_pip: latest
 pip_version_setuptools: latest
 pip_version_docker_py: latest
+pip_version_docker_compose: latest
 
 # If this variable is set to true kernel updates and host restarts are permitted.
 # Warning: Use with caution in production environments.

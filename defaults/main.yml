@@ -21,6 +21,7 @@ docker_opts: ""
 pip_version_pip: latest
 pip_version_setuptools: latest
 pip_version_docker_py: latest
+pip_version_docker_compose: latest
 
 # If this variable is set to true kernel updates and host restarts are permitted.
 # Warning: Use with caution in production environments.

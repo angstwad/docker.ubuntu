@@ -2,6 +2,11 @@
 # lxc-docker is the default
 docker_pkg_name: lxc-docker
 # docker_pkg_name: docker.io
+
+# docker dns path for docker.io package ( changed at ubuntu 14.04 from docker to docker.io )
+docker_dns_file_path: /etc/default/docker 
+#docker_dns_file_path: /etc/default/docker.io
+
 # Important if running Ubuntu 12.04-13.10 and ssh on a non-standard port
 ssh_port: 22
 # Place to get apt repository key

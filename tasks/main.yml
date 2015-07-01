@@ -68,7 +68,7 @@
 
 # Upgrade pip with pip to fix angstwad/docker.ubuntu/pull/35 and docker-py/issues/525
 # Install latest version when no specific release is set.
-- name: Upgrade latest pip, setuptools, and docker-py with pip
+- name: Upgrade latest pip, setuptools, docker-py and docker-compose with pip
   pip:
     name: "{{ item.name }}"
     state: latest
@@ -76,10 +76,11 @@
     - { name: pip, version: "{{ pip_version_pip }}" }
     - { name: setuptools, version: "{{ pip_version_setuptools }}" }
     - { name: docker-py, version: "{{ pip_version_docker_py }}" }
+    - { name: docker-compose, version: "{{ pip_version_docker_compose }}" }
   when: item.version=="latest"
 
 # Install specific version when set in the variables
-- name: Install specific pip, setuptools, and docker-py with pip
+- name: Install specific pip, setuptools, docker-py and docker-compose with pip
   pip:
     name: "{{ item.name }}"
     state: present
@@ -88,6 +89,7 @@
     - { name: pip, version: "{{ pip_version_pip }}" }
     - { name: setuptools, version: "{{ pip_version_setuptools }}" }
     - { name: docker-py, version: "{{ pip_version_docker_py }}" }
+    - { name: docker-compose, version: "{{ pip_version_docker_compose }}" }
   when: item.version!="latest"
 
 - name: Check if /etc/updatedb.conf exists
@@ -127,3 +129,12 @@
     name: docker.io
     state: started
   when: docker_pkg_name == 'docker.io'
+
+  # ATTENTION: this task can potentially create new users!
+- name: Add users to the docker group
+  user:
+    name:   "{{ item }}"
+    groups: docker
+    append: yes
+  with_items: docker_group_members
+  when: docker_group_members is defined

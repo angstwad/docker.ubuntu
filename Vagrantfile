@@ -3,7 +3,7 @@
 
 role = File.basename(File.expand_path(File.dirname(__FILE__)))
 
-ENV['ANSIBLE_ROLES_PATH'] = "../../roles"
+ENV['ANSIBLE_ROLES_PATH'] = "../"
 
 boxes = [
   {

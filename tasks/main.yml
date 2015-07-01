@@ -41,7 +41,7 @@
 
 - name: Fix DNS in docker.io
   lineinfile:
-    dest: /etc/default/docker
+    dest: "{{ docker_defaults_file_path }}"
     regexp: "DOCKER_OPTS="
     line: 'DOCKER_OPTS="--dns {{ ansible_docker0.ipv4.address }}"'
   register: dns_fix

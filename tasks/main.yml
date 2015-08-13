@@ -118,7 +118,7 @@
     line: "DEFAULT_FORWARD_POLICY=\"ACCEPT\""
   when: ufw_default_exists.stat.exists
 
-- name: Start docker-lxc
+- name: Start docker
   service:
     name: docker
     state: started

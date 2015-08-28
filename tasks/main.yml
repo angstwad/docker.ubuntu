@@ -138,3 +138,7 @@
     append: yes
   with_items: docker_group_members
   when: docker_group_members is defined
+
+- name: update facts if docker0 is not defined
+  action: setup
+  when: ansible_docker0 is not defined

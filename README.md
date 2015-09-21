@@ -70,7 +70,7 @@ apt_repository: deb https://get.docker.com/ubuntu docker main
 #  --log-level=debug
 docker_opts: ""
 # List of users to be added to 'docker' system group (disabled by default)
-# SECURITY WARNING: 
+# SECURITY WARNING:
 # Be aware that granted users can easily get full root access on the docker host system!
 docker_group_members: []
 # Versions for the python packages that are installed

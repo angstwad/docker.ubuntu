@@ -122,7 +122,7 @@
   service:
     name: docker
     state: started
-  when: docker_pkg_name.find('lxc-docker') != -1
+  when: docker_pkg_name.find('lxc-docker') != -1 or docker_pkg_name.find('docker-engine') != -1
 
 - name: Start docker.io
   service:

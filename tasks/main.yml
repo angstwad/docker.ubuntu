@@ -39,6 +39,19 @@
     - Reload docker
   when: docker_opts != ""
 
+- name: Ensure docker daemon options are picked up (systemd)
+  copy:
+    content: >
+      [Service]
+      EnvironmentFile=/etc/default/docker
+    dest: /etc/systemd/system/docker.service.d/DockerEnv.conf
+    owner: root
+    group: root
+    mode: 0644
+  notify:
+    - Reload docker
+  when: docker_opts != "" and ansible_distribution_version|version_compare(15.04, '>=')
+
 - name: Fix DNS in docker.io
   lineinfile:
     dest: "{{ docker_defaults_file_path }}"

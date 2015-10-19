@@ -14,6 +14,12 @@
     id: "{{ apt_key_sig }}"
     url: "{{ apt_key_url }}"
     state: present
+  register: add_repository_key
+  ignore_errors: true
+
+- name: Alternative | Add Docker repository key
+  shell: curl -sSL https://get.docker.com/gpg | sudo apt-key add -
+  when: add_repository_key|failed
 
 - name: Add Docker repository and update apt cache
   apt_repository:

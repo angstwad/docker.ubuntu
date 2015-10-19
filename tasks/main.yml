@@ -117,6 +117,7 @@
     - { name: docker-py, version: "{{ pip_version_docker_py }}" }
     - { name: docker-compose, version: "{{ pip_version_docker_compose }}" }
   when: item.version=="latest"
+  ignore_errors: yes
 
 # Install specific version when set in the variables
 - name: Install specific pip, setuptools, docker-py and docker-compose with pip

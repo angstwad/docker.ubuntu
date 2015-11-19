@@ -32,7 +32,7 @@
     name: "{{ docker_pkg_name }}"
     state: "{{ 'latest' if update_docker_package else 'present' }}"
     update_cache: yes
-    cache_valid_time: 600
+    cache_valid_time: "{{ docker_apt_cache_valid_time }}"
 
 - name: Set docker daemon options
   copy:

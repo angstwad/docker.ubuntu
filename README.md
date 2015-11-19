@@ -52,17 +52,21 @@ The following role variables are defined:
 
 ```
 ---
-# lxc-docker is the default
-docker_pkg_name: lxc-docker
-# docker_pkg_name: docker.io
+# docker-engine is the default package name
+docker_pkg_name: docker-engine
+docker_apt_cache_valid_time: 600
+
+# docker dns path for docker.io package ( changed at ubuntu 14.04 from docker to docker.io )
+docker_defaults_file_path: /etc/default/docker
+
 # Important if running Ubuntu 12.04-13.10 and ssh on a non-standard port
 ssh_port: 22
 # Place to get apt repository key
-apt_key_url: http://get.docker.io/gpg
+apt_key_url: https://apt.dockerproject.org/gpg
 # apt repository key signature
-apt_key_sig: A88D21E9
+apt_key_sig: 2C52609D
 # Name of the apt repository for docker
-apt_repository: deb https://get.docker.com/ubuntu docker main
+apt_repository: deb https://apt.dockerproject.org/repo ubuntu-{{ ansible_distribution_release }} main
 # The following help expose a docker port or to add additional options when
 # running docker daemon.  The default is to not use any special options.
 #docker_opts: >
@@ -71,10 +75,10 @@ apt_repository: deb https://get.docker.com/ubuntu docker main
 #  --log-level=debug
 docker_opts: ""
 # List of users to be added to 'docker' system group (disabled by default)
-# SECURITY WARNING:
+# SECURITY WARNING: 
 # Be aware that granted users can easily get full root access on the docker host system!
 docker_group_members: []
-# Versions for the python packages that are installed
+# Versions for the python packages that are installed installed
 pip_version_pip: latest
 pip_version_setuptools: latest
 pip_version_docker_py: latest
@@ -83,6 +87,7 @@ pip_version_docker_compose: latest
 # If this variable is set to true kernel updates and host restarts are permitted.
 # Warning: Use with caution in production environments.
 kernel_update_and_reboot_permitted: no
+
 # Set to 'yes' or 'true' to enable updates (sets 'latest' in apt module)
 update_docker_package: no
 # Change these to 'present' if you're running Ubuntu 12.04-13.10 and are fine with less-than-latest packages

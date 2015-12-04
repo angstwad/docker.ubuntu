@@ -100,7 +100,7 @@
     pkg: "{{ item }}"
     state: latest
     update_cache: yes
-    cache_valid_time: 600
+    cache_valid_time: "{{ docker_apt_cache_valid_time }}"
   with_items:
     - python-dev
     - python-pip

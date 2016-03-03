@@ -53,7 +53,7 @@
       or xorg_pkg_result|changed"
 
 - name: Wait for instance to come online (10 minute timeout)
-  sudo: false
+  become: no
   local_action:
     module: wait_for
     host: "{{ ansible_ssh_host|default(inventory_hostname) }}"

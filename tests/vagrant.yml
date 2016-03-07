@@ -1,7 +1,7 @@
 ---
 # test file for docker.ubuntu role on vagrant
 - hosts: all
-  sudo: true
+  become: yes
 
   vars:
     docker_group_members: [ '{{ ansible_ssh_user }}' ]

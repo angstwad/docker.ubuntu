@@ -18,7 +18,7 @@
   ignore_errors: true
 
 - name: Alternative | Add Docker repository key
-  shell: curl -sSL https://get.docker.com/gpg | sudo apt-key add -
+  shell: "curl -sSL {{ apt_key_url }} | sudo apt-key add -"
   when: add_repository_key|failed
 
 - name: Add Docker repository and update apt cache

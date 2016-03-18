@@ -2,7 +2,6 @@ docker_ubuntu
 ========
 
 [![Build Status](https://travis-ci.org/angstwad/docker.ubuntu.svg)](https://travis-ci.org/angstwad/docker.ubuntu)
-Don't believe the build status - look for yourself. There are reasons it fails, and reasons we won't change the play to game the build.
 
 Installs Docker on a version higher than Ubuntu 12.04.
 This role differs from other roles in that it specifically follows docker.io installation instructions for each Ubuntu version, 12.04 or 13.04+.

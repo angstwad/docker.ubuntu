@@ -42,7 +42,7 @@
     group: root
     mode: 0644
   notify:
-    - Reload docker
+    - Restart docker
   when: docker_opts != "" and ansible_distribution_version|version_compare(15.04, '<')
 
 - name: Create systemd configuration directory for Docker service (systemd)

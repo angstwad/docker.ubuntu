@@ -21,6 +21,11 @@
   shell: "curl -sSL {{ apt_key_url }} | sudo apt-key add -"
   when: add_repository_key|failed
 
+- name: HTTPS APT transport for Docker repository
+  apt:
+    name: apt-transport-https
+    state: present
+
 - name: Add Docker repository and update apt cache
   apt_repository:
     repo: "{{ apt_repository }}"

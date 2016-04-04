@@ -51,12 +51,12 @@
   when: docker_opts != "" and ansible_distribution_version|version_compare(15.04, '<')
 
 - name: Create systemd configuration directory for Docker service (systemd)
-  file: 
-    dest: /etc/systemd/system/docker.service.d 
+  file:
+    dest: /etc/systemd/system/docker.service.d
     state: directory
     owner: root
     group: root
-    mode: 0755 
+    mode: 0755
   when: docker_opts != "" and ansible_distribution_version|version_compare(15.04, '>=')
 
 - name: Set docker daemon options (systemd)
@@ -117,11 +117,11 @@
     name: "{{ item.name }}"
     state: latest
   with_items:
-    - { name: pip, version: "{{ pip_version_pip }}" }
-    - { name: setuptools, version: "{{ pip_version_setuptools }}" }
-    - { name: docker-py, version: "{{ pip_version_docker_py }}" }
-    - { name: docker-compose, version: "{{ pip_version_docker_compose }}" }
-  when: item.version=="latest"
+    - { name: pip, version: "{{ pip_version_pip }}", install: "{{ pip_install_pip }}" }
+    - { name: setuptools, version: "{{ pip_version_setuptools }}", install: "{{ pip_install_setuptools }}" }
+    - { name: docker-py, version: "{{ pip_version_docker_py }}", install: "{{ pip_install_docker_py }}" }
+    - { name: docker-compose, version: "{{ pip_version_docker_compose }}", install: "{{ pip_install_docker_compose }}" }
+  when: (item.version=="latest" and item.install)
   ignore_errors: yes
 
 # Install specific version when set in the variables
@@ -131,11 +131,11 @@
     state: present
     version: "{{ item.version }}"
   with_items:
-    - { name: pip, version: "{{ pip_version_pip }}" }
-    - { name: setuptools, version: "{{ pip_version_setuptools }}" }
-    - { name: docker-py, version: "{{ pip_version_docker_py }}" }
-    - { name: docker-compose, version: "{{ pip_version_docker_compose }}" }
-  when: item.version!="latest"
+    - { name: pip, version: "{{ pip_version_pip }}", install: "{{ pip_install_pip }}" }
+    - { name: setuptools, version: "{{ pip_version_setuptools }}", install: "{{ pip_install_setuptools }}" }
+    - { name: docker-py, version: "{{ pip_version_docker_py }}", install: "{{ pip_install_docker_py }}" }
+    - { name: docker-compose, version: "{{ pip_version_docker_compose }}", install: "{{ pip_install_docker_compose }}" }
+  when: (item.version!="latest" and item.install)
 
 - name: Check if /etc/updatedb.conf exists
   stat:

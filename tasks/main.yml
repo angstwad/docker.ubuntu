@@ -59,25 +59,25 @@
     mode: 0755
   when: docker_opts != "" and ansible_distribution_version|version_compare(15.04, '>=')
 
-- name: Set docker daemon options (systemd)
-  copy:
-    content: |
-      [Service]
-      Environment="DOCKER_OPTS={{ docker_opts.rstrip('\n') }}"
-    dest: /etc/systemd/system/docker.service.d/env.conf
-    owner: root
-    group: root
-    mode: 0644
-  notify:
-    - Reload systemd
-    - Restart docker
-  when: docker_opts != "" and ansible_distribution_version|version_compare(15.04, '>=')
+# - name: Set docker daemon options (systemd)
+#   copy:
+#     content: |
+#       [Service]
+#       Environment="DOCKER_OPTS={{ docker_opts.rstrip('\n') }}"
+#     dest: /etc/systemd/system/docker.service.d/env.conf
+#     owner: root
+#     group: root
+#     mode: 0644
+#   notify:
+#     - Reload systemd
+#     - Restart docker
+#   when: docker_opts != "" and ansible_distribution_version|version_compare(15.04, '>=')
 
 - name: Ensure docker daemon options used (systemd)
   lineinfile:
     dest: /lib/systemd/system/docker.service
     regexp: "ExecStart=/usr/bin/docker daemon -H fd://"
-    line: ExecStart=/usr/bin/docker daemon -H fd:// $DOCKER_OPTS
+    line: ExecStart=/usr/bin/docker daemon -H fd:// {{ docker_opts.rstrip('\n') }}
   notify:
     - Reload systemd
     - Restart docker

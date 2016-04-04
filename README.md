@@ -77,6 +77,11 @@ docker_opts: ""
 # SECURITY WARNING: 
 # Be aware that granted users can easily get full root access on the docker host system!
 docker_group_members: []
+# Flags for whether to install pip packages
+pip_install_pip: true
+pip_install_setuptools: true
+pip_install_docker_py: true
+pip_install_docker_compose: true
 # Versions for the python packages that are installed installed
 pip_version_pip: latest
 pip_version_setuptools: latest

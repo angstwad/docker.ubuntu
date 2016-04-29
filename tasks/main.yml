@@ -74,10 +74,9 @@
   when: docker_opts != "" and ansible_distribution_version|version_compare(15.04, '>=')
 
 - name: Ensure docker daemon options used (systemd)
-  lineinfile:
-    dest: /lib/systemd/system/docker.service
-    regexp: "ExecStart=/usr/bin/docker daemon -H fd://"
-    line: ExecStart=/usr/bin/docker daemon -H fd:// $DOCKER_OPTS
+  template:
+    src: docker.conf
+    dest: /etc/systemd/system/docker.service.d/docker.conf
   notify:
     - Reload systemd
     - Restart docker

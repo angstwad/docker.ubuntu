@@ -14,7 +14,7 @@ This role differs from other roles in that it specifically follows docker.io ins
 - name: Run docker.ubuntu
   hosts: docker
   roles:
-    - docker.ubuntu
+    - angstwad.docker_ubuntu
 ```
 
 **Please see [this playbook](https://github.com/angstwad/ansible-docker-rackspace) as a more advanced example of how to utilize this role.**

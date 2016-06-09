@@ -29,6 +29,7 @@
 - name: Add Docker repository and update apt cache
   apt_repository:
     repo: "{{ apt_repository }}"
+    mode: '644'
     update_cache: yes
     state: present
 

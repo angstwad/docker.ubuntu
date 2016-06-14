@@ -185,5 +185,5 @@
   when: docker_group_members is defined
 
 - name: update facts if docker0 is not defined
-  action: setup
+  action: setup filter="ansible_docker0"
   when: ansible_docker0 is not defined

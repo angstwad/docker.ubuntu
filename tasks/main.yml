@@ -29,6 +29,7 @@
 - name: Add Docker repository and update apt cache
   apt_repository:
     repo: "{{ apt_repository }}"
+    mode: '644'
     update_cache: yes
     state: present
 
@@ -184,5 +185,5 @@
   when: docker_group_members is defined
 
 - name: update facts if docker0 is not defined
-  action: setup
+  action: setup filter="ansible_docker0"
   when: ansible_docker0 is not defined

@@ -12,7 +12,7 @@
 - name: Add Docker repository key
   apt_key:
     id: "{{ apt_key_sig }}"
-    url: "{{ apt_key_url }}"
+    keyserver: "{{ apt_key_url }}"
     state: present
   register: add_repository_key
   ignore_errors: true

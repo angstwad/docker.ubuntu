@@ -9,9 +9,9 @@ docker_defaults_file_path: /etc/default/docker
 # Important if running Ubuntu 12.04-13.10 and ssh on a non-standard port
 ssh_port: 22
 # Place to get apt repository key
-apt_key_url: https://apt.dockerproject.org/gpg
+apt_key_url: hkp://p80.pool.sks-keyservers.net:80
 # apt repository key signature
-apt_key_sig: F76221572C52609D
+apt_key_sig: 58118E89F3A912897C070ADBF76221572C52609D
 # Name of the apt repository for docker
 apt_repository: deb https://apt.dockerproject.org/repo ubuntu-{{ ansible_distribution_release }} main
 # The following help expose a docker port or to add additional options when

@@ -9,15 +9,22 @@ boxes = [
   {
     :name => "ubuntu-1204",
     :box => "ubuntu/precise64",
-    :ip => '10.0.0.11',
-    :cpu => "50",
+    :ip => '10.0.77.11',
+    :cpu => "33",
     :ram => "256"
   },
   {
     :name => "ubuntu-1404",
     :box => "ubuntu/trusty64",
-    :ip => '10.0.0.12',
-    :cpu => "50",
+    :ip => '10.0.77.12',
+    :cpu => "33",
+    :ram => "256"
+  },
+  {
+    :name => "debian-jessie",
+    :box => "debian/jessie64",
+    :ip => '10.0.77.13',
+    :cpu => "33",
     :ram => "256"
   },
 ]

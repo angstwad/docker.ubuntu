@@ -63,3 +63,17 @@
     state: started
   when: "(ansible_distribution_version|version_compare(12.04, '=') and reboot_result|changed)
       or (ansible_distribution_version|version_compare(13.10, '=') and cgroup_lite_result|changed)"
+
+# Fix for https://github.com/docker/docker/issues/23347
+- name: Install dmsetup for Ubuntu 16.04
+  apt:
+    pkg: dmsetup
+    state: "{{ dmsetup_pkg_state }}"
+    update_cache: yes
+    cache_valid_time: 600
+  register: dmsetup_result
+  when: "ansible_distribution_version|version_compare(16.04, '=')"
+
+- name: Run dmsetup for Ubuntu 16.04
+  command: dmsetup mknodes
+  when: dmsetup_result

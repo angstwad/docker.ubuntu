@@ -22,7 +22,7 @@
     update_cache: yes
     cache_valid_time: 600
   register: dmsetup_result
-  when: "ansible_distribution_version|version_compare(16.04, '=')"
+  when: ansible_distribution_version|version_compare(16.04, '=')
 
 - name: Run dmsetup for Ubuntu 16.04
   command: dmsetup mknodes

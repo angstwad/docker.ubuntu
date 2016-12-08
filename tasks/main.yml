@@ -203,12 +203,16 @@
   when: ufw_default_exists.stat.exists
 
 - name: Set docker proxy settings if proxy env. vars are defined
-  lineinfile: dest=/etc/default/docker line="{{item}}" state=present
+  lineinfile:
+    dest: /etc/default/docker
+    line: "{{item}}"
+    state: present
   when: ansible_env.http_proxy is defined
   with_items:
     - "export HTTP_PROXY={{ansible_env.http_proxy}}"
     - "export HTTPS_PROXY={{ansible_env.https_proxy}}"
-  notify: "Reload docker"
+  notify:
+    - Restart docker
 
 - name: Start docker
   service:

@@ -202,15 +202,23 @@
     line: "DEFAULT_FORWARD_POLICY=\"ACCEPT\""
   when: ufw_default_exists.stat.exists
 
-- name: Set docker proxy settings if proxy env. vars are defined
+- name: Set docker proxy settings if http_proxy env. var is defined
   lineinfile:
     dest: /etc/default/docker
-    line: "{{item}}"
+    regexp: "^export HTTP_PROXY="
+    line: "export HTTP_PROXY={{ansible_env.https_proxy}}"
     state: present
   when: ansible_env.http_proxy is defined
-  with_items:
-    - "export HTTP_PROXY={{ansible_env.http_proxy}}"
-    - "export HTTPS_PROXY={{ansible_env.https_proxy}}"
+  notify:
+    - Restart docker
+
+- name: Set docker proxy settings if https_proxy env. var is defined
+  lineinfile:
+    dest: /etc/default/docker
+    regexp: "^export HTTPS_PROXY="
+    line: "export HTTPS_PROXY={{ansible_env.https_proxy}}"
+    state: present
+  when: ansible_env.https_proxy is defined
   notify:
     - Restart docker
 

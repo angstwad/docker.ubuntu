@@ -33,6 +33,7 @@
   with_items:
     - linux-image-extra-{{ uname_output.stdout }}
     - linux-image-extra-virtual
+  when: ansible_distribution_version|version_compare(14.04, '>=')
 
 - name: Run dmsetup for Ubuntu 16.04
   command: dmsetup mknodes

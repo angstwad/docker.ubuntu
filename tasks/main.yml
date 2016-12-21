@@ -206,21 +206,23 @@
   lineinfile:
     dest: /etc/default/docker
     regexp: "^export HTTP_PROXY="
-    line: "export HTTP_PROXY={{ansible_env.https_proxy}}"
+    line: "export HTTP_PROXY=\"{{ansible_env.http_proxy}}\""
     state: present
   when: ansible_env.http_proxy is defined
   notify:
     - Restart docker
+  tags: proxy
 
 - name: Set docker proxy settings if https_proxy env. var is defined
   lineinfile:
     dest: /etc/default/docker
     regexp: "^export HTTPS_PROXY="
-    line: "export HTTPS_PROXY={{ansible_env.https_proxy}}"
+    line: "export HTTPS_PROXY=\"{{ansible_env.https_proxy}}\""
     state: present
   when: ansible_env.https_proxy is defined
   notify:
     - Restart docker
+  tags: proxy
 
 - name: Start docker
   service:

@@ -77,6 +77,15 @@ apt_repository: deb https://apt.dockerproject.org/repo {{ ansible_lsb.id|lower }
 #  -H tcp://0.0.0.0:2375
 #  --log-level=debug
 docker_opts: ""
+
+# configurable proxies: a reasonable default is to re-use the proxy from ansible_env:
+# docker_http_proxy: "{{ ansible_env.http_proxy|default('') }}"
+# Notes:
+# if docker_http_proxy==""   the role sets HTTP_PROXY="" (useful to 'empty' existing ENV var)
+# if docker_http_proxy is undefined the role will not set/modify any ENV vars
+docker_http_proxy:
+docker_https_proxy:
+
 # List of users to be added to 'docker' system group (disabled by default)
 # SECURITY WARNING: 
 # Be aware that granted users can easily get full root access on the docker host system!

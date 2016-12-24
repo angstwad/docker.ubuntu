@@ -203,6 +203,28 @@
     line: "DEFAULT_FORWARD_POLICY=\"ACCEPT\""
   when: ufw_default_exists.stat.exists
 
+- name: Set docker HTTP_PROXY if docker_http_proxy defined
+  lineinfile:
+    dest: /etc/default/docker
+    regexp: "^export HTTP_PROXY="
+    line: "export HTTP_PROXY=\"{{docker_http_proxy}}\""
+    state: present
+  when: docker_http_proxy is defined and (docker_http_proxy != None)
+  notify:
+    - Restart docker
+  tags: proxy
+
+- name: Set docker HTTPS_PROXY if docker_https_proxy defined
+  lineinfile:
+    dest: /etc/default/docker
+    regexp: "^export HTTPS_PROXY="
+    line: "export HTTPS_PROXY=\"{{docker_https_proxy}}\""
+    state: present
+  when: docker_https_proxy is defined and (docker_https_proxy != None)
+  notify:
+    - Restart docker
+  tags: proxy
+
 - name: Start docker
   service:
     name: docker

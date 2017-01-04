@@ -30,7 +30,11 @@
   changed_when: false
 
 - name: Install linux-image-extra-* packages to enable AuFS driver
-  apt: pkg={{ item }} state=present
+  apt:
+    pkg: "{{ item }}"
+    state: present
+    update_cache: yes
+    cache_valid_time: "{{ docker_apt_cache_valid_time }}"
   with_items:
     - linux-image-extra-{{ uname_output.stdout }}
     - linux-image-extra-virtual

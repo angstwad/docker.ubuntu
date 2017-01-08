@@ -19,7 +19,7 @@
   apt:
     pkg: dmsetup
     state: "{{ dmsetup_pkg_state }}"
-    update_cache: yes
+    update_cache: "{{ 'yes' if dmsetup_pkg_state=='latest' else 'no' }}"
     cache_valid_time: 600
   register: dmsetup_result
   when: ansible_distribution_version|version_compare(16.04, '=')
@@ -67,7 +67,7 @@
   apt:
     name: "{{ docker_pkg_name }}"
     state: "{{ 'latest' if update_docker_package else 'present' }}"
-    update_cache: yes
+    update_cache: "{{ update_docker_package }}"
     cache_valid_time: "{{ docker_apt_cache_valid_time }}"
 
 - name: Set systemd playbook var

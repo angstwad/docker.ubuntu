@@ -38,7 +38,7 @@
 
 - name: Run dmsetup for Ubuntu 16.04
   command: dmsetup mknodes
-  when: dmsetup_result
+  when: dmsetup_result.changed
 
 - name: Add Docker repository key
   apt_key:

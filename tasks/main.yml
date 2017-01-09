@@ -152,31 +152,17 @@
     - python-pip
 
 # Upgrade pip with pip to fix angstwad/docker.ubuntu/pull/35 and docker-py/issues/525
-# Install latest version when no specific release is set.
-- name: Upgrade latest pip, setuptools, docker-py and docker-compose with pip
+- name: Install pip, setuptools, docker-py and docker-compose with pip
   pip:
     name: "{{ item.name }}"
-    state: latest
+    state: "{{ 'latest' if item.version=='latest' else 'present' }}"
+    version: "{{ item.version if item.version!='latest' else omit }}"
   with_items:
     - { name: pip, version: "{{ pip_version_pip }}", install: "{{ pip_install_pip }}" }
     - { name: setuptools, version: "{{ pip_version_setuptools }}", install: "{{ pip_install_setuptools }}" }
     - { name: docker-py, version: "{{ pip_version_docker_py }}", install: "{{ pip_install_docker_py }}" }
     - { name: docker-compose, version: "{{ pip_version_docker_compose }}", install: "{{ pip_install_docker_compose }}" }
-  when: (item.version=="latest" and item.install)
-  ignore_errors: yes
-
-# Install specific version when set in the variables
-- name: Install specific pip, setuptools, docker-py and docker-compose with pip
-  pip:
-    name: "{{ item.name }}"
-    state: present
-    version: "{{ item.version }}"
-  with_items:
-    - { name: pip, version: "{{ pip_version_pip }}", install: "{{ pip_install_pip }}" }
-    - { name: setuptools, version: "{{ pip_version_setuptools }}", install: "{{ pip_install_setuptools }}" }
-    - { name: docker-py, version: "{{ pip_version_docker_py }}", install: "{{ pip_install_docker_py }}" }
-    - { name: docker-compose, version: "{{ pip_version_docker_compose }}", install: "{{ pip_install_docker_compose }}" }
-  when: (item.version!="latest" and item.install)
+  when: item.install
 
 - name: Check if /etc/updatedb.conf exists
   stat:

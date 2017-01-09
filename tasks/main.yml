@@ -27,6 +27,7 @@
 - name: Read uname
   shell: uname -r
   register: uname_output
+  changed_when: false
 
 - name: Install linux-image-extra-* packages to enable AuFS driver
   apt: pkg={{ item }} state=present

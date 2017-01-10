@@ -28,6 +28,7 @@
   shell: uname -r
   register: uname_output
   changed_when: false
+  always_run: yes
 
 - name: Install linux-image-extra-* packages to enable AuFS driver
   apt:

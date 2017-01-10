@@ -8,6 +8,9 @@
 
 - name: Restart docker
   service: name=docker state=restarted
+  
+- name: Restart docker systemd
+  command: systemctl restart docker
 
 - name: Restart dockerio
   service: name=docker.io state=restarted

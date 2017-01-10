@@ -2,9 +2,20 @@
 # test file for docker.ubuntu role on vagrant
 - hosts: all
   become: yes
-
+  
   vars:
     docker_group_members: [ '{{ ansible_ssh_user }}' ]
 
+  # FIXME The correct place to install python is via a provisioner before Ansible.
+  # http://stackoverflow.com/questions/32429259/ansible-fails-with-bin-sh-1-usr-bin-python-not-found
+#   gather_facts: no
+  pre_tasks:
+#     - name: Install python 2 required by Ansible
+#       raw: sudo apt-get -y install python-minimal
+#     - name: Gathering facts
+#       setup:
+
   roles:
-    - docker.ubuntu
+    - role: docker.ubuntu
+      docker_http_proxy: "{{ ansible_env.http_proxy|default('http://foo.bar.com:3128') }}"
+      docker_https_proxy: "{{ ansible_env.https_proxy|default('https://foo.bar.com:3128') }}"

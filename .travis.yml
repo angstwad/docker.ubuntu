@@ -17,3 +17,4 @@ script:
 #  - echo localhost > inventory
   - ansible-playbook -i hosts --syntax-check docker.yml
   - ansible-playbook -i hosts --connection=local --sudo -vvvv docker.yml
+  

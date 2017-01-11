@@ -1,9 +1,21 @@
 ---
-- hosts: all
-  become: yes
+- name: Bring up docker containers
+  hosts: localhost
+  gather_facts: false
+  vars:
+    inventory:
+      - name: ubuntu1204
+        image: "chrismeyers/ubuntu12.04"
+      - name: ubuntu1404
+        image: "ubuntu/14.04"  
+      - name: ubuntu1604
+        image: "ubuntu/16.04" 
   roles:
-    - { role: ./,
-        docker_opts: "-H tcp://127.0.0.1:4243 -H unix:///var/run/docker.sock --dns 8.8.8.8 --dns 8.8.4.4"
-      }
+    - role: provision_docker
+      provision_docker_inventory: "{{inventory}}"
 
-#- include: integration-tests.yml
+- name: Hello world
+  hosts: docker_containers
+  tasks:
+    - debug: msg=”Hello World”
+

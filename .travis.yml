@@ -1,26 +1,28 @@
 ---
+sudo: required
+dist: trusty
 language: python
 python: "2.7"
-env:
-  - ANSIBLE_VERSION='ansible<2'
-  - ANSIBLE_VERSION='ansible>2'
-sudo: required
 services:
   -docker
+env:
+  global:
+    - PATH="/usr/bin:$PATH"
+  - ANSIBLE_VERSION='ansible<2'
+  - ANSIBLE_VERSION='ansible>2'
 
 before_install:
-  - docker pull 
   - sudo apt-get update -qq
-  - sudo apt-get install -y -o Dpkg::Options::="--force-confnew" docker-engine
     
-  #- sudo apt-get install -qq python-apt python-pycurl
 install:
-  # Install Ansible.
-  - sudo pip install $ANSIBLE_VERSION
-script:
+  - sudo apt-get install sshpass
+  - pip install docker-py
+  - pip install $ANSIBLE_VERSION
   - ansible --version
   - export ANSIBLE_ROLES_PATH="../"
+
+script:  
 #  - echo localhost > inventory
-  - ansible-playbook -i hosts --syntax-check docker.yml
+  - ansible-playbook -i hosts --syntax-check tests/test.yml
   - ansible-playbook -i hosts --connection=local --sudo -vvvv tests/test.yml
   

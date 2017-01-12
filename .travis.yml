@@ -31,7 +31,7 @@ install:
 script:  
 #  - echo localhost > inventory
   - ansible-playbook -i hosts --syntax-check tests/test.yml
-  - ansible-playbook -i hosts --sudo -vvvv tests/test.yml
+  - ansible-playbook -i hosts --sudo -v tests/test.yml
 # - ansible-playbook -i hosts -e "provision_docker_privileged=true" --sudo -vvvv tests/test.yml
 
   

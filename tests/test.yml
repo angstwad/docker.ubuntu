@@ -15,9 +15,14 @@
       provision_docker_inventory: "{{inventory}}"
       tags: provision_docker
 
-- name: Test all with hello world
+- name: Run role and test
   hosts: all
   roles:
+    - role: docker.ubuntu
+      docker_http_proxy: "{{ ansible_env.http_proxy|default('http://foo.bar.com:3128') }}"
+      docker_https_proxy: "{{ ansible_env.https_proxy|default('https://foo.bar.com:3128') }}"
+
   tasks:
-    - command: ”echo Hello World from ”
+    - command: "echo Hello World from && lsb_release -a"
+    - command: "echo $http_proxy && echo $https_proxy"
 

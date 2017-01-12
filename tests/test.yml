@@ -26,6 +26,8 @@
     - name: "install python2"
       raw: apt-get update && apt-get -y install python-minimal
       become: true
+    - name: Gathering facts
+      setup:
   tasks:
     - command: "echo Hello World from && lsb_release -a"
     - command: "echo $http_proxy && echo $https_proxy"

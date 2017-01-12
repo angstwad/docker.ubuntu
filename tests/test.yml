@@ -23,7 +23,7 @@
       docker_https_proxy: "{{ ansible_env.https_proxy|default('https://foo.bar.com:3128') }}"
   gather_facts: no
   pre_tasks:
-    - name: "install python2"
+    - name: "install python 2"
       raw: apt-get update && apt-get -y install python-minimal
       become: true
     - name: Gathering facts

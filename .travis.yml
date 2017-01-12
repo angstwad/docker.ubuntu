@@ -10,14 +10,21 @@ env:
     - PATH="/usr/bin:$PATH"
 
 before_install:
+    # Ansible doesn't play well with virtualenv
+  - deactivate
   - sudo apt-get update -qq
+  - sudo apt-get install -y -o Dpkg::Options::="--force-confnew"  docker-engine
     
-install:
-  - sudo apt-get install sshpass
-  - pip install docker-py
-  - pip install ansible
-  - ansible --version
-  - export ANSIBLE_ROLES_PATH="../"
+install:  
+  - sudo pip install docker-py
+    # software-properties-common for ubuntu 14.04
+    # python-software-properties for ubuntu 12.04
+  - sudo apt-get install -y sshpass software-properties-common python-software-properties
+  - sudo apt-add-repository -y ppa:ansible/ansible
+  - sudo apt-get update -qq
+  - sudo apt-get install -y ansible
+  - sudo rm /usr/bin/python && sudo ln -s /usr/bin/python2.7 /usr/bin/python
+  - ansible-galaxy install -r test/requirements.yml -p test/roles/
 
 script:  
 #  - echo localhost > inventory

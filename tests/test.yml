@@ -1,7 +1,7 @@
 ---
 - name: Bring up docker containers
-  hosts: localhost
-  gather_facts: false
+  hosts: all
+  #gather_facts: false
   vars:
     inventory:
       - name: ubuntu1204
@@ -13,9 +13,11 @@
   roles:
     - role: provision_docker
       provision_docker_inventory: "{{inventory}}"
+      tags: provision_docker
 
-- name: Hello world
-  hosts: docker_containers
+- name: Test all with hello world
+  hosts: all
+  roles:
   tasks:
     - debug: msg=”Hello World”
 

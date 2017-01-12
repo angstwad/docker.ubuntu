@@ -1,7 +1,7 @@
 ---
 - name: Bring up docker containers
   hosts: all
-  #gather_facts: false
+  gather_facts: false
   vars:
     inventory:
       - name: ubuntu1204

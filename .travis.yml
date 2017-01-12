@@ -15,7 +15,7 @@ before_install:
 install:
   - sudo apt-get install sshpass
   - pip install docker-py
-  - pip install $ANSIBLE_VERSION
+  - pip install ansible
   - ansible --version
   - export ANSIBLE_ROLES_PATH="../"
 

@@ -3,12 +3,12 @@
 - name: Fail if not a new release of Ubuntu
   fail:
     msg: "{{ ansible_distribution_version }} is not an acceptable version of Ubuntu for this role"
-  when: ansible_lsb.id|lower == "ubuntu" and ( ansible_distribution_version|version_compare(12.04, '<') or ansible_distribution_version|version_compare(12.10, '=') )
+  when: ansible_lsb.id|lower == "ubuntu" and ( ansible_distribution_version|version_compare('12.04', '<') or ansible_distribution_version|version_compare('12.10', '=') )
 
 - name: Fail if not a new release of Debian
   fail:
     msg: "{{ ansible_distribution_version }} is not an acceptable version of Debian for this role"
-  when: ansible_lsb.id|lower == "debian" and ansible_distribution_version|version_compare(8.5, '<')
+  when: ansible_lsb.id|lower == "debian" and ansible_distribution_version|version_compare('8.5', '<')
 
 - name: Update kernel, kernel extras, Xorg pkgs, and related tasks
   include: kernel_check_and_update.yml
@@ -22,7 +22,7 @@
     update_cache: "{{ 'yes' if dmsetup_pkg_state=='latest' else 'no' }}"
     cache_valid_time: 600
   register: dmsetup_result
-  when: ansible_distribution_version|version_compare(16.04, '=')
+  when: ansible_distribution_version|version_compare('16.04', '=')
 
 - name: Read uname
   shell: uname -r
@@ -39,7 +39,7 @@
   with_items:
     - linux-image-extra-{{ uname_output.stdout }}
     - linux-image-extra-virtual
-  when: ansible_distribution_version|version_compare(14.04, '>=')
+  when: ansible_distribution_version|version_compare('14.04', '>=')
 
 - name: Run dmsetup for Ubuntu 16.04
   command: dmsetup mknodes
@@ -84,7 +84,7 @@
 - name: Set systemd playbook var
   set_fact:
     is_systemd: true
-  when: ( ansible_lsb.id|lower == "ubuntu" and ansible_distribution_version|version_compare(15.04, '>=') or ansible_lsb.id|lower == "debian" )
+  when: ( ansible_lsb.id|lower == "ubuntu" and ansible_distribution_version|version_compare('15.04', '>=') or ansible_lsb.id|lower == "debian" )
 
 - name: Set docker daemon options
   copy:

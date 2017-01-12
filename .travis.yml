@@ -24,7 +24,7 @@ install:
   - sudo apt-get update -qq
   - sudo apt-get install -y ansible
   - sudo rm /usr/bin/python && sudo ln -s /usr/bin/python2.7 /usr/bin/python
-  - ansible-galaxy install -r test/requirements.yml -p test/roles/
+  - ansible-galaxy install -r test/requirements.yml -p tests/roles/
 
 script:  
 #  - echo localhost > inventory

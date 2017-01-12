@@ -1,4 +1,6 @@
 ---
+notifications:
+  email: false
 sudo: required
 dist: trusty
 language: python

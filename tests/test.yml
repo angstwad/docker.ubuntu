@@ -19,5 +19,5 @@
   hosts: all
   roles:
   tasks:
-    - debug: msg=”Hello World”
+    - command: ”echo Hello World from ”
 

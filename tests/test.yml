@@ -24,7 +24,7 @@
   gather_facts: no
   pre_tasks:
     - name: "install python2"
-      raw: apt-get -y install python-minimal
+      raw: apt-get update && apt-get -y install python-minimal
       become: true
   tasks:
     - command: "echo Hello World from && lsb_release -a"

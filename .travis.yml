@@ -8,8 +8,6 @@ services:
 env:
   global:
     - PATH="/usr/bin:$PATH"
-  - ANSIBLE_VERSION='ansible<2'
-  - ANSIBLE_VERSION='ansible>2'
 
 before_install:
   - sudo apt-get update -qq

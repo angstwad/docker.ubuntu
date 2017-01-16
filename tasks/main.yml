@@ -37,7 +37,7 @@
 
 - name: Run dmsetup for Ubuntu 16.04
   command: dmsetup mknodes
-#  when: dmsetup_result
+  #  when: dmsetup_result # mtbvang This original check was not working. This tasks still got run on all hosts.
   when: ansible_distribution_version|version_compare(16.04, '=')
   
 - name: Add Docker repository key

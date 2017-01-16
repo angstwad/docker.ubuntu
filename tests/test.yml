@@ -18,6 +18,12 @@
       tags: provision_docker
 
 - name: Install lsb release on Debian
+  hosts: ubuntu1604
+  gather_facts: false
+  tasks:
+    - command: apt-get -y install python-minimal
+
+- name: Install lsb release on Debian
   hosts: debian
   gather_facts: false
   tasks:
@@ -29,15 +35,12 @@
 #     - ubuntu1404
 #     - ubuntu1604
     - debian
+  gather_facts: no
   roles:
     - role: docker.ubuntu
       docker_http_proxy: "{{ ansible_env.http_proxy|default('http://foo.bar.com:3128') }}"
       docker_https_proxy: "{{ ansible_env.https_proxy|default('https://foo.bar.com:3128') }}"
-  gather_facts: no
   pre_tasks:
-    - name: "install python 2"
-      raw: apt-get update && apt-get -y install python-minimal
-      become: true
     - name: Gathering facts
       setup:
   tasks:

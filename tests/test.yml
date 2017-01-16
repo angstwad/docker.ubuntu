@@ -52,8 +52,8 @@
       fail:
         msg: "HTTP_PROXY env variable is {{ ansible_env.http_proxy }} instead of ..."
       when: ansible_env.http_proxy != "http://foo.bar.com:3128" or
-        ansible_env.http_proxy is undefined or 
-        ansible_env.http_proxy is none or 
-        ansible_env.http_proxy | trim == ''
+            ansible_env.http_proxy is undefined or 
+            ansible_env.http_proxy is none or 
+            ansible_env.http_proxy | trim == ''
 
 

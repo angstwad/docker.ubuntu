@@ -10,6 +10,8 @@
         image: "ubuntu:14.04"  
       - name: ubuntu1604
         image: "ubuntu:16.04" 
+      - name: debian
+        image: "debian:jessie"
   roles:
     - role: provision_docker
       provision_docker_inventory: "{{inventory}}"
@@ -17,9 +19,10 @@
 
 - name: Run role and test
   hosts: 
-    - ubuntu1204
-    - ubuntu1404
-    - ubuntu1604
+#     - ubuntu1204
+#     - ubuntu1404
+#     - ubuntu1604
+    - debian
   roles:
     - role: docker.ubuntu
       docker_http_proxy: "{{ ansible_env.http_proxy|default('http://foo.bar.com:3128') }}"

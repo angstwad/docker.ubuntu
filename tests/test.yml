@@ -35,10 +35,10 @@
   
 - name: Run role and test
   hosts: 
-#    - ubuntu1204
+    - ubuntu1204
     - ubuntu1404
-#    - ubuntu1604
-#    - debian
+    - ubuntu1604
+    - debian
   gather_facts: false
   roles:
     - role: docker.ubuntu

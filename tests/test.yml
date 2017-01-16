@@ -17,6 +17,13 @@
       provision_docker_inventory: "{{inventory}}"
       tags: provision_docker
 
+ 
+- name: Install lsb-release on Debian
+  hosts:
+    - debian
+  tasks:
+    raw: apt-get -y install lsb-release
+    become: true
     
 - name: Run role and test
   hosts: 
@@ -32,11 +39,6 @@
   pre_tasks:
     - name: "install python 2"
       raw: apt-get update && apt-get -y install python-minimal
-      become: true
-    - name: Install lsb-release on Debian
-      hosts:
-        - debian
-      raw: apt-get -y install lsb-release
       become: true
     - name: Gathering facts
       setup:

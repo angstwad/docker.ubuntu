@@ -17,7 +17,7 @@
       provision_docker_inventory: "{{inventory}}"
       tags: provision_docker
 
-- name: Install lsb release on Debian
+- name: Install python on Debian
   hosts: ubuntu1604
   gather_facts: false
   tasks:

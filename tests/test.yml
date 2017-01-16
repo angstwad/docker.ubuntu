@@ -1,6 +1,6 @@
 ---
 - name: Bring up docker containers
-  hosts: all
+  hosts: localhost
   gather_facts: false
   vars:
     inventory:
@@ -16,7 +16,10 @@
       tags: provision_docker
 
 - name: Run role and test
-  hosts: all
+  hosts: 
+    - ubuntu1204
+    - ubuntu1404
+    - ubuntu1604
   roles:
     - role: docker.ubuntu
       docker_http_proxy: "{{ ansible_env.http_proxy|default('http://foo.bar.com:3128') }}"

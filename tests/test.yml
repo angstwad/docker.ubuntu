@@ -17,11 +17,11 @@
       provision_docker_inventory: "{{inventory}}"
       tags: provision_docker
 
-- name: 'Install lsb-release on Debian'
+- name: "Install lsb-release on Debian"
   hosts:
     - debian
   tasks:
-    raw: apt-get -y install lsb-release
+    command: apt-get -y install lsb-release
     become: true
 
 - name: Run role and test

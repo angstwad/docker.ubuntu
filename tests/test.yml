@@ -17,7 +17,7 @@
       provision_docker_inventory: "{{inventory}}"
       tags: provision_docker
 
-- name: Install lsb-release on Debian
+- name: 'Install lsb-release on Debian'
   hosts:
     - debian
   tasks:

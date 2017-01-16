@@ -33,12 +33,12 @@
     - raw: apt-get update && apt-get -y install lsb-release
   become: true
   
-- name: Run role and test
+- name: Run role and test using tasks
   hosts: 
     - ubuntu1204
-    - ubuntu1404
-    - ubuntu1604
-    - debian
+#     - ubuntu1404
+#     - ubuntu1604
+#     - debian
   gather_facts: false
   roles:
     - role: docker.ubuntu
@@ -48,10 +48,12 @@
     - name: Gathering facts
       setup:
   tasks:
-  - name: Fail if HTTP_PROXY environment variable not set Ubuntu
-    fail:
-      msg: "HTTP_PROXY env variable is {{ ansible_env.http_proxy }} instead of ..."
-    when: ansible_env.http_proxy != "http://foo.bar.com:3128" or
-      not (ansible_env.http_proxy is undefined or ansible_env.http_proxy is none or ansible_env.http_proxy | trim == '')
+    - name: Fail if HTTP_PROXY environment variable not set Ubuntu
+      fail:
+        msg: "HTTP_PROXY env variable is {{ ansible_env.http_proxy }} instead of ..."
+      when: ansible_env.http_proxy != "http://foo.bar.com:3128" or
+        ansible_env.http_proxy is undefined or 
+        ansible_env.http_proxy is none or 
+        ansible_env.http_proxy | trim == ''
 
 

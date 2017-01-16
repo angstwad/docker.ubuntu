@@ -37,8 +37,9 @@
 
 - name: Run dmsetup for Ubuntu 16.04
   command: dmsetup mknodes
-  when: dmsetup_result
-
+#  when: dmsetup_result
+  when: ansible_distribution_version|version_compare(16.04, '=')
+  
 - name: Add Docker repository key
   apt_key:
     id: "{{ apt_key_sig }}"

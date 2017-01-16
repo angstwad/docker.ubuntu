@@ -236,7 +236,7 @@
     or (docker_https_proxy is defined and (docker_https_proxy != None))))
     and ansible_distribution_version|version_compare(15.04, '>=') and ansible_lsb.id|lower == "ubuntu"
   notify:
-    - Restart docker systemd
+    - Restart docker
   tags: proxy
 
 - name: Start docker

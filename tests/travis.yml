@@ -12,8 +12,6 @@
         image: "ubuntu:16.04" 
       - name: debian
         image: "debian:jessie"
-    http_proxy_default: 'http://foo.bar.com:3128'
-    https_proxy_default: 'https://foo.bar.com:3128' 
   roles:
     - role: provision_docker
       provision_docker_inventory: "{{inventory}}"
@@ -26,8 +24,6 @@
   gather_facts: false
   tasks:
     - raw: apt-get update && apt-get -y install python-minimal
-    - debug:
-        msg: "http_proxy_default = {{ http_proxy_default }}"
   become: true
   
   
@@ -47,8 +43,8 @@
   gather_facts: false
   roles:
     - role: docker.ubuntu
-      docker_http_proxy: "{{ ansible_env.http_proxy|default(http_proxy_default) }}"
-      docker_https_proxy: "{{ ansible_env.https_proxy|default(https_proxy_default) }}"
+      docker_http_proxy: "{{ ansible_env.http_proxy|default('http://foo.bar.com:3128') }}"
+      docker_https_proxy: "{{ ansible_env.https_proxy|default('https://foo.bar.com:3128') }}"
   pre_tasks:
     - name: Gathering facts
       setup:

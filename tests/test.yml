@@ -48,15 +48,15 @@
     - name: Gathering facts
       setup:
   tasks:
-    - name: Test if HTTP_PROXY environment variable not set Ubuntu
+    - name: Test if HTTP_PROXY environment variable not set
       debug:
         msg: "HTTP_PROXY was set to {{ ansible_env.HTTP_PROXY }}" 
-      fail:
-        msg: "HTTP_PROXY env variable is {{ ansible_env.HTTP_PROXY }} instead of ..."
-      when: (ansible_env.HTTP_PROXY != "http://foo.bar.com:3128") or
-            (ansible_env.HTTP_PROXY is undefined) or 
-            (ansible_env.HTTP_PROXY is none) or 
-            (ansible_env.HTTP_PROXY | trim == '')
+#       fail:
+#         msg: "HTTP_PROXY env variable is {{ ansible_env.HTTP_PROXY }} instead of ..."
+#       when: (ansible_env.HTTP_PROXY != "http://foo.bar.com:3128") or
+#             (ansible_env.HTTP_PROXY is undefined) or 
+#             (ansible_env.HTTP_PROXY is none) or 
+#             (ansible_env.HTTP_PROXY | trim == '')
 
 - name: Ubuntu 1604 specific tests
   hosts: ubuntu1604
@@ -68,4 +68,4 @@
     - fail:
         msg: "/etc/systemd/system/docker.service.d/http-proxy.conf missing"
       when: not docker_systemd_file.stat.exists
-    
+

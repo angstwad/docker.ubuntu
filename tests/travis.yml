@@ -44,8 +44,8 @@
   gather_facts: false
   roles:
     - role: docker.ubuntu
-      docker_http_proxy: "{{ ansible_env.http_proxy|default({{ http_proxy_default }}) }}"
-      docker_https_proxy: "{{ ansible_env.https_proxy|default({{ https_proxy_default }}) }}"
+      docker_http_proxy: "{{ ansible_env.http_proxy|default(http_proxy_default) }}"
+      docker_https_proxy: "{{ ansible_env.https_proxy|default(https_proxy_default) }}"
   pre_tasks:
     - name: Gathering facts
       setup:
@@ -70,7 +70,6 @@
 #             ({{ read_http_proxy }} is none) or 
 #             ({{ read_http_proxy }} | trim == '')
 
-- name: Ubuntu 1604 specific tests
   hosts: ubuntu1604
   tasks:
     - name: Tests if http-proxy.conf exists.

@@ -44,8 +44,8 @@
   gather_facts: false
   roles:
     - role: docker.ubuntu
-      docker_http_proxy: "{{ ansible_env.http_proxy|default('http://foo.bar.com:3128') }}"
-      docker_https_proxy: "{{ ansible_env.https_proxy|default('https://foo.bar.com:3128') }}"
+      docker_http_proxy: "{{ ansible_env.http_proxy|default({{ http_proxy_default }}) }}"
+      docker_https_proxy: "{{ ansible_env.https_proxy|default({{ https_proxy_default }}) }}"
   pre_tasks:
     - name: Gathering facts
       setup:
@@ -60,7 +60,7 @@
     - name: Test if HTTP_PROXY environment variable not set
       vars:
         # FIXME the exported variable from the playbook is not there as expected.
-        read_http_proxy: "{{ lookup('env','HTTP_PROXY') }}"
+        read_http_proxy: "{{ lookup('env','PATH') }}"
       debug:
         msg: "HTTP_PROXY was set to {{ read_http_proxy }}" 
 #       fail:

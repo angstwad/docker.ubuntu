@@ -18,9 +18,6 @@
     - role: provision_docker
       provision_docker_inventory: "{{inventory}}"
       tags: provision_docker
-
-- debug:
-  msg: "http_proxy_default = {{ http_proxy_default }}"
   
 - name: Install python 2 on OSes that are missing it for Ansible.
   hosts: 
@@ -29,7 +26,10 @@
   gather_facts: false
   tasks:
     - raw: apt-get update && apt-get -y install python-minimal
+    - debug:
+        msg: "http_proxy_default = {{ http_proxy_default }}"
   become: true
+  
   
 - name: Install lsb release on Debian
   hosts: debian

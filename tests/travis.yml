@@ -47,6 +47,14 @@
   pre_tasks:
     - name: Gathering facts
       setup:
+      
+- name: Run tests for all supported environments
+  hosts:
+    - ubuntu1204
+#     - ubuntu1404
+#     - ubuntu1604
+#     - debian
+
   tasks:
     - name: Test if HTTP_PROXY environment variable not set
       debug:

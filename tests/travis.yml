@@ -26,7 +26,6 @@
     - raw: apt-get update && apt-get -y install python-minimal
   become: true
   
-  
 - name: Install lsb release on Debian
   hosts: debian
   gather_facts: false
@@ -35,6 +34,31 @@
   become: true
   
 - name: Run role on all suported OSes.
+  hosts: 
+    - ubuntu1204
+#     - ubuntu1404
+#     - ubuntu1604
+#     - debian
+  gather_facts: false
+  roles:
+    - role: docker.ubuntu
+  pre_tasks:
+    - name: Gathering facts
+      setup:
+      
+- name: Test that docker is installed with hello-world test
+  hosts: 
+  - ubuntu1204
+#     - ubuntu1404
+#     - ubuntu1604
+#     - debian
+  tasks:      
+    - shell: sudo docker run hello-world
+      register: dockeroutput
+    - debug: 
+        msg: dockeroutput.stdout_lines
+      
+- name: Run role on all suported OSes with proxy set.
   hosts: 
     - ubuntu1204
 #     - ubuntu1404
@@ -76,10 +100,10 @@
       when: not (ansible_lsb.id|lower == "ubuntu" and ( ansible_distribution_version|version_compare(15.04, '>='))
     - name: Fail if proxy export lines are missing from /etc/default/docker
       fail: msg="Hello, world!"
-      when: ({{ checkdockerconf }} != "http://foo.bar.com:3128") or
-            ({{ checkdockerconf }} is undefined) or 
-            ({{ checkdockerconf }} is none) or 
-            ({{ checkdockerconf }} | trim == '') and not
+      when: (checkdockerconf != "http://foo.bar.com:3128") or
+            (checkdockerconf is undefined) or 
+            (checkdockerconf is none) or 
+            (checkdockerconf | trim == '') and not
             (ansible_lsb.id|lower == "ubuntu" and ( ansible_distribution_version|version_compare(15.04, '>=')))
     #- name: Run docker hello world test
       

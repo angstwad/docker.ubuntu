@@ -68,6 +68,16 @@
 #             ({{ read_http_proxy }} is undefined) or 
 #             ({{ read_http_proxy }} is none) or 
 #             ({{ read_http_proxy }} | trim == '')
+    - name: Check whether /etc/default/docker contains export HTTP_PROXY
+      command: awk /^'export HTTP_PROXY=http:\/\/foo\.bar\.com:3128'/ /etc/default/docker
+      register: checkdockerconf
+      changed_when: False
+    - name: Fail if proxy export lines are missing from /etc/default/docker
+      fail: msg="Hello, world!"
+      when: ({{ checkdockerconf }} != "http://foo.bar.com:3128") or
+            ({{ checkdockerconf }} is undefined) or 
+            ({{ checkdockerconf }} is none) or 
+            ({{ checkdockerconf }} | trim == '')
 
 - name: Ubuntu 1604 specific tests
   hosts: ubuntu1604

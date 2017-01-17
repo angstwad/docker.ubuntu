@@ -19,6 +19,9 @@
       provision_docker_inventory: "{{inventory}}"
       tags: provision_docker
 
+- debug:
+  msg: "http_proxy_default = {{ http_proxy_default }}"
+  
 - name: Install python 2 on OSes that are missing it for Ansible.
   hosts: 
     - ubuntu1604
@@ -70,6 +73,7 @@
 #             ({{ read_http_proxy }} is none) or 
 #             ({{ read_http_proxy }} | trim == '')
 
+- name: Ubuntu 1604 specific tests
   hosts: ubuntu1604
   tasks:
     - name: Tests if http-proxy.conf exists.

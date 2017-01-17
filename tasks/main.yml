@@ -227,6 +227,8 @@
   notify:
     - Restart docker
   tags: proxy
+  debug:
+    msg: "HTTP_PROXY was set to {{ lookup('env','HTTP_PROXY') }}" 
    
 - name: Set docker HTTP_PROXY for Ubuntu 15.04+ if docker_http_proxy defined
   # Couldn't use ini_file module because keys are duplicated. 

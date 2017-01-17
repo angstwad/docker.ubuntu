@@ -80,7 +80,7 @@
             ({{ checkdockerconf }} is undefined) or 
             ({{ checkdockerconf }} is none) or 
             ({{ checkdockerconf }} | trim == '') and not
-            (ansible_lsb.id|lower == "ubuntu" and ( ansible_distribution_version|version_compare(15.04, '>='))
+            (ansible_lsb.id|lower == "ubuntu" and ( ansible_distribution_version|version_compare(15.04, '>=')))
     #- name: Run docker hello world test
       
       

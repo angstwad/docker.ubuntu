@@ -51,19 +51,19 @@
       
 - name: Run tests for all supported environments
   hosts:
-    - ubuntu1204
+#    - ubuntu1204
 #     - ubuntu1404
-#     - ubuntu1604
+     - ubuntu1604
 #     - debian
   tasks:
     - name: Test if HTTP_PROXY environment variable not set
       vars:
         # FIXME the exported variable from the playbook is not there as expected.
-        read_http_proxy: "{{ lookup('env','PATH') }}"
+        read_http_proxy: "{{ lookup('env','HTTP_PROXY') }}"
       debug:
         msg: "HTTP_PROXY was set to {{ read_http_proxy }}" 
 #       fail:
-#         msg: "HTTP_PROXY env variable is {{ read_http_proxy }} instead of {{ http_proxy }}"
+#         msg: "HTTP_PROXY env variable is {{ read_http_proxy }} instead of expected http://foo.bar.com:3128"
 #       when: ({{ read_http_proxy }} != "http://foo.bar.com:3128") or
 #             ({{ read_http_proxy }} is undefined) or 
 #             ({{ read_http_proxy }} is none) or 

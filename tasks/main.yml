@@ -227,8 +227,9 @@
   notify:
     - Restart docker
   tags: proxy
-  
+   
 - name: Set docker HTTP_PROXY for Ubuntu 15.04+ if docker_http_proxy defined
+  # Couldn't use ini_file module because keys are duplicated. 
   template:
     src: http-proxy.conf
     dest: /etc/systemd/system/docker.service.d

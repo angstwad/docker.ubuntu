@@ -54,17 +54,18 @@
 #     - ubuntu1404
 #     - ubuntu1604
 #     - debian
-
   tasks:
     - name: Test if HTTP_PROXY environment variable not set
+      vars:
+        http_proxy: "{{ lookup('env','HTTP_PROXY') }}"
       debug:
-        msg: "HTTP_PROXY was set to {{ lookup('env', 'HTTP_PROXY') }}" 
+        msg: "HTTP_PROXY was set to {{ http_proxy }}" 
 #       fail:
-#         msg: "HTTP_PROXY env variable is {{ ansible_env.HTTP_PROXY }} instead of ..."
-#       when: (ansible_env.HTTP_PROXY != "http://foo.bar.com:3128") or
-#             (ansible_env.HTTP_PROXY is undefined) or 
-#             (ansible_env.HTTP_PROXY is none) or 
-#             (ansible_env.HTTP_PROXY | trim == '')
+#         msg: "HTTP_PROXY env variable is {{ {{ http_proxy }} }} instead of ..."
+#       when: ({{ http_proxy }} != "http://foo.bar.com:3128") or
+#             ({{ http_proxy }} is undefined) or 
+#             ({{ http_proxy }} is none) or 
+#             ({{ http_proxy }} | trim == '')
 
 - name: Ubuntu 1604 specific tests
   hosts: ubuntu1604

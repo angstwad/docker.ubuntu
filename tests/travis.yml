@@ -12,6 +12,8 @@
         image: "ubuntu:16.04" 
       - name: debian
         image: "debian:jessie"
+    http_proxy_default: 'http://foo.bar.com:3128'
+    https_proxy_default: 'https://foo.bar.com:3128' 
   roles:
     - role: provision_docker
       provision_docker_inventory: "{{inventory}}"
@@ -57,15 +59,16 @@
   tasks:
     - name: Test if HTTP_PROXY environment variable not set
       vars:
-        http_proxy: "{{ lookup('env','HTTP_PROXY') }}"
+        # FIXME the exported variable from the playbook is not there as expected.
+        read_http_proxy: "{{ lookup('env','HTTP_PROXY') }}"
       debug:
-        msg: "HTTP_PROXY was set to {{ http_proxy }}" 
+        msg: "HTTP_PROXY was set to {{ read_http_proxy }}" 
 #       fail:
-#         msg: "HTTP_PROXY env variable is {{ {{ http_proxy }} }} instead of ..."
-#       when: ({{ http_proxy }} != "http://foo.bar.com:3128") or
-#             ({{ http_proxy }} is undefined) or 
-#             ({{ http_proxy }} is none) or 
-#             ({{ http_proxy }} | trim == '')
+#         msg: "HTTP_PROXY env variable is {{ read_http_proxy }} instead of {{ http_proxy }}"
+#       when: ({{ read_http_proxy }} != "http://foo.bar.com:3128") or
+#             ({{ read_http_proxy }} is undefined) or 
+#             ({{ read_http_proxy }} is none) or 
+#             ({{ read_http_proxy }} | trim == '')
 
 - name: Ubuntu 1604 specific tests
   hosts: ubuntu1604

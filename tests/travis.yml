@@ -19,7 +19,7 @@
       provision_docker_inventory: "{{inventory}}"
       tags: provision_docker
 
-- name: Install python on Debian
+- name: Install python 2 on OSes that are missing it for Ansible.
   hosts: 
     - ubuntu1604
     - ubuntu1404
@@ -35,7 +35,7 @@
     - raw: apt-get update && apt-get -y install lsb-release
   become: true
   
-- name: Run role and run tests on all supported OSs
+- name: Run role on all suported OSes.
   hosts: 
     - ubuntu1204
 #     - ubuntu1404

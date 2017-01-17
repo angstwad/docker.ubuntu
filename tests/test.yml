@@ -33,7 +33,7 @@
     - raw: apt-get update && apt-get -y install lsb-release
   become: true
   
-- name: Run role and test using tasks
+- name: Run role and run tests on all supported OSs
   hosts: 
     - ubuntu1204
 #     - ubuntu1404
@@ -48,12 +48,16 @@
     - name: Gathering facts
       setup:
   tasks:
-    - name: Fail if HTTP_PROXY environment variable not set Ubuntu
+    - name: Test if HTTP_PROXY environment variable not set Ubuntu
       fail:
-        msg: "HTTP_PROXY env variable is {{ ansible_env.http_proxy }} instead of ..."
-      when: (ansible_env.http_proxy != "http://foo.bar.com:3128") or
-            (ansible_env.http_proxy is undefined) or 
-            (ansible_env.http_proxy is none) or 
-            (ansible_env.http_proxy | trim == '')
+        msg: "HTTP_PROXY env variable is {{ ansible_env.HTTP_PROXY }} instead of ..."
+      when: (ansible_env.HTTP_PROXY != "http://foo.bar.com:3128") or
+            (ansible_env.HTTP_PROXY is undefined) or 
+            (ansible_env.HTTP_PROXY is none) or 
+            (ansible_env.HTTP_PROXY | trim == '')
 
-
+- name: Ubuntu 1604 specific tests
+  hosts: ubuntu1604
+  tasks:
+    - name: Tests if http-proxy.conf exists.
+    

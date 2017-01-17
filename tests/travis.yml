@@ -73,6 +73,7 @@
       command: awk /^'export HTTP_PROXY=http:\/\/foo\.bar\.com:3128'/ /etc/default/docker
       register: checkdockerconf
       changed_when: False
+      when: not (ansible_lsb.id|lower == "ubuntu" and ( ansible_distribution_version|version_compare(15.04, '>='))
     - name: Fail if proxy export lines are missing from /etc/default/docker
       fail: msg="Hello, world!"
       when: ({{ checkdockerconf }} != "http://foo.bar.com:3128") or

@@ -1,0 +1,15 @@
+- name: Test that docker is installed with hello-world test
+  hosts: 
+  - ubuntu1204
+#     - ubuntu1404
+#     - ubuntu1604
+#     - debian
+  tasks:      
+    - shell: docker run hello-world
+      register: dockeroutput
+      become: true
+    - debug: 
+        msg: "'dockeroutput:' {{ dockeroutput.stdout_lines }}"
+    - fail:
+        msg: "'Hello world check failed. Output of shell is: ' {{ dockeroutput.stdout_lines }}"
+      when: dockeroutput.stdout.find("Hello from Docker!") == -1

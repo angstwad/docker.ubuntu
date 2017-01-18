@@ -23,17 +23,15 @@
       register: contentsofdockerfile
     - debug: msg="contents of docker file {{ contentsofdockerfile }}"
     - name: Check whether /etc/default/docker contains export HTTP_PROXY
-      command: awk /^'export HTTP_PROXY=http:\/\/foo\.bar\.com:3128'/ /etc/default/docker
+      command: awk /^'export HTTP_PROXY="http:\/\/foo\.bar\.com:3128"'/ /etc/default/docker
       register: checkdockerconf
       changed_when: False
       when: not (ansible_lsb.id|lower == "ubuntu" and ( ansible_distribution_version|version_compare(15.04, '>=')))
     - debug: msg="'checkdockerconf.stdout_lines:'  {{ checkdockerconf.stdout_lines }}"
     - name: Fail if proxy export lines are missing from /etc/default/docker
       fail: msg="'Docker HTTP_PROXY not set in /etc/default/docker. checkdockerconf.stdout_liones:' {{ checkdockerconf.stdout_lines }}"
-      when: (checkdockerconf is undefined) or 
-            (checkdockerconf is none) or 
-            (checkdockerconf | trim == '') and not
-            (ansible_lsb.id|lower == "ubuntu" and ( ansible_distribution_version|version_compare(15.04, '>=')))
+      when: (checkdockerconf | trim != 'export HTTP_PROXY="http://foo.bar.com:3128"') and
+            not (ansible_lsb.id|lower == "ubuntu" and ( ansible_distribution_version|version_compare(15.04, '>=')))
 
 - name: Ubuntu 1604 specific tests
   hosts: ubuntu1604

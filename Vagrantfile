@@ -59,7 +59,7 @@ Vagrant.configure("2") do |config|
 
       vms.vm.network :private_network, ip: box[:ip]
         
-      if box[:name].eql? "ubuntu-1604" 
+      if box[:name].eql? "ubuntu1604" 
         vms.vm.provision "shell",
           inline: "echo 'Installing python 2 required by Ansible.' && sudo apt-get -y install python-minimal"
       end

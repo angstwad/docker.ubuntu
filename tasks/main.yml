@@ -29,7 +29,7 @@
   register: uname_output
 
 - name: Install linux-image-extra-* packages to enable AuFS driver
-  apt: pkg={{ item }} state=present
+  apt: pkg={{ item }} state=present update_cache=yes
   with_items:
     - linux-image-extra-{{ uname_output.stdout }}
     - linux-image-extra-virtual

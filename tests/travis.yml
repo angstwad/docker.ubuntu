@@ -61,7 +61,7 @@
     - fail:
         msg:"{{ dockeroutput.stdout_lines }}"
       when: dockeroutput.stdout.find("Hello from Docker!") == -1
-    
+
 
 - name: Run role on all suported OSes with proxy set.
   hosts: 
@@ -79,9 +79,9 @@
 
 - name: Run tests for all supported environments
   hosts:
-#    - ubuntu1204
+    - ubuntu1204
 #     - ubuntu1404
-     - ubuntu1604
+#     - ubuntu1604
 #     - debian
   tasks:
     - name: Test if HTTP_PROXY environment variable is set
@@ -103,13 +103,13 @@
       changed_when: False
       when: not (ansible_lsb.id|lower == "ubuntu" and ( ansible_distribution_version|version_compare(15.04, '>=')))
     - name: Fail if proxy export lines are missing from /etc/default/docker
-      fail: msg="Docker HTTP_PROXY not setin /etc/default/docker. "
+      fail: msg="Docker HTTP_PROXY not set in /etc/default/docker. "
       when: (checkdockerconf != "http://foo.bar.com:3128") or
             (checkdockerconf is undefined) or 
             (checkdockerconf is none) or 
             (checkdockerconf | trim == '') and not
             (ansible_lsb.id|lower == "ubuntu" and ( ansible_distribution_version|version_compare(15.04, '>=')))
-    - debug: msg="{{ checkdockerconf.stdout_lines }}"
+    - debug: msg="'checkdockerconf.stdout_lines: ' {{ checkdockerconf.stdout_lines }}"
 
 - name: Ubuntu 1604 specific tests
   hosts: ubuntu1604

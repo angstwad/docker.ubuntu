@@ -1,9 +1,9 @@
 - name: Run tests for all supported environments
   hosts:
     - ubuntu1204
-#     - ubuntu1404
-#     - ubuntu1604
-#     - debianjessie
+    - ubuntu1404
+    - ubuntu1604
+    - debianjessie
   vars:
     # FIXME the exported variable from the playbook is not there as expected.
     read_http_proxy: "{{ lookup('env','HTTP_PROXY') }}"

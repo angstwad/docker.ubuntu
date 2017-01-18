@@ -36,9 +36,9 @@
 - name: Run role on all suported OSes.
   hosts: 
     - ubuntu1204
-#     - ubuntu1404
-#     - ubuntu1604
-#     - debianjessie
+    - ubuntu1404
+    - ubuntu1604
+    - debianjessie
   pre_tasks:
     - name: Gathering facts
       setup:
@@ -50,9 +50,9 @@
 - name: Run role on all suported OSes with proxy set.
   hosts: 
     - ubuntu1204
-#     - ubuntu1404
-#     - ubuntu1604
-#     - debianjessie
+    - ubuntu1404
+    - ubuntu1604
+    - debianjessie
   pre_tasks:
     - name: Gathering facts
       setup:
@@ -62,5 +62,3 @@
       docker_https_proxy: "{{ ansible_env.https_proxy|default('https://foo.bar.com:3128') }}"
 
 - include: inc_tests_proxy.yml
-
-

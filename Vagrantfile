@@ -38,6 +38,9 @@ boxes = [
 ]
 
 Vagrant.configure("2") do |config|
+  if Vagrant.has_plugin?("vagrant-cachier")
+    config.cache.scope = :box
+  end
   boxes.each do |box|
     config.vm.define box[:name] do |vms|
       vms.vm.box = box[:box]

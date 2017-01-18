@@ -14,9 +14,9 @@
         image: "debian:jessie"
   roles:
     - role: provision_docker
-      provision_docker_inventory: "{{inventory}}"
+      provision_docker_inventory: "{{ inventory }}"
       tags: provision_docker
-  
+
 - name: Install python 2 on OSes that are missing it for Ansible.
   hosts: 
     - ubuntu1604
@@ -25,26 +25,26 @@
   tasks:
     - raw: apt-get update && apt-get -y install python-minimal
   become: true
-  
+
 - name: Install lsb release on Debian
   hosts: debian
   gather_facts: false
   tasks:
     - raw: apt-get update && apt-get -y install lsb-release
   become: true
-  
+
 - name: Run role on all suported OSes.
   hosts: 
     - ubuntu1204
 #     - ubuntu1404
 #     - ubuntu1604
 #     - debian
-  gather_facts: false
-  roles:
-    - role: docker.ubuntu
   pre_tasks:
     - name: Gathering facts
       setup:
+  roles:
+    - role: docker.ubuntu
+
       
 - name: Test that docker is installed with hello-world test
   hosts: 
@@ -57,27 +57,26 @@
       register: dockeroutput
       become: true
     - debug: 
-        msg:"dockeroutput: {{ dockeroutput.stdout_lines }}"
+        msg:"'dockeroutput:' {{ dockeroutput.stdout_lines }}"
     - fail:
         msg:"{{ dockeroutput.stdout_lines }}"
       when: dockeroutput.stdout.find("Hello from Docker!") == -1
     
-              
+
 - name: Run role on all suported OSes with proxy set.
   hosts: 
     - ubuntu1204
 #     - ubuntu1404
 #     - ubuntu1604
 #     - debian
-  gather_facts: false
+  pre_tasks:
+    - name: Gathering facts
+      setup:
   roles:
     - role: docker.ubuntu
       docker_http_proxy: "{{ ansible_env.http_proxy|default('http://foo.bar.com:3128') }}"
       docker_https_proxy: "{{ ansible_env.https_proxy|default('https://foo.bar.com:3128') }}"
-  pre_tasks:
-    - name: Gathering facts
-      setup:
-      
+
 - name: Run tests for all supported environments
   hosts:
 #    - ubuntu1204

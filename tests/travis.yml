@@ -56,11 +56,12 @@
     - shell: docker run hello-world
       register: dockeroutput
       become: true
+    - debug: 
+        msg:"dockeroutput: {{ dockeroutput.stdout_lines }}"
     - fail:
         msg:"{{ dockeroutput.stdout_lines }}"
-      when: dockeroutput.stdout.find("Hello from Docker!") != -1
-    - debug: 
-        msg:"{{ dockeroutput.stdout_lines }}"
+      when: dockeroutput.stdout.find("Hello from Docker!") == -1
+    
               
 - name: Run role on all suported OSes with proxy set.
   hosts: 

@@ -30,7 +30,7 @@
     - debug: msg="'checkdockerconf.stdout_lines:'  {{ checkdockerconf.stdout_lines }}"
     - name: Fail if proxy export lines are missing from /etc/default/docker
       fail: msg="'Docker HTTP_PROXY not set in /etc/default/docker. checkdockerconf.stdout_liones:' {{ checkdockerconf.stdout_lines }}"
-      when: (checkdockerconf | trim != 'export HTTP_PROXY="http://foo.bar.com:3128"') and
+      when: (checkdockerconf | trim != 'export HTTP_PROXY=\"http://foo.bar.com:3128\"') and
             not (ansible_lsb.id|lower == "ubuntu" and ( ansible_distribution_version|version_compare(15.04, '>=')))
 
 - name: Ubuntu 1604 specific tests

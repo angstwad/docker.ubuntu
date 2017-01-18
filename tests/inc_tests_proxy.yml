@@ -4,11 +4,13 @@
 #     - ubuntu1404
 #     - ubuntu1604
 #     - debianjessie
+  vars:
+    # FIXME the exported variable from the playbook is not there as expected.
+    read_http_proxy: "{{ lookup('env','HTTP_PROXY') }}"
+    http_proxy: "{{ ansible_env.http_proxy|default('http://foo.bar.com:3128')|regex_escape() }}"
+
   tasks:
     - name: Test if HTTP_PROXY environment variable is set
-      vars:
-        # FIXME the exported variable from the playbook is not there as expected.
-        read_http_proxy: "{{ lookup('env','HTTP_PROXY') }}"
       debug:
         msg: "HTTP_PROXY was set to {{ read_http_proxy }}" 
       # Since envirtonment variables don't seem to be set check the docker conf file instead.
@@ -23,14 +25,16 @@
       register: contentsofdockerfile
     - debug: msg="contents of /etc/default/docker file {{ contentsofdockerfile }}"
     - name: Check whether /etc/default/docker contains export HTTP_PROXY
-      command: awk /^'export HTTP_PROXY="http:\/\/foo\.bar\.com:3128"'/ /etc/default/docker
+      command: awk /^'export HTTP_PROXY="{{ http_proxy }}"'/ /etc/default/docker
       register: checkdockerconf
       changed_when: False
       when: not (ansible_lsb.id|lower == "ubuntu" and ( ansible_distribution_version|version_compare(15.04, '>=')))
     - debug: msg="'checkdockerconf.stdout_lines:'  {{ checkdockerconf.stdout_lines }}"
     - name: Fail if proxy export lines are missing from /etc/default/docker
-      fail: msg="'Docker HTTP_PROXY not set in /etc/default/docker. checkdockerconf.stdout_liones:' {{ checkdockerconf.stdout_lines }}"
-      when: (checkdockerconf | trim != 'export HTTP_PROXY=\"http://foo.bar.com:3128\"') and
+      fail: msg="'Docker HTTP_PROXY not set in /etc/default/docker. checkdockerconf.stdout_lines:' {{ checkdockerconf.stdout_lines }}"
+      when: (checkdockerconf.stdout_lines | trim == '') or
+            (checkdockerconf is undefined) or
+            (checkdockerconf is none) and
             not (ansible_lsb.id|lower == "ubuntu" and ( ansible_distribution_version|version_compare(15.04, '>=')))
 
 - name: Ubuntu 1604 specific tests

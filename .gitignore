@@ -1,4 +1,5 @@
 /.vagrant/
 /.project
 /tests/vagrant.retry
+/tests/roles/provision_docker
 /ubuntu-xenial-16.04-cloudimg-console.log

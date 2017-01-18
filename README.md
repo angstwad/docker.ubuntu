@@ -131,6 +131,10 @@ None.
 Testing
 -------
 
+The Vagrant tests installs the role on VMs and the Travis CI tests uses docker containers. 
+
+**Vagrant**
+
 To test the role in a Vagrant environment just run `vagrant up`.  This will
 create the following VMs:
 
@@ -142,6 +146,10 @@ create the following VMs:
 and it will provision them by applying this role with Ansible.
 
 Requires `ansible-playbook` to be in the path.
+
+**Travis CI**
+
+The Travis CI build runs the same tests as vagrant, but in docker containers
 
 License
 -------

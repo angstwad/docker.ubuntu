@@ -21,7 +21,7 @@
     - name: Debugging AWK of HTTP_PROXY
       command: cat /etc/default/docker
       register: contentsofdockerfile
-    - debug: msg="contents of docker file {{ contentsofdockerfile }}"
+    - debug: msg="contents of /etc/default/docker file {{ contentsofdockerfile }}"
     - name: Check whether /etc/default/docker contains export HTTP_PROXY
       command: awk /^'export HTTP_PROXY="http:\/\/foo\.bar\.com:3128"'/ /etc/default/docker
       register: checkdockerconf

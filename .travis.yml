@@ -31,6 +31,6 @@ install:
 script:  
 #  - echo localhost > inventory
   - ansible-playbook -i hosts --syntax-check tests/travis.yml
-  - ansible-playbook -i hosts --sudo tests/travis.yml -v
-
+#  - ansible-playbook -i hosts --sudo tests/travis.yml -v
+  - ansible-playbook -i hosts --sudo tests/travis.yml 
   

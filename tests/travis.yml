@@ -56,8 +56,11 @@
     - shell: docker run hello-world
       register: dockeroutput
       become: true
+    - fail:
+        msg: dockeroutput.stdout_lines
+      when: dockeroutput.stdout.find("Hello from Docker!") != -1
     - debug: 
-        msg: dockeroutput.stdout.find("Hello from Docker!") != -1
+        msg: dockeroutput.stdout_lines
               
 - name: Run role on all suported OSes with proxy set.
   hosts: 
@@ -100,13 +103,13 @@
       changed_when: False
       when: not (ansible_lsb.id|lower == "ubuntu" and ( ansible_distribution_version|version_compare(15.04, '>=')))
     - name: Fail if proxy export lines are missing from /etc/default/docker
-      fail: msg="Hello, world!"
+      fail: msg="Docker HTTP_PROXY not setin /etc/default/docker. "
       when: (checkdockerconf != "http://foo.bar.com:3128") or
             (checkdockerconf is undefined) or 
             (checkdockerconf is none) or 
             (checkdockerconf | trim == '') and not
             (ansible_lsb.id|lower == "ubuntu" and ( ansible_distribution_version|version_compare(15.04, '>=')))
-    #- name: Run docker hello world test
+      debug: msg=checkdockerconf.stdout_lines
 
 - name: Ubuntu 1604 specific tests
   hosts: ubuntu1604

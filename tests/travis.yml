@@ -57,10 +57,10 @@
       register: dockeroutput
       become: true
     - fail:
-        msg: {{ dockeroutput.stdout_lines }}
+        msg:"{{ dockeroutput.stdout_lines }}"
       when: dockeroutput.stdout.find("Hello from Docker!") != -1
     - debug: 
-        msg: {{ dockeroutput.stdout_lines }}
+        msg:"{{ dockeroutput.stdout_lines }}"
               
 - name: Run role on all suported OSes with proxy set.
   hosts: 
@@ -109,7 +109,7 @@
             (checkdockerconf is none) or 
             (checkdockerconf | trim == '') and not
             (ansible_lsb.id|lower == "ubuntu" and ( ansible_distribution_version|version_compare(15.04, '>=')))
-    - debug: msg= {{ checkdockerconf.stdout_lines }}
+    - debug: msg="{{ checkdockerconf.stdout_lines }}"
 
 - name: Ubuntu 1604 specific tests
   hosts: ubuntu1604

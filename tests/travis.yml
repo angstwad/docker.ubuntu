@@ -33,32 +33,4 @@
     - raw: apt-get update && apt-get -y install lsb-release
   become: true
 
-- name: Run role on all suported OSes.
-  hosts: 
-    - ubuntu1204
-    - ubuntu1404
-    - ubuntu1604
-    - debianjessie
-  pre_tasks:
-    - name: Gathering facts
-      setup:
-  roles:
-    - role: docker.ubuntu
-
-- include: inc_tests.yml
-
-- name: Run role on all suported OSes with proxy set.
-  hosts: 
-    - ubuntu1204
-    - ubuntu1404
-    - ubuntu1604
-    - debianjessie
-  pre_tasks:
-    - name: Gathering facts
-      setup:
-  roles:
-    - role: docker.ubuntu
-      docker_http_proxy: "{{ ansible_env.http_proxy|default('http://foo.bar.com:3128') }}"
-      docker_https_proxy: "{{ ansible_env.https_proxy|default('https://foo.bar.com:3128') }}"
-
-- include: inc_tests_proxy.yml
+- include: inc_common.yml

@@ -3,7 +3,7 @@
     - ubuntu1204
 #     - ubuntu1404
 #     - ubuntu1604
-#     - debian
+#     - debianjessie
   tasks:
     - name: Test if HTTP_PROXY environment variable is set
       vars:

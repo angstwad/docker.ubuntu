@@ -3,7 +3,7 @@
   - ubuntu1204
 #     - ubuntu1404
 #     - ubuntu1604
-#     - debian
+#     - debianjessie
   tasks:      
     - shell: docker run hello-world
       register: dockeroutput

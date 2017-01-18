@@ -10,7 +10,7 @@
         image: "ubuntu:14.04"  
       - name: ubuntu1604
         image: "ubuntu:16.04" 
-      - name: debian
+      - name: debianjessie
         image: "debian:jessie"
   roles:
     - role: provision_docker
@@ -27,7 +27,7 @@
   become: true
 
 - name: Install lsb release on Debian
-  hosts: debian
+  hosts: debianjessie
   gather_facts: false
   tasks:
     - raw: apt-get update && apt-get -y install lsb-release
@@ -38,7 +38,7 @@
     - ubuntu1204
 #     - ubuntu1404
 #     - ubuntu1604
-#     - debian
+#     - debianjessie
   pre_tasks:
     - name: Gathering facts
       setup:
@@ -52,7 +52,7 @@
     - ubuntu1204
 #     - ubuntu1404
 #     - ubuntu1604
-#     - debian
+#     - debianjessie
   pre_tasks:
     - name: Gathering facts
       setup:

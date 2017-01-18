@@ -8,28 +8,28 @@ ENV['ANSIBLE_ROLES_PATH'] = "#{vagrant_root}/../"
 
 boxes = [
   {
-    :name => "ubuntu-1204",
+    :name => "ubuntu1204",
     :box => "ubuntu/precise64",
     :ip => '10.0.77.11',
     :cpu => "25",
     :ram => "256"
   },
   {
-    :name => "ubuntu-1404",
+    :name => "ubuntu1404",
     :box => "ubuntu/trusty64",
     :ip => '10.0.77.12',
     :cpu => "25",
     :ram => "256"
   },
   {
-    :name => "debian-jessie",
+    :name => "debianjessie",
     :box => "debian/jessie64",
     :ip => '10.0.77.13',
     :cpu => "25",
     :ram => "256"
   },
   {
-    :name => "ubuntu-1604",
+    :name => "ubuntu1604",
     :box => "ubuntu/xenial64",
     :ip => '10.0.77.14',
     :cpu => "25",
@@ -41,11 +41,16 @@ Vagrant.configure("2") do |config|
   if Vagrant.has_plugin?("vagrant-cachier")
     config.cache.scope = :box
   end
+  
+  # The symbolic link in test/roles is causing an rsync 'Too many levels of symbolic link' error for debian jessie
+  config.vm.synced_folder ".", "/vagrant", type: "rsync",
+      rsync__exclude: "tests/roles"
+      
   boxes.each do |box|
     config.vm.define box[:name] do |vms|
       vms.vm.box = box[:box]
       vms.vm.box_url = box[:url]
-      vms.vm.hostname = "ansible-#{role}-#{box[:name]}"
+      vms.vm.hostname = "#{box[:name]}"
       
       vms.vm.provider "virtualbox" do |v|
         v.customize ["modifyvm", :id, "--cpuexecutioncap", box[:cpu]]

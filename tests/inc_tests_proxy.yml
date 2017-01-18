@@ -1,4 +1,6 @@
-- name: Run tests for all supported environments
+# Tests related to the proxy settings
+
+- name: Tests for all supported environments
   hosts:
     - ubuntu1204
     - ubuntu1404

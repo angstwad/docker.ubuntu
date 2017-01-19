@@ -31,7 +31,6 @@
       command: awk /^'export HTTP_PROXY="{{ http_proxy }}"'/ /etc/default/docker
       when: not (ansible_lsb.id|lower == "ubuntu" and ( ansible_distribution_version|version_compare(15.04, '>=')))
       register: checkdockerconf
-      changed_when: False
     - debug: msg="'checkdockerconf.stdout_lines:'  {{ checkdockerconf.stdout_lines }}"
     - name: Fail if proxy export lines are missing from /etc/default/docker
       fail: msg="'Docker HTTP_PROXY not set in /etc/default/docker. checkdockerconf.stdout_lines:' {{ checkdockerconf.stdout_lines }}"

@@ -4,14 +4,14 @@
   gather_facts: false
   vars:
     inventory:
-#       - name: ubuntu1204
-#         image: "chrismeyers/ubuntu12.04"
+      - name: ubuntu1204
+        image: "chrismeyers/ubuntu12.04"
       - name: ubuntu1404
         image: "ubuntu:14.04"  
-#       - name: ubuntu1604
-#         image: "ubuntu:16.04" 
-#       - name: debianjessie
-#         image: "debian:jessie"
+      - name: ubuntu1604
+        image: "ubuntu:16.04" 
+      - name: debianjessie
+        image: "debian:jessie"
   roles:
     - role: provision_docker
       provision_docker_inventory: "{{ inventory }}"
@@ -19,7 +19,7 @@
 
 - name: Install python 2 on OSes that are missing it for Ansible.
   hosts: 
-#     - ubuntu1604
+    - ubuntu1604
     - ubuntu1404
   gather_facts: false
   tasks:

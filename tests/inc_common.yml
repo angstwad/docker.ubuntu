@@ -1,11 +1,11 @@
 ---
 - name: Run role on all suported OSes.
+  become: true
   hosts: 
+    - ubuntu1204
     - ubuntu1404
-#     - ubuntu1204
-#     - ubuntu1404
-#     - ubuntu1604
-#     - debianjessie
+    - ubuntu1604
+    - debianjessie
   pre_tasks:
     - name: Gathering facts
       setup:
@@ -15,12 +15,12 @@
 - include: inc_tests.yml
 
 - name: Run role on all suported OSes with proxy set.
+  become: true
   hosts: 
+    - ubuntu1204
     - ubuntu1404
-#     - ubuntu1204
-#     - ubuntu1404
-#     - ubuntu1604
-#     - debianjessie
+    - ubuntu1604
+    - debianjessie
   pre_tasks:
     - name: Gathering facts
       setup:

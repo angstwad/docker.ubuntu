@@ -1,18 +1,15 @@
 # Tests that role installs as expected with defaults.
 - name: Test that docker is installed with hello-world test
+  become: true
   hosts: 
+    - ubuntu1204
     - ubuntu1404
-#     - ubuntu1204
-#     - ubuntu1404
-#     - ubuntu1604
-#     - debianjessie
+    - ubuntu1604
+    - debianjessie
   tasks:      
     - shell: docker run hello-world
       register: dockeroutput
       become: true
-      ignore_errors: yes
-    - debug: 
-        msg: "'dockeroutput:' {{ dockeroutput.stdout_lines }}"
     - fail:
         msg: "'Hello world check failed. Output of shell is: ' {{ dockeroutput.stdout_lines }}"
       when: dockeroutput.stdout.find("Hello from Docker!") == -1

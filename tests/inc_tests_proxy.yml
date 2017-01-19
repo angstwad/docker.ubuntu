@@ -1,6 +1,7 @@
 # Tests related to the proxy settings
 
 - name: Tests for all supported environments
+  become: true
   hosts:
     - ubuntu1204
     - ubuntu1404
@@ -40,6 +41,7 @@
             not (ansible_lsb.id|lower == "ubuntu" and ( ansible_distribution_version|version_compare(15.04, '>=')))
 
 - name: Ubuntu 1604 specific tests
+  become: true
   hosts: ubuntu1604
   tasks:
     - name: Tests if http-proxy.conf exists.

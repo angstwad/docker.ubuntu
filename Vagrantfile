@@ -38,9 +38,9 @@ boxes = [
 ]
 
 Vagrant.configure("2") do |config|
-  if Vagrant.has_plugin?("vagrant-cachier")
-    config.cache.scope = :box
-  end
+  #  if Vagrant.has_plugin?("vagrant-cachier")
+  #    config.cache.scope = :box
+  #  end
   
   # The symbolic link in test/roles is causing an rsync 'Too many levels of symbolic link' error for debian jessie
   config.vm.synced_folder ".", "/vagrant", type: "rsync",

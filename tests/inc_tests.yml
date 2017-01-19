@@ -2,14 +2,15 @@
 - name: Test that docker is installed with hello-world test
   hosts: 
     - ubuntu1404
-#   - ubuntu1204
-#   - ubuntu1404
-#   - ubuntu1604
-#   - debianjessie
+#     - ubuntu1204
+#     - ubuntu1404
+#     - ubuntu1604
+#     - debianjessie
   tasks:      
     - shell: docker run hello-world
       register: dockeroutput
       become: true
+      ignore_errors: yes
     - debug: 
         msg: "'dockeroutput:' {{ dockeroutput.stdout_lines }}"
     - fail:

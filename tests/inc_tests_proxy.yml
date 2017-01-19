@@ -7,16 +7,16 @@
     - ubuntu1604
     - debianjessie
   tasks:      
-    - shell: docker run hello-world
+    - name: Run hello world with proxy
+      shell: docker run hello-world
       register: dockeroutput
       become: true
-      when: "{{ ansible_env.http_proxy is defined }}"
+      ignore_errors: yes
     - fail:
         msg: "'Hello world check failed. Output of shell is: ' {{ dockeroutput.stdout_lines }}"
       # Existence of proxy is dected through http_proy env variable.   
-      when: (dockeroutput.stdout.find("Hello from Docker!") == -1) and
-        "{{ ansible_env.http_proxy is defined }}"
-        
+      when: (dockeroutput.stdout.find("Hello from Docker!") == -1)
+      
 - name: Non ubuntu 1604 tests
   become: true
   hosts:

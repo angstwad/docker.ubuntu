@@ -1,5 +1,5 @@
 # Tests related to the proxy settings
-- name: Test that docker is installed with hello-world test
+- name: Test that docker is working behind proxy with hello-world test
   become: true
   hosts: 
     - ubuntu1204

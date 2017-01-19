@@ -1,49 +1,48 @@
 # Tests related to the proxy settings
-
-- name: Tests for all supported environments
+- name: Test that docker is installed with hello-world test
   become: true
-  hosts:
+  hosts: 
     - ubuntu1204
     - ubuntu1404
     - ubuntu1604
     - debianjessie
+  tasks:      
+    - shell: docker run hello-world
+      register: dockeroutput
+      become: true
+      when: "{{ ansible_env.http_proxy is defined }}"
+    - fail:
+        msg: "'Hello world check failed. Output of shell is: ' {{ dockeroutput.stdout_lines }}"
+      # Existence of proxy is dected through http_proy env variable.   
+      when: (dockeroutput.stdout.find("Hello from Docker!") == -1) and
+        "{{ ansible_env.http_proxy is defined }}"
+        
+- name: Non ubuntu 1604 tests
+  become: true
+  hosts:
+    - ubuntu1204
+    - ubuntu1404
+    - debianjessie
   vars:
-    # FIXME the exported variable from the playbook is not there as expected.
-    read_http_proxy: "{{ lookup('env','HTTP_PROXY') }}"
     http_proxy: "{{ ansible_env.http_proxy|default('http://foo.bar.com:3128')|regex_escape() }}"
-
   tasks:
-    - name: Test if HTTP_PROXY environment variable is set
-      debug:
-        msg: "HTTP_PROXY was set to {{ read_http_proxy }}" 
-      # Since envirtonment variables don't seem to be set check the docker conf file instead.
-      #       fail:
-      #         msg: "HTTP_PROXY env variable is {{ read_http_proxy }} instead of expected http://foo.bar.com:3128"
-      #       when: ({{ read_http_proxy }} != "http://foo.bar.com:3128") or
-      #             ({{ read_http_proxy }} is undefined) or 
-      #             ({{ read_http_proxy }} is none) or 
-      #             ({{ read_http_proxy }} | trim == '')
-#     - name: Debugging AWK of HTTP_PROXY
-#       command: cat /etc/default/docker
-#       register: contentsofdockerfile
-#     - debug: msg="contents of /etc/default/docker file {{ contentsofdockerfile }}"
+#    - setup:
     - name: Check whether /etc/default/docker contains export HTTP_PROXY
       command: awk /^'export HTTP_PROXY="{{ http_proxy }}"'/ /etc/default/docker
-      when: not (ansible_lsb.id|lower == "ubuntu" and ( ansible_distribution_version|version_compare(15.04, '>=')))
+      when: not ((ansible_lsb.id|lower == "ubuntu") and ( ansible_distribution_version|version_compare('15.04', '>=')))
       register: checkdockerconf
-    - debug: msg="'checkdockerconf.stdout_lines:'  {{ checkdockerconf.stdout_lines }}"
     - name: Fail if proxy export lines are missing from /etc/default/docker
       fail: msg="'Docker HTTP_PROXY not set in /etc/default/docker. checkdockerconf.stdout_lines:' {{ checkdockerconf.stdout_lines }}"
-      when: (checkdockerconf.stdout_lines | trim == '') or
+      when: (checkdockerconf.stdout_lines|trim == '') or
             (checkdockerconf is undefined) or
             (checkdockerconf is none) and
-            not (ansible_lsb.id|lower == "ubuntu" and ( ansible_distribution_version|version_compare(15.04, '>=')))
+            not ((ansible_lsb.id|lower == "ubuntu") and ( ansible_distribution_version|version_compare('15.04', '>=')))
 
 - name: Ubuntu 1604 specific tests
   become: true
   hosts: ubuntu1604
   tasks:
-    - name: Tests if http-proxy.conf exists.
+    - name: Tests if http-proxy.conf exists
       stat: 
         path: /etc/systemd/system/docker.service.d/http-proxy.conf
       register: docker_systemd_file

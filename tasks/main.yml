@@ -219,11 +219,15 @@
     - Restart docker
   tags: proxy
    
+- name: Make dir for http proxy conf file 
+  file: 
+    path: /etc/systemd/system/docker.service.d
+    state: directory
 - name: Set docker HTTP_PROXY for Ubuntu 15.04+ if docker_http_proxy defined
-  # Couldn't use ini_file module because keys are duplicated. 
+# Couldn't use ini_file module because keys are duplicated. 
   template:
     src: http-proxy.conf
-    dest: /etc/systemd/system/docker.service.d
+    dest: "/etc/systemd/system/docker.service.d/http-proxy.conf"
   when: (((docker_http_proxy is defined and (docker_http_proxy != None))
     or (docker_https_proxy is defined and (docker_https_proxy != None))))
     and ansible_distribution_version|version_compare('15.04', '>=') and ansible_lsb.id|lower == "ubuntu"

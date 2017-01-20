@@ -17,4 +17,4 @@
       # Existence of proxy is dected through http_proxy env variable on host. If so docker can't connect to registry to get 
       # hello-world test container.   
       when: (dockeroutput.stdout.find("Hello from Docker!") == -1) and
-        ("{{ lookup('env','http_proxy') is undefined }}" == false)
+        ("{{ lookup('env','http_proxy') is undefined }}" == true)

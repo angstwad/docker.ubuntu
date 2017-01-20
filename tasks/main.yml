@@ -201,8 +201,8 @@
     regexp: "^export HTTP_PROXY="
     line: "export HTTP_PROXY=\"{{docker_http_proxy}}\""
     state: present
-  when: docker_http_proxy is defined and (docker_http_proxy != None)
-    and ansible_distribution_version|version_compare('15.04', '<=') and ansible_lsb.id|lower == "ubuntu"
+  when: docker_http_proxy is defined and (docker_http_proxy != None) and 
+    not (ansible_distribution_version|version_compare('15.04', '>=') and ansible_lsb.id|lower == "ubuntu")
   notify:
     - Restart docker
   tags: proxy
@@ -213,8 +213,8 @@
     regexp: "^export HTTPS_PROXY="
     line: "export HTTPS_PROXY=\"{{docker_https_proxy}}\""
     state: present
-  when: docker_https_proxy is defined and (docker_https_proxy != None)
-    and ansible_distribution_version|version_compare('15.04', '<=') and ansible_lsb.id|lower == "ubuntu"
+  when: docker_https_proxy is defined and (docker_https_proxy != None) and 
+    not (ansible_distribution_version|version_compare('15.04', '>=') and ansible_lsb.id|lower == "ubuntu")
   notify:
     - Restart docker
   tags: proxy

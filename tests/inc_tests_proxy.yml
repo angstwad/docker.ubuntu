@@ -17,7 +17,7 @@
         msg: "'Hello world check failed. Output of shell is: ' {{ dockeroutput.stdout_lines }}"
       # Existence of proxy is dected through http_proy env variable.   
       when: (dockeroutput.stdout.find("Hello from Docker!") == -1) and
-        ("{{ lookup('env','http_proxy') is undefined }}" == false)
+        ("{{ lookup('env','http_proxy') is undefined }}" == 'False)
       
 - name: Non ubuntu 1604 tests
   become: true

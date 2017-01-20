@@ -1,4 +1,8 @@
 ---
+branches:
+  only:
+    - master
+    - travismultiansibleversion
 sudo: required
 dist: trusty
 language: python
@@ -16,9 +20,6 @@ before_install:
   - sudo apt-get install -y -o Dpkg::Options::="--force-confnew"  docker-engine
     
 install:  
-  - sudo pip install docker-py
-    # software-properties-common for ubuntu 14.04
-    # python-software-properties for ubuntu 12.04
   - sudo apt-get install -y sshpass software-properties-common python-software-properties
   - sudo apt-add-repository -y ppa:ansible/ansible
   - sudo apt-get update -qq

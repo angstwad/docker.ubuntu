@@ -1,5 +1,6 @@
 # Tests that role installs as expected with defaults. Which includes with no proxies.
 - name: Test that docker is working (no proxy) with hello-world test
+  become: true
   hosts: 
     - ubuntu1204
     - ubuntu1404
@@ -12,9 +13,8 @@
       ignore_errors: yes
     # Fail if hello-world didn't work and we're not behind a proxy
     - fail:
-        msg: "'Hello world check failed."
+        msg: "'Hello world check failed. Output of shell is:' {{ dockeroutput.stdout_lines }}"
       # Existence of proxy is dected through http_proxy env variable on host. If so docker can't connect to registry to get 
       # hello-world test container.   
       when: (dockeroutput.stdout.find("Hello from Docker!") == -1) and
-        ("{{ lookup('env','http_proxy') is undefined }}" == 'True')
-  become: true
+        ("{{ lookup('env','http_proxy') is undefined }}" == true)

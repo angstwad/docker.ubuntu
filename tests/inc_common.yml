@@ -11,7 +11,6 @@
       setup:
   roles:
     - role: docker.ubuntu
-      docker_opts: "-H tcp://127.0.0.1:4243 -H unix:///var/run/docker.sock --dns 8.8.8.8 --dns 8.8.4.4"
 
 - include: inc_tests.yml
 
@@ -29,6 +28,5 @@
     - role: docker.ubuntu
       docker_http_proxy: "{{ ansible_env.http_proxy|default('http://foo.bar.com:3128') }}"
       docker_https_proxy: "{{ ansible_env.https_proxy|default('https://foo.bar.com:3128') }}"
-      docker_opts: "-H tcp://127.0.0.1:4243 -H unix:///var/run/docker.sock --dns 8.8.8.8 --dns 8.8.4.4"
 
 - include: inc_tests_proxy.yml

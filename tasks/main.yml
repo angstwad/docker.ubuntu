@@ -104,7 +104,7 @@
     owner: root
     group: root
     mode: 0755
-  when: docker_opts != "" and is_systemd
+  when: is_systemd
 
 - name: Set docker daemon options (systemd)
   copy:
@@ -219,24 +219,23 @@
     - Restart docker
   tags: proxy
    
-- name: Make dir for http proxy conf file 
-  file: 
-    path: /etc/systemd/system/docker.service.d
-    state: directory
-  when: (((docker_http_proxy is defined and (docker_http_proxy != None))
-    or (docker_https_proxy is defined and (docker_https_proxy != None))))
-    and ansible_distribution_version|version_compare('15.04', '>=') and ansible_lsb.id|lower == "ubuntu"
-- name: Set docker HTTP_PROXY for Ubuntu 15.04+ if docker_http_proxy defined
-# Couldn't use ini_file module because keys are duplicated. 
-  template:
-    src: http-proxy.conf
-    dest: "/etc/systemd/system/docker.service.d/http-proxy.conf"
-  when: (((docker_http_proxy is defined and (docker_http_proxy != None))
-    or (docker_https_proxy is defined and (docker_https_proxy != None))))
-    and ansible_distribution_version|version_compare('15.04', '>=') and ansible_lsb.id|lower == "ubuntu"
+- name: Set docker HTTP_PROXY for systemd based OSes.
+  copy:
+    content: |
+      [Service]
+      Environment="HTTP_PROXY={{docker_http_proxy}}"
+      Environment="HTTPS_PROXY={{docker_https_proxy}}"
+      Environment="NO_PROXY=localhost,127.0.0.1,localaddress,.localdomain.com"
+    dest: /etc/systemd/system/docker.service.d/http-proxy.conf
+    owner: root
+    group: root
+    mode: 0644
   notify:
+    - Reload systemd
     - Restart docker
-  tags: proxy
+  when: (((docker_http_proxy is defined and (docker_http_proxy != None))
+    or (docker_https_proxy is defined and (docker_https_proxy != None))))
+    and is_systemd
 
 - name: Start docker
   service:

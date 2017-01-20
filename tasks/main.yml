@@ -156,6 +156,15 @@
     - python-dev
     - python-pip
 
+# Display an informative message if the docker-compose version needs to be downgraded
+- name: Docker-compose version downgrade
+  debug:
+    msg: >-
+      Downgrading docker-compose version to {{ _pip_version_docker_compose }} because of docker-compose > 1.10
+      requiring docker python package (instead of the docker-py one) which is incompatible with the docker_container
+      module in Ansible < 2.3
+  when: pip_install_docker_compose and _pip_version_docker_compose != pip_version_docker_compose
+
 # Upgrade pip with pip to fix angstwad/docker.ubuntu/pull/35 and docker-py/issues/525
 - name: Install pip, setuptools, docker-py and docker-compose with pip
   pip:
@@ -166,7 +175,7 @@
     - { name: pip, version: "{{ pip_version_pip }}", install: "{{ pip_install_pip }}" }
     - { name: setuptools, version: "{{ pip_version_setuptools }}", install: "{{ pip_install_setuptools }}" }
     - { name: docker-py, version: "{{ pip_version_docker_py }}", install: "{{ pip_install_docker_py }}" }
-    - { name: docker-compose, version: "{{ pip_version_docker_compose }}", install: "{{ pip_install_docker_compose }}" }
+    - { name: docker-compose, version: "{{ _pip_version_docker_compose }}", install: "{{ pip_install_docker_compose }}" }
   when: item.install
 
 - name: Check if /etc/updatedb.conf exists

@@ -1,6 +1,5 @@
 # Tests related to the proxy settings
 - name: Test that docker is working behind proxy with hello-world test
-  become: true
   hosts: 
     - ubuntu1204
     - ubuntu1404
@@ -18,6 +17,7 @@
       # Existence of proxy is dected through http_proy env variable.   
       when: (dockeroutput.stdout.find("Hello from Docker!") == -1) and
         ("{{ lookup('env','http_proxy') is undefined }}" == 'False')
+  become: true
       
 - name: Non ubuntu 1604 tests
   become: true

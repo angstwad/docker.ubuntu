@@ -231,7 +231,6 @@
     group: root
     mode: 0644
   notify:
-    - Reload systemd
     - Restart docker
   when: (((docker_http_proxy is defined and (docker_http_proxy != None))
     or (docker_https_proxy is defined and (docker_https_proxy != None))))

@@ -147,7 +147,17 @@
 
 # Install pip with easy_install for ubuntu 12.04 because pip 1.0 doesn't workk behind a proxy and can't be 
 # used to upgrade pip. http://askubuntu.com/questions/767157/cannot-upgrade-pip-behind-proxy
-- name: Install pip with easy_install on ubuntu1204
+- name: Install easy_install on ubuntu 1204
+  apt:
+    pkg: "{{ item }}"
+    state: latest
+    update_cache: yes
+    cache_valid_time: "{{ docker_apt_cache_valid_time }}"
+  with_items:
+    - python-setuptools
+  when: ansible_lsb.id|lower == "ubuntu" and ansible_distribution_version|version_compare('12.04', '==')
+    and ansible_env.http_proxy is defined
+- name: Install pip with easy_install on ubuntu 1204
   easy_install:
     name: pip
     state: latest

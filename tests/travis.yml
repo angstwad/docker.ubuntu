@@ -9,7 +9,7 @@
       - name: ubuntu1404
         image: "ubuntu-upstart:14.04"  
       - name: ubuntu1604
-        image: "ubuntu:16.04" 
+        image: "solita/ubuntu-systemd:16.04" 
       - name: debianjessie
         image: "debian:jessie"
   roles:

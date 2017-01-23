@@ -7,7 +7,7 @@
       - name: ubuntu1204
         image: "chrismeyers/ubuntu12.04"
       - name: ubuntu1404
-        image: "ubuntu:14.04"  
+        image: "ubuntu-upstart:14.04"  
       - name: ubuntu1604
         image: "ubuntu:16.04" 
       - name: debianjessie

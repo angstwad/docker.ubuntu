@@ -12,7 +12,8 @@
       register: dockeroutput
       ignore_errors: yes
     # Fail if hello-world didn't work and we're not behind a proxy
-    - fail:
+    - name: Check result of hello world test
+      fail:
         msg: "'Hello world check failed. Output of shell is:' {{ dockeroutput.stdout_lines }}"
       # Existence of proxy is dected through http_proxy env variable on host. If so docker can't connect to registry to get 
       # hello-world test container.   

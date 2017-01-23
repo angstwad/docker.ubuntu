@@ -12,7 +12,8 @@
       become: true
       ignore_errors: yes
     # Fail if hellow docker didn't work and proxy settings are dected on host.  
-    - fail:
+    - name: Check result of hello world test
+      fail:
         msg: "'Hello world check failed"
       # Existence of proxy is dected through http_proy env variable.   
       when: (dockeroutput.stdout.find("Hello from Docker!") == -1) and

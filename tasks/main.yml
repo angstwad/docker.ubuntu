@@ -230,7 +230,7 @@
     line: "export HTTP_PROXY=\"{{docker_http_proxy}}\""
     state: present
   when: docker_http_proxy is defined and (docker_http_proxy != None) and 
-    not (ansible_distribution_version|version_compare('15.04', '>=') and ansible_lsb.id|lower == "ubuntu")
+    and not is_systemd
   notify:
     - Restart docker
   tags: proxy
@@ -242,7 +242,7 @@
     line: "export HTTPS_PROXY=\"{{docker_https_proxy}}\""
     state: present
   when: docker_https_proxy is defined and (docker_https_proxy != None) and 
-    not (ansible_distribution_version|version_compare('15.04', '>=') and ansible_lsb.id|lower == "ubuntu")
+    and not is_systemd
   notify:
     - Restart docker
   tags: proxy

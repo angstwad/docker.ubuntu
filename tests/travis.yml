@@ -45,6 +45,7 @@
       setup:
   roles:
     - role: docker.ubuntu
+    
 - include: inc_tests.yml
 
 - name: Run role on all suported OSes with proxy set.

@@ -88,7 +88,7 @@
 
 - name: Set docker daemon options
   copy:
-    content: "DOCKER_OPTS=\"{{ docker_opts.rstrip('\n') }}\""
+    content: "DOCKER_OPTS=\"{{ docker_opts.rstrip() }}\""
     dest: /etc/default/docker
     owner: root
     group: root
@@ -110,7 +110,7 @@
   copy:
     content: |
       [Service]
-      Environment="DOCKER_OPTS={{ docker_opts.rstrip('\n') }}"
+      Environment="DOCKER_OPTS={{ docker_opts.rstrip() }}"
     dest: /etc/systemd/system/docker.service.d/env.conf
     owner: root
     group: root

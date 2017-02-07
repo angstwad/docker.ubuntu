@@ -7,4 +7,4 @@
     docker_group_members: [ '{{ ansible_ssh_user }}' ]
 
   roles:
-    - docker.ubuntu
+    - { role: ../../docker.ubuntu }

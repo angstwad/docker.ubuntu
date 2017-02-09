@@ -12,8 +12,8 @@ galaxy_info:
       versions:
         - precise
         - raring
-        - saucy
         - trusty
+        - xenial
   categories:
     - development
     - packaging

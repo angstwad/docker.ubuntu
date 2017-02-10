@@ -21,9 +21,16 @@ boxes = [
     :ram => "256"
   },
   {
+    :name => "ubuntu-1604",
+    :box => "ubuntu/xenial64",
+    :ip => '10.0.77.13',
+    :cpu => "33",
+    :ram => "512"
+  },
+  {
     :name => "debian-jessie",
     :box => "debian/jessie64",
-    :ip => '10.0.77.13',
+    :ip => '10.0.77.14',
     :cpu => "33",
     :ram => "256"
   },
@@ -34,7 +41,6 @@ Vagrant.configure("2") do |config|
     config.vm.define box[:name] do |vms|
       vms.vm.box = box[:box]
       vms.vm.box_url = box[:url]
-      vms.vm.hostname = "ansible-#{role}-#{box[:name]}"
 
       vms.vm.provider "virtualbox" do |v|
         v.customize ["modifyvm", :id, "--cpuexecutioncap", box[:cpu]]
@@ -42,6 +48,11 @@ Vagrant.configure("2") do |config|
       end
 
       vms.vm.network :private_network, ip: box[:ip]
+
+      # neccessary for ubuntu 16.04 and harmless for the rest
+      vms.vm.provision :shell do |shell|
+        shell.inline = "DEBIAN_FRONTEND=noninteractive apt-get -y install python-simplejson"
+      end
 
       vms.vm.provision :ansible do |ansible|
         ansible.playbook = "tests/vagrant.yml"

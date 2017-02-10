@@ -10,8 +10,6 @@ Installs Docker on:
 
 This role differs from other roles in that it specifically follows docker.io installation instructions for each distribution version.
 
-**Note**: This role now defaults to installing the lxc-docker package, the latest package from the docker.io repository.  There have been recent changes to the "interface" of this role, so to speak, and the changes are breaking for those using this as a parameterized role.
-
 **Example Play**:
 ```
 ---

@@ -77,6 +77,10 @@ apt_repository: deb https://apt.dockerproject.org/repo {{ ansible_lsb.id|lower }
 #  -H tcp://0.0.0.0:2375
 #  --log-level=debug
 docker_opts: ""
+# List of users to be added to 'docker' system group (disabled by default)
+# SECURITY WARNING: 
+# Be aware that granted users can easily get full root access on the docker host system!
+docker_group_members: []
 
 # configurable proxies: a reasonable default is to re-use the proxy from ansible_env:
 # docker_http_proxy: "{{ ansible_env.http_proxy|default('') }}"
@@ -108,6 +112,7 @@ update_docker_package: no
 # Change these to 'present' if you're running Ubuntu 12.04-13.10 and are fine with less-than-latest packages
 kernel_pkg_state: latest
 cgroup_lite_pkg_state: latest
+dmsetup_pkg_state: latest
 # Force an install of the kernel extras, in case you're suffering from some issue related to the
 # static binary provided by upstream Docker.  For example, see this GitHub Issue in Docker:
 # https://github.com/docker/docker/issues/12750
@@ -118,7 +123,6 @@ install_kernel_extras: false
 # where an X/Unit desktop is actively being used. If you're not using an X/Unity on 12.04, you
 # won't need to enable this.
 install_xorg_pkgs: false
-
 ```
 
 Dependencies

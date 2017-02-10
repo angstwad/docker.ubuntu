@@ -20,7 +20,7 @@
     pkg: dmsetup
     state: "{{ dmsetup_pkg_state }}"
     update_cache: "{{ 'yes' if dmsetup_pkg_state=='latest' else 'no' }}"
-    cache_valid_time: 600
+    cache_valid_time: "{{ docker_apt_cache_valid_time }}"
   register: dmsetup_result
   when: ansible_distribution_version|version_compare('16.04', '=')
 
@@ -172,11 +172,19 @@
     state: "{{ 'latest' if item.version=='latest' else 'present' }}"
     version: "{{ item.version if item.version!='latest' else omit }}"
   with_items:
-    - { name: pip, version: "{{ pip_version_pip }}", install: "{{ pip_install_pip }}" }
-    - { name: setuptools, version: "{{ pip_version_setuptools }}", install: "{{ pip_install_setuptools }}" }
-    - { name: docker-py, version: "{{ pip_version_docker_py }}", install: "{{ pip_install_docker_py }}" }
-    - { name: docker-compose, version: "{{ _pip_version_docker_compose }}", install: "{{ pip_install_docker_compose }}" }
-  when: item.install
+    - name: pip
+      version: "{{ pip_version_pip }}"
+      install: "{{ pip_install_pip }}"
+    - name: setuptools
+      version: "{{ pip_version_setuptools }}"
+      install: "{{ pip_install_setuptools }}"
+    - name: docker-py
+      version: "{{ pip_version_docker_py }}"
+      install: "{{ pip_install_docker_py and (install_docker_py_on_1604 or not ansible_distribution_version|version_compare('16.04', '>=')) }}"
+    - name: docker-compose
+      version: "{{ _pip_version_docker_compose }}"
+      install: "{{ pip_install_docker_compose }}"
+  when: item.install|bool
 
 - name: Check if /etc/updatedb.conf exists
   stat:
@@ -248,5 +256,6 @@
   when: docker_group_members is defined
 
 - name: update facts if docker0 is not defined
-  action: setup filter="ansible_docker0"
+  setup:
+    filter: "ansible_docker0"
   when: ansible_docker0 is not defined

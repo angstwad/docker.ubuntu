@@ -2,9 +2,9 @@
 # test file for docker.ubuntu role on vagrant
 - hosts: all
   become: yes
-
   vars:
-    docker_group_members: [ '{{ ansible_ssh_user }}' ]
-
+    docker_group_members:
+      - "{{ ansible_ssh_user }}"
   roles:
-    - docker.ubuntu
+    - role: docker.ubuntu
+      kernel_update_and_reboot_permitted: yes

@@ -39,6 +39,8 @@ pip_install_pip: true
 pip_install_setuptools: true
 pip_install_docker_py: true
 pip_install_docker_compose: true
+install_docker_py_on_1604: false
+
 # Versions for the python packages that are installed
 pip_version_pip: latest
 pip_version_setuptools: latest
@@ -51,6 +53,7 @@ kernel_update_and_reboot_permitted: no
 
 # Set to 'yes' or 'true' to enable updates (sets 'latest' in apt module)
 update_docker_package: no
+
 # Change these to 'present' if you're running Ubuntu 12.04-13.10 and are fine with less-than-latest packages
 kernel_pkg_state: latest
 cgroup_lite_pkg_state: latest

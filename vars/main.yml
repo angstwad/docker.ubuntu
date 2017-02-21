@@ -4,6 +4,6 @@
 # which is incompatible with the docker_container module in Ansible < 2.3
 # TODO: update ansible version in the comparison when https://github.com/ansible/ansible/issues/20492 gets fixed.
 _pip_version_docker_compose: >-
-    {{ '1.9.0' if ansible_version.full | version_compare('2.3', '<=')
+    {{ '1.9.0' if ansible_version.full | version_compare('2.3.0', '<=')
         and (pip_version_docker_compose=='latest' or pip_version_docker_compose | version_compare('1.9.0', '>'))
         else pip_version_docker_compose }}

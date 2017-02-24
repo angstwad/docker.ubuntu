@@ -181,6 +181,14 @@
   pip:
     name: docker-py
     state: absent
+  register: docker_py_removed
+
+- name: Force reinstall of docker from pip after docker-py removal
+  pip:
+    name: docker
+    version: "{{ pip_version_docker if pip_version_docker!='latest' else omit }}"
+    state: "{{ 'forcereinstall' if pip_install_docker|bool }}"
+  when: pip_install_docker|bool and docker_py_removed|changed
 
 - name: Check if /etc/updatedb.conf exists
   stat:

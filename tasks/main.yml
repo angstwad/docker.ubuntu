@@ -156,17 +156,8 @@
     - python-dev
     - python-pip
 
-# Display an informative message if the docker-compose version needs to be downgraded
-- name: Docker-compose version downgrade
-  debug:
-    msg: >-
-      Downgrading docker-compose version to {{ _pip_version_docker_compose }} because of docker-compose > 1.10
-      requiring docker python package (instead of the docker-py one) which is incompatible with the docker_container
-      module in Ansible < 2.3
-  when: pip_install_docker_compose and _pip_version_docker_compose != pip_version_docker_compose
-
 # Upgrade pip with pip to fix angstwad/docker.ubuntu/pull/35 and docker-py/issues/525
-- name: Install pip, setuptools, docker-py and docker-compose with pip
+- name: Install pip, setuptools, docker and docker-compose with pip
   pip:
     name: "{{ item.name }}"
     state: "{{ 'latest' if item.version=='latest' else 'present' }}"
@@ -178,13 +169,18 @@
     - name: setuptools
       version: "{{ pip_version_setuptools }}"
       install: "{{ pip_install_setuptools }}"
-    - name: docker-py
-      version: "{{ pip_version_docker_py }}"
-      install: "{{ pip_install_docker_py and (install_docker_py_on_1604 or not ansible_distribution_version|version_compare('16.04', '>=')) }}"
+    - name: docker
+      version: "{{ pip_version_docker }}"
+      install: "{{ pip_install_docker }}"
     - name: docker-compose
-      version: "{{ _pip_version_docker_compose }}"
+      version: "{{ pip_version_docker_compose }}"
       install: "{{ pip_install_docker_compose }}"
   when: item.install|bool
+
+- name: Remove deprecated docker-py
+  pip:
+    name: docker-py
+    state: absent
 
 - name: Check if /etc/updatedb.conf exists
   stat:

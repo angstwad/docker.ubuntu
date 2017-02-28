@@ -1,4 +1,10 @@
 ---
+# Select python variable file according to the ansible_python_interpreter.
+python_vars_file: >-
+  {{ 'python3.yml' if ansible_python_interpreter is defined
+                          and 'python3' in ansible_python_interpreter
+                       else 'python2.yml' }}
+
 # To use Docker Ansible modules, managed nodes require some Docker Python packages :
 # * `docker-py` (renamed into `docker` since the 2.0.0 version);
 # * `docker-compose` which is required by the docker_service Ansible module.

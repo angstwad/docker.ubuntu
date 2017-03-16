@@ -153,8 +153,11 @@
     update_cache: yes
     cache_valid_time: "{{ docker_apt_cache_valid_time }}"
   with_items:
+    - python-setuptools
     - python-dev
-    - python-pip
+
+- name: Upgrade pip
+  shell: easy_install --upgrade pip
 
 # Display an informative message if the docker-compose version needs to be downgraded
 - name: Docker-compose version downgrade

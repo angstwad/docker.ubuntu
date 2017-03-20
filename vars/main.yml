@@ -3,6 +3,6 @@
 # Because of docker-compose 1.10+ requires docker python package (instead of the docker-py one)
 # which is incompatible with the docker_container module in Ansible < 2.3
 _pip_version_docker_compose: >-
-    {{ '1.9.0' if ansible_version.full | version_compare('2.3', '<=')
+    {{ '1.9.0' if ansible_version.full | version_compare('2.3', '<')
         and (pip_version_docker_compose=='latest' or pip_version_docker_compose | version_compare('1.9.0', '>'))
         else pip_version_docker_compose }}

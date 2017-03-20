@@ -39,7 +39,6 @@ pip_install_pip: true
 pip_install_setuptools: true
 pip_install_docker_py: true
 pip_install_docker_compose: true
-install_docker_py_on_1604: false
 
 # Versions for the python packages that are installed
 pip_version_pip: latest

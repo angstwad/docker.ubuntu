@@ -178,9 +178,9 @@
     - name: setuptools
       version: "{{ pip_version_setuptools }}"
       install: "{{ pip_install_setuptools }}"
-    - name: docker-py
-      version: "{{ pip_version_docker_py }}"
-      install: "{{ pip_install_docker_py }}"
+    - name: "{{ _pip_docker_package_name }}"
+      version: "{{ pip_version_docker }}"
+      install: "{{ _pip_install_docker }}"
     - name: docker-compose
       version: "{{ _pip_version_docker_compose }}"
       install: "{{ pip_install_docker_compose }}"

@@ -37,13 +37,17 @@ docker_https_proxy:
 # Flags for whether to install pip packages
 pip_install_pip: true
 pip_install_setuptools: true
-pip_install_docker_py: true
+# pip_install_docker is ignored if pip_install_docker_compose is true as docker-compose as a dependency over docker.
+# See var/main.yml for more information.
+pip_install_docker: true
 pip_install_docker_compose: true
 
 # Versions for the python packages that are installed
 pip_version_pip: latest
 pip_version_setuptools: latest
-pip_version_docker_py: latest
+# pip_version_docker is ignored if pip_install_docker_compose is true as docker-compose as a dependency over docker.
+# See var/main.yml for more information.
+pip_version_docker: latest
 pip_version_docker_compose: latest
 
 # If this variable is set to true kernel updates and host restarts are permitted.

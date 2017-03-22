@@ -34,6 +34,13 @@ boxes = [
     :cpu => "33",
     :ram => "256"
   },
+  {
+    :name => "ubuntu-1604-python3",
+    :box => "ubuntu/xenial64",
+    :ip => '10.0.77.15',
+    :cpu => "33",
+    :ram => "512"
+  },
 ]
 
 Vagrant.configure("2") do |config|
@@ -52,6 +59,9 @@ Vagrant.configure("2") do |config|
       vms.vm.provision :ansible do |ansible|
         ansible.playbook = "tests/vagrant.yml"
         ansible.verbose = "vv"
+        ansible.host_vars = {
+          "ubuntu-1604-python3" => {"ansible_python_interpreter" => "/usr/bin/python3"}
+        }
       end
     end
   end

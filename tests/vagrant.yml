@@ -1,5 +1,12 @@
 ---
 # test file for docker.ubuntu role on vagrant
+- hosts: ubuntu-1604
+  become: yes
+  gather_facts: no
+  tasks:
+    - name: Install python
+      raw: export DEBIAN_FRONTEND=noninteractive && apt-get -y install python python-simplejson
+
 - hosts: all
   become: yes
   vars:

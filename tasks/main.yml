@@ -165,6 +165,20 @@
       module in Ansible < 2.3
   when: pip_install_docker_compose and _pip_version_docker_compose != pip_version_docker_compose
 
+# See vars/main.yml for more information on this.
+- name: Clean previous docker-py package if installing docker.
+  pip:
+    name: docker-py
+    state: absent
+  when: (_pip_install_docker or pip_install_docker_compose) and _pip_docker_package_name == 'docker'
+
+# See vars/main.yml for more information on this.
+- name: Clean previous docker package if installing docker-py.
+  pip:
+    name: docker
+    state: absent
+  when: (_pip_install_docker or pip_install_docker_compose) and _pip_docker_package_name == 'docker-py'
+
 # Upgrade pip with pip to fix angstwad/docker.ubuntu/pull/35 and docker-py/issues/525
 - name: Install pip, setuptools, docker-py and docker-compose with pip
   pip:

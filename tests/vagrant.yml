@@ -8,3 +8,19 @@
   roles:
     - role: docker.ubuntu
       kernel_update_and_reboot_permitted: yes
+
+  tasks:
+    - name: Create a dummy container
+      docker_container:
+        name: foobar
+        pull: true
+        image: busybox
+        state: started
+      when: _pip_install_docker or pip_install_docker_compose
+      register: container_creation
+
+    - name: Remove the dummy container
+      docker_container:
+        name: foobar
+        state: absent
+      when: container_creation.changed

@@ -1,8 +1,33 @@
 ---
-# Downgrade docker-compose version if ansible version < 2.3 and docker-compose > 1.9.0
-# Because of docker-compose 1.10+ requires docker python package (instead of the docker-py one)
-# which is incompatible with the docker_container module in Ansible < 2.3
+# To use Docker Ansible modules, managed nodes require some Docker Python packages :
+# * `docker-py` (renamed into `docker` since the 2.0.0 version);
+# * `docker-compose` which is required by the docker_service Ansible module.
+#
+# The `docker` python package introduces some backward incompatible changes is version 2.0.0.
+# Ansible 2.3+ is required to run this new version. Previous Ansible versions have to use docker-py<=1.10.6.
+# The `docker-compose` python package has a dependency over the docker/docker-py package.
+# The `docker-compose` 1.9.0 is the latest version to be compatible with the docker<2.0.0.
+#
+# To sum up:
+# * with Ansible < 2.3:
+#   * you have to use docker-py<=1.10.6 due to backward incompatibilities of next versions
+#   * you have to use docker-compose<=1.9.0 due to docker-compose>1.9.0 using newer versions of docker-py.
+
+# Compute the `docker` Python package's version to use.
+_pip_version_docker: >-
+    {{ '1.10.6' if ansible_version.full | version_compare('2.3', '<')
+        and (pip_version_docker=='latest' or pip_version_docker | version_compare('1.10.6', '>'))
+        else pip_version_docker }}
+
+# Compute the `docker` Python package's name according to its version.
+_pip_docker_package_name: "{{ 'docker-py' if pip_version_docker | version_compare('1.10.6', '<=') else 'docker' }}"
+
+# Determine whether to install the `docker` package or not. The `docker-compose` Python package has a dependency over the `docker` Python package.
+# So when installing the `docker-compose` package we'd rather let it handle the `docker` package version to prevent version mismatches.
+_pip_install_docker: "{{ not pip_install_docker_compose and pip_install_docker }}"
+
+# Compute the `docker-compose` Python package's version to use.
 _pip_version_docker_compose: >-
-    {{ '1.9.0' if ansible_version.full | version_compare('2.3', '<=')
+    {{ '1.9.0' if ansible_version.full | version_compare('2.3', '<')
         and (pip_version_docker_compose=='latest' or pip_version_docker_compose | version_compare('1.9.0', '>'))
         else pip_version_docker_compose }}

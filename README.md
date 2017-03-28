@@ -1,8 +1,6 @@
 docker_ubuntu
 ========
 
-[![Build Status](https://travis-ci.org/angstwad/docker.ubuntu.svg)](https://travis-ci.org/angstwad/docker.ubuntu)
-
 Installs Docker on:
 
 * Ubuntu 12.04+

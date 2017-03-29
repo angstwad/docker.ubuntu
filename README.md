@@ -1,16 +1,12 @@
 docker_ubuntu
 ========
 
-[![Build Status](https://travis-ci.org/angstwad/docker.ubuntu.svg)](https://travis-ci.org/angstwad/docker.ubuntu)
-
 Installs Docker on:
 
 * Ubuntu 12.04+
 * Debian 8.5+
 
 This role differs from other roles in that it specifically follows docker.io installation instructions for each distribution version.
-
-**Note**: This role now defaults to installing the lxc-docker package, the latest package from the docker.io repository.  There have been recent changes to the "interface" of this role, so to speak, and the changes are breaking for those using this as a parameterized role.
 
 **Example Play**:
 ```
@@ -81,15 +77,29 @@ docker_opts: ""
 # SECURITY WARNING: 
 # Be aware that granted users can easily get full root access on the docker host system!
 docker_group_members: []
+
+# configurable proxies: a reasonable default is to re-use the proxy from ansible_env:
+# docker_http_proxy: "{{ ansible_env.http_proxy|default('') }}"
+# Notes:
+# if docker_http_proxy==""   the role sets HTTP_PROXY="" (useful to 'empty' existing ENV var)
+# if docker_http_proxy is undefined the role will not set/modify any ENV vars
+docker_http_proxy:
+docker_https_proxy:
+
 # Flags for whether to install pip packages
 pip_install_pip: true
 pip_install_setuptools: true
-pip_install_docker_py: true
+# pip_install_docker is ignored if pip_install_docker_compose is true as docker-compose as a dependency over docker.
+# See var/main.yml for more information.
+pip_install_docker: true
 pip_install_docker_compose: true
+
 # Versions for the python packages that are installed
 pip_version_pip: latest
 pip_version_setuptools: latest
-pip_version_docker_py: latest
+# pip_version_docker is ignored if pip_install_docker_compose is true as docker-compose as a dependency over docker.
+# See var/main.yml for more information.
+pip_version_docker: latest
 pip_version_docker_compose: latest
 
 # If this variable is set to true kernel updates and host restarts are permitted.
@@ -101,6 +111,7 @@ update_docker_package: no
 # Change these to 'present' if you're running Ubuntu 12.04-13.10 and are fine with less-than-latest packages
 kernel_pkg_state: latest
 cgroup_lite_pkg_state: latest
+dmsetup_pkg_state: latest
 # Force an install of the kernel extras, in case you're suffering from some issue related to the
 # static binary provided by upstream Docker.  For example, see this GitHub Issue in Docker:
 # https://github.com/docker/docker/issues/12750
@@ -111,7 +122,6 @@ install_kernel_extras: false
 # where an X/Unit desktop is actively being used. If you're not using an X/Unity on 12.04, you
 # won't need to enable this.
 install_xorg_pkgs: false
-
 ```
 
 Dependencies

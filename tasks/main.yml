@@ -3,12 +3,12 @@
 - name: Fail if not a new release of Ubuntu
   fail:
     msg: "{{ ansible_distribution_version }} is not an acceptable version of Ubuntu for this role"
-  when: ansible_lsb.id|lower == "ubuntu" and ( ansible_distribution_version|version_compare(12.04, '<') or ansible_distribution_version|version_compare(12.10, '=') )
+  when: ansible_lsb.id|lower == "ubuntu" and ( ansible_distribution_version|version_compare('12.04', '<') or ansible_distribution_version|version_compare('12.10', '=') )
 
 - name: Fail if not a new release of Debian
   fail:
     msg: "{{ ansible_distribution_version }} is not an acceptable version of Debian for this role"
-  when: ansible_lsb.id|lower == "debian" and ansible_distribution_version|version_compare(8.5, '<')
+  when: ansible_lsb.id|lower == "debian" and ansible_distribution_version|version_compare('8.5', '<')
 
 - name: Update kernel, kernel extras, Xorg pkgs, and related tasks
   include: kernel_check_and_update.yml
@@ -19,14 +19,31 @@
   apt:
     pkg: dmsetup
     state: "{{ dmsetup_pkg_state }}"
-    update_cache: yes
-    cache_valid_time: 600
+    update_cache: "{{ 'yes' if dmsetup_pkg_state=='latest' else 'no' }}"
+    cache_valid_time: "{{ docker_apt_cache_valid_time }}"
   register: dmsetup_result
-  when: ansible_distribution_version|version_compare(16.04, '=')
+  when: ansible_distribution_version|version_compare('16.04', '=')
+
+- name: Read uname
+  shell: uname -r
+  register: uname_output
+  changed_when: false
+  always_run: yes
+
+- name: Install linux-image-extra-* packages to enable AuFS driver
+  apt:
+    pkg: "{{ item }}"
+    state: present
+    update_cache: yes
+    cache_valid_time: "{{ docker_apt_cache_valid_time }}"
+  with_items:
+    - linux-image-extra-{{ uname_output.stdout }}
+    - linux-image-extra-virtual
+  when: ansible_distribution_version|version_compare('14.04', '>=')
 
 - name: Run dmsetup for Ubuntu 16.04
   command: dmsetup mknodes
-  when: dmsetup_result
+  when: dmsetup_result.changed
 
 - name: Add Docker repository key
   apt_key:
@@ -56,7 +73,7 @@
   apt:
     name: "{{ docker_pkg_name }}"
     state: "{{ 'latest' if update_docker_package else 'present' }}"
-    update_cache: yes
+    update_cache: "{{ update_docker_package }}"
     cache_valid_time: "{{ docker_apt_cache_valid_time }}"
 
 - name: Set systemd playbook var
@@ -67,11 +84,11 @@
 - name: Set systemd playbook var
   set_fact:
     is_systemd: true
-  when: ( ansible_lsb.id|lower == "ubuntu" and ansible_distribution_version|version_compare(15.04, '>=') or ansible_lsb.id|lower == "debian" )
+  when: ( ansible_lsb.id|lower == "ubuntu" and ansible_distribution_version|version_compare('15.04', '>=') or ansible_lsb.id|lower == "debian" )
 
 - name: Set docker daemon options
   copy:
-    content: "DOCKER_OPTS=\"{{ docker_opts.rstrip('\n') }}\""
+    content: "DOCKER_OPTS=\"{{ docker_opts.rstrip() }}\""
     dest: /etc/default/docker
     owner: root
     group: root
@@ -93,7 +110,7 @@
   copy:
     content: |
       [Service]
-      Environment="DOCKER_OPTS={{ docker_opts.rstrip('\n') }}"
+      Environment="DOCKER_OPTS={{ docker_opts.rstrip() }}"
     dest: /etc/systemd/system/docker.service.d/env.conf
     owner: root
     group: root
@@ -139,32 +156,49 @@
     - python-dev
     - python-pip
 
-# Upgrade pip with pip to fix angstwad/docker.ubuntu/pull/35 and docker-py/issues/525
-# Install latest version when no specific release is set.
-- name: Upgrade latest pip, setuptools, docker-py and docker-compose with pip
-  pip:
-    name: "{{ item.name }}"
-    state: latest
-  with_items:
-    - { name: pip, version: "{{ pip_version_pip }}", install: "{{ pip_install_pip }}" }
-    - { name: setuptools, version: "{{ pip_version_setuptools }}", install: "{{ pip_install_setuptools }}" }
-    - { name: docker-py, version: "{{ pip_version_docker_py }}", install: "{{ pip_install_docker_py }}" }
-    - { name: docker-compose, version: "{{ pip_version_docker_compose }}", install: "{{ pip_install_docker_compose }}" }
-  when: (item.version=="latest" and item.install)
-  ignore_errors: yes
+# Display an informative message if the docker-compose version needs to be downgraded
+- name: Docker-compose version downgrade
+  debug:
+    msg: >-
+      Downgrading docker-compose version to {{ _pip_version_docker_compose }} because of docker-compose > 1.10
+      requiring docker python package (instead of the docker-py one) which is incompatible with the docker_container
+      module in Ansible < 2.3
+  when: pip_install_docker_compose and _pip_version_docker_compose != pip_version_docker_compose
 
-# Install specific version when set in the variables
-- name: Install specific pip, setuptools, docker-py and docker-compose with pip
+# See vars/main.yml for more information on this.
+- name: Clean previous docker-py package if installing docker.
+  pip:
+    name: docker-py
+    state: absent
+  when: (_pip_install_docker or pip_install_docker_compose) and _pip_docker_package_name == 'docker'
+
+# See vars/main.yml for more information on this.
+- name: Clean previous docker package if installing docker-py.
+  pip:
+    name: docker
+    state: absent
+  when: (_pip_install_docker or pip_install_docker_compose) and _pip_docker_package_name == 'docker-py'
+
+# Upgrade pip with pip to fix angstwad/docker.ubuntu/pull/35 and docker-py/issues/525
+- name: Install pip, setuptools, docker-py and docker-compose with pip
   pip:
     name: "{{ item.name }}"
-    state: present
-    version: "{{ item.version }}"
+    state: "{{ 'latest' if item.version=='latest' else 'present' }}"
+    version: "{{ item.version if item.version!='latest' else omit }}"
   with_items:
-    - { name: pip, version: "{{ pip_version_pip }}", install: "{{ pip_install_pip }}" }
-    - { name: setuptools, version: "{{ pip_version_setuptools }}", install: "{{ pip_install_setuptools }}" }
-    - { name: docker-py, version: "{{ pip_version_docker_py }}", install: "{{ pip_install_docker_py }}" }
-    - { name: docker-compose, version: "{{ pip_version_docker_compose }}", install: "{{ pip_install_docker_compose }}" }
-  when: (item.version!="latest" and item.install)
+    - name: pip
+      version: "{{ pip_version_pip }}"
+      install: "{{ pip_install_pip }}"
+    - name: setuptools
+      version: "{{ pip_version_setuptools }}"
+      install: "{{ pip_install_setuptools }}"
+    - name: "{{ _pip_docker_package_name }}"
+      version: "{{ pip_version_docker }}"
+      install: "{{ _pip_install_docker }}"
+    - name: docker-compose
+      version: "{{ _pip_version_docker_compose }}"
+      install: "{{ pip_install_docker_compose }}"
+  when: item.install|bool
 
 - name: Check if /etc/updatedb.conf exists
   stat:
@@ -192,6 +226,28 @@
     line: "DEFAULT_FORWARD_POLICY=\"ACCEPT\""
   when: ufw_default_exists.stat.exists
 
+- name: Set docker HTTP_PROXY if docker_http_proxy defined
+  lineinfile:
+    dest: /etc/default/docker
+    regexp: "^export HTTP_PROXY="
+    line: "export HTTP_PROXY=\"{{docker_http_proxy}}\""
+    state: present
+  when: docker_http_proxy is defined and (docker_http_proxy != None)
+  notify:
+    - Restart docker
+  tags: proxy
+
+- name: Set docker HTTPS_PROXY if docker_https_proxy defined
+  lineinfile:
+    dest: /etc/default/docker
+    regexp: "^export HTTPS_PROXY="
+    line: "export HTTPS_PROXY=\"{{docker_https_proxy}}\""
+    state: present
+  when: docker_https_proxy is defined and (docker_https_proxy != None)
+  notify:
+    - Restart docker
+  tags: proxy
+
 - name: Start docker
   service:
     name: docker
@@ -214,5 +270,6 @@
   when: docker_group_members is defined
 
 - name: update facts if docker0 is not defined
-  action: setup filter="ansible_docker0"
+  setup:
+    filter: "ansible_docker0"
   when: ansible_docker0 is not defined

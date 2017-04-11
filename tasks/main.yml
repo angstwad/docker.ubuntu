@@ -126,7 +126,7 @@
     owner: root
     group: root
     mode: 0755
-  when: docker_opts != "" and is_systemd
+  when: (docker_opts != "" or (docker_http_proxy is defined and (docker_http_proxy != None)) or (docker_https_proxy is defined and (docker_https_proxy != None))) and is_systemd
 
 - name: Set docker daemon options (systemd)
   copy:
@@ -255,7 +255,7 @@
     regexp: "^export HTTP_PROXY="
     line: "export HTTP_PROXY=\"{{docker_http_proxy}}\""
     state: present
-  when: docker_http_proxy is defined and (docker_http_proxy != None)
+  when: docker_http_proxy is defined and (docker_http_proxy != None) and not is_systemd
   notify:
     - Restart docker
   tags: proxy
@@ -266,9 +266,24 @@
     regexp: "^export HTTPS_PROXY="
     line: "export HTTPS_PROXY=\"{{docker_https_proxy}}\""
     state: present
-  when: docker_https_proxy is defined and (docker_https_proxy != None)
+  when: docker_https_proxy is defined and (docker_https_proxy != None) and not is_systemd
   notify:
     - Restart docker
+  tags: proxy
+
+- name: Set docker HTTP(S)_PROXY if docker_http(s)_proxy defined (systemd)
+  copy:
+    content: |
+      [Service]
+      Environment="HTTP_PROXY={{ docker_http_proxy }} HTTPS_PROXY={{ docker_https_proxy | default('') }} NO_PROXY={{ docker_no_proxy | default('') }}"
+    dest: /etc/systemd/system/docker.service.d/proxy.conf
+    owner: root
+    group: root
+    mode: 0644
+  notify:
+    - Reload systemd
+    - Restart docker
+  when: ((docker_http_proxy is defined and (docker_http_proxy != None)) or (docker_https_proxy is defined and (docker_https_proxy != None))) and is_systemd
   tags: proxy
 
 - name: Start docker

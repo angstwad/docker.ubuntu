@@ -21,7 +21,7 @@ This role differs from other roles in that it specifically follows docker.io ins
 
 Applying the role to servers is pretty simple:
 ```
-- name: Install Docker on Rax Server
+- name: Install Docker
   hosts: all
   roles:
     - angstwad.docker_ubuntu
@@ -29,7 +29,7 @@ Applying the role to servers is pretty simple:
 
 Overriding the role's default variables is also pretty straightforward:
 ```
-- name: Install Docker on Rax Server
+- name: Install Docker
   hosts: all
   roles:
     - role: angstwad.docker_ubuntu

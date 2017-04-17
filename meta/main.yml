@@ -1,7 +1,7 @@
 ---
 galaxy_info:
   author: Paul Durivage
-  description: Docker on Ubuntu greater than 12.04
+  description: A comprehensive and (ideally) sane way to install Docker on Ubuntu 12.04+
   license: Apache v2.0
   min_ansible_version: 2.2
   platforms:

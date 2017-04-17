@@ -2,6 +2,7 @@
 # docker-engine is the default package name
 docker_pkg_name: docker-engine
 docker_apt_cache_valid_time: 600
+docker_aufs_enabled: true
 
 # docker dns path for docker.io package ( changed at ubuntu 14.04 from docker to docker.io )
 docker_defaults_file_path: /etc/default/docker

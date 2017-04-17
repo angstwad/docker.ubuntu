@@ -26,7 +26,7 @@ _pip_version_docker: >-
         else pip_version_docker }}
 
 # Compute the `docker` Python package's name according to its version.
-_pip_docker_package_name: "{{ 'docker-py' if pip_version_docker | version_compare('1.10.6', '<=') else 'docker' }}"
+_pip_docker_package_name: "{{ 'docker-py' if _pip_version_docker | version_compare('1.10.6', '<=') else 'docker' }}"
 
 # Determine whether to install the `docker` package or not. The `docker-compose` Python package has a dependency over the `docker` Python package.
 # So when installing the `docker-compose` package we'd rather let it handle the `docker` package version to prevent version mismatches.

@@ -34,6 +34,13 @@ boxes = [
     :cpu => "33",
     :ram => "256"
   },
+  {
+    :name => "ubuntu-1604-python3",
+    :box => "ubuntu/xenial64",
+    :ip => '10.0.77.15',
+    :cpu => "33",
+    :ram => "512"
+  },
 ]
 
 Vagrant.configure("2") do |config|
@@ -49,14 +56,12 @@ Vagrant.configure("2") do |config|
 
       vms.vm.network :private_network, ip: box[:ip]
 
-      # neccessary for ubuntu 16.04 and harmless for the rest
-      vms.vm.provision :shell do |shell|
-        shell.inline = "DEBIAN_FRONTEND=noninteractive apt-get -y install python-simplejson"
-      end
-
       vms.vm.provision :ansible do |ansible|
         ansible.playbook = "tests/vagrant.yml"
         ansible.verbose = "vv"
+        ansible.host_vars = {
+          "ubuntu-1604-python3" => {"ansible_python_interpreter" => "/usr/bin/python3"}
+        }
       end
     end
   end

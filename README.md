@@ -19,15 +19,8 @@ This role differs from other roles in that it specifically follows docker.io ins
 
 **Please see [this playbook](https://github.com/angstwad/ansible-docker-rackspace) as a more advanced example of how to utilize this role.**
 
-Applying the role to servers is pretty simple:
-```
-- name: Install Docker
-  hosts: all
-  roles:
-    - angstwad.docker_ubuntu
-```
+Applying the role to servers is pretty simple, as demonstrated above.  Overriding the default configration is done simply by overriding the role's default variables:
 
-Overriding the role's default variables is also pretty straightforward:
 ```
 - name: Install Docker
   hosts: all

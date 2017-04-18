@@ -50,7 +50,7 @@ Testing
 -------
 
 To test the role in a Vagrant environment just run `vagrant up`.  This will
-create three VMs:
+create some VMs:
 
 * Ubuntu 12.04
 * Ubuntu 14.04

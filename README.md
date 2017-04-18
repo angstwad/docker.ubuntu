@@ -54,6 +54,7 @@ create three VMs:
 
 * Ubuntu 12.04
 * Ubuntu 14.04
+* Ubuntu 16.04
 * Debian Jessie 8.5
 
 and it will provision them by applying this role with Ansible.

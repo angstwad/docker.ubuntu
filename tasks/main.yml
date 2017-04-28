@@ -41,7 +41,7 @@
   with_items:
     - linux-image-extra-{{ ansible_kernel }}
     - linux-image-extra-virtual
-  when: docker_aufs_enabled and ansible_distribution_version|version_compare('14.04', '>=')
+  when: docker_aufs_enabled and ansible_distribution_version|version_compare('14.04', '==')
   register: linux_image_extra_install
   ignore_errors: yes
 

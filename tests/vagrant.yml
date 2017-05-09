@@ -13,7 +13,7 @@
     docker_group_members:
       - "{{ ansible_ssh_user }}"
   roles:
-    - role: docker.ubuntu
+    - role: ../docker.ubuntu
       kernel_update_and_reboot_permitted: yes
 
   tasks:

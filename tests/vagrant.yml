@@ -12,6 +12,9 @@
   vars:
     docker_group_members:
       - "{{ ansible_ssh_user }}"
+    docker_extra_envs:
+      - { param: 'AWS_ACCESS_KEY_ID',  value: 'AEDMIDIEKDICOSLEID' }
+      - ( param: 'AWS_SECRET_ACCESS_KEY', value: '2340iklzmkwe09i6lknfgnmklmwelrgk' }
   roles:
     - role: docker.ubuntu
       kernel_update_and_reboot_permitted: yes

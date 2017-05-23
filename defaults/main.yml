@@ -35,6 +35,13 @@ docker_group_members: []
 docker_http_proxy:
 docker_https_proxy:
 
+# add extra environment variables like log driver key id and secrect key
+# example:
+# docker_extra_envs:
+#   - { param: 'AWS_ACCESS_KEY_ID',  value: 'AEDMIDIEKDICOSLEID' }
+#   - ( param: 'AWS_SECRET_ACCESS_KEY', value: '2340iklzmkwe09i6lknfgnmklmwelrgk' }
+docker_extra_envs: []
+
 # Flags for whether to install pip packages
 pip_install_pip: true
 pip_install_setuptools: true

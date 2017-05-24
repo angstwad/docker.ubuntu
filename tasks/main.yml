@@ -140,13 +140,13 @@
     - Restart docker
   when: docker_opts != "" and is_systemd
 
-  - name: Set docker daemon environment variables (systemd)
-    lineinfile:
-      dest: /etc/default/docker
-      regexp: "Environment {{ item.param }}="
-      line: 'Environment {{ item.param }}="{{ item.value }}"'
-    with_items: "{{ docker_extra_envs }}"
-    when: docker_extra_envs != []
+- name: Set docker daemon environment variables (systemd)
+  lineinfile:
+    dest: /etc/default/docker
+    regexp: "Environment {{ item.param }}="
+    line: 'Environment {{ item.param }}="{{ item.value }}"'
+  with_items: "{{ docker_extra_envs }}"
+  when: docker_extra_envs != []
 
 - name: Ensure docker daemon options used (systemd)
   template:

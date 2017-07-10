@@ -1,6 +1,13 @@
 ---
-# docker-engine is the default package name
-docker_pkg_name: docker-engine
+# uninstall previous versions of docker, but not by default
+# https://docs.docker.com/engine/installation/linux/docker-ce/ubuntu/#uninstall-old-versions
+uninstall_previous_docker_versions: false
+
+# assume that the desired version is community edition
+docker_edition: ce
+
+# docker-ce is the default package name
+docker_pkg_name: "{{ 'docker-ee' if docker_edition == 'ee' else 'docker-ce' }}"
 docker_apt_cache_valid_time: 600
 docker_aufs_enabled: true
 
@@ -10,11 +17,11 @@ docker_defaults_file_path: /etc/default/docker
 # Important if running Ubuntu 12.04-13.10 and ssh on a non-standard port
 ssh_port: 22
 # Place to get apt repository key
-apt_key_url: hkp://p80.pool.sks-keyservers.net:80
+apt_key_url: https://download.docker.com/linux/ubuntu/gpg
 # apt repository key signature
-apt_key_sig: 58118E89F3A912897C070ADBF76221572C52609D
-# Name of the apt repository for docker
-apt_repository: deb https://apt.dockerproject.org/repo {{ ansible_lsb.id|lower }}-{{ ansible_lsb.codename|lower }} main
+apt_key_sig: 9DC858229FC7DD38854AE2D88D81803C0EBFCD88
+# Name of the apt repository for classic docker or edition docker
+apt_repository: "deb [arch=amd64] https://download.docker.com/linux/ubuntu {{ ansible_lsb.codename|lower }} stable"
 # The following help expose a docker port or to add additional options when
 # running docker daemon.  The default is to not use any special options.
 #docker_opts: >

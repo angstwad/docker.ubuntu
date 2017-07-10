@@ -22,6 +22,16 @@
   include: kernel_check_and_update.yml
   when: kernel_update_and_reboot_permitted or install_kernel_extras
 
+- name: Uninstall old versions of Docker
+  apt:
+    name: "{{ item }}"
+    state: absent
+  with_items:
+    - docker
+    - docker-engine
+    - docker.io
+  when: uninstall_previous_docker_versions
+
 # Fix for https://github.com/docker/docker/issues/23347
 - name: Install dmsetup for Ubuntu 16.04
   apt:

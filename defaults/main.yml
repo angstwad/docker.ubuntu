@@ -20,8 +20,8 @@ ssh_port: 22
 apt_key_url: https://download.docker.com/linux/ubuntu/gpg
 # apt repository key signature
 apt_key_sig: 9DC858229FC7DD38854AE2D88D81803C0EBFCD88
-# Name of the apt repository for classic docker or edition docker
-apt_repository: "deb [arch=amd64] https://download.docker.com/linux/ubuntu {{ ansible_lsb.codename|lower }} stable"
+# Name of the apt repository for Docker CE or EE
+apt_repository: "deb [arch=amd64] https://download.docker.com/linux/{{ ansible_lsb.id|lower }} {{ ansible_lsb.codename|lower }} stable"
 # The following help expose a docker port or to add additional options when
 # running docker daemon.  The default is to not use any special options.
 #docker_opts: >

@@ -8,6 +8,15 @@ Installs Docker on:
 
 This role differs from other roles in that it specifically follows docker.io installation instructions for each distribution version.
 
+
+You can install docker on your local ubuntu instance with a single command:
+```bash
+sudo python2.7 -m pip install ansible && sudo ansible-galaxy install --force angstwad.docker_ubuntu && echo '- hosts: all
+  roles:
+      - angstwad.docker_ubuntu
+      ' > /tmp/docker_ubuntu.yml && sudo ansible-playbook /tmp/docker_ubuntu.yml -c local -i 'localhost,'
+```
+
 **Example Play**:
 ```
 ---

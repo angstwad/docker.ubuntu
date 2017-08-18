@@ -67,6 +67,13 @@
   command: dmsetup mknodes
   when: dmsetup_result.changed
 
+- name: Ensure GNUPG-curl is available for https
+  apt:
+    pkg: gnupg-curl
+    state: present
+    update_cache: yes
+    cache_valid_time: "{{ docker_apt_cache_valid_time }}"
+
 - name: Add Docker repository key
   apt_key:
     id: "{{ apt_key_sig }}"

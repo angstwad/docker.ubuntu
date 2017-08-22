@@ -63,6 +63,16 @@
     cache_valid_time: "{{ docker_apt_cache_valid_time }}"
   when: linux_image_extra_install|failed
 
+- name: Install packages to allow apt to use a repository over HTTPS
+  apt:
+    name: "{{ item }}"
+    state: present
+  with_items:
+    - apt-transport-https
+    - ca-certificates
+    - curl
+    - software-properties-common
+
 - name: Run dmsetup for Ubuntu 16.04
   command: dmsetup mknodes
   when: dmsetup_result.changed

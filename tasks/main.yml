@@ -73,7 +73,7 @@
   apt:
     name: "{{ docker_pkg_name }}"
     state: "{{ 'latest' if update_docker_package else 'present' }}"
-    update_cache: "{{ update_docker_package }}"
+    update_cache: "{{ update_docker_package_cache }}"
     cache_valid_time: "{{ docker_apt_cache_valid_time }}"
 
 - name: Set systemd playbook var

@@ -1,6 +1,8 @@
 ---
 # docker-engine is the default package name
-docker_pkg_name: docker-engine
+docker_pkg_version: 17.05.0
+docker_pkg_edition: ce
+docker_pkg_name: docker-engine={{ docker_pkg_version }}~{{ docker_pkg_edition }}-0~{{ansible_lsb.id|lower }}-{{ ansible_lsb.codename|lower }}
 docker_apt_cache_valid_time: 600
 
 # docker dns path for docker.io package ( changed at ubuntu 14.04 from docker to docker.io )

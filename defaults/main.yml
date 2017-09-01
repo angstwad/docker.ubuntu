@@ -4,7 +4,7 @@ ubuntu_version: {{ansible_lsb.id|lower }}-{{ ansible_lsb.codename|lower }}
 docker_pkg_version: 17.05.0
 docker_pkg_edition: ce
 docker_pkg_apt_version: {{ docker_pkg_version }}~{{ docker_pkg_edition }}-0~{{ ubuntu_version }}
-docker_pkg_name: docker-engine={{ docker_pkg_apt_version }}
+docker_pkg_name: docker-engine{{ '' if docker_pkg_version=='latest' else '=' + docker_pkg_apt_version }}
 docker_apt_cache_valid_time: 600
 
 # docker dns path for docker.io package ( changed at ubuntu 14.04 from docker to docker.io )
@@ -55,8 +55,7 @@ pip_version_docker_compose: latest
 # Warning: Use with caution in production environments.
 kernel_update_and_reboot_permitted: no
 
-# Set to 'yes' or 'true' to enable updates (sets 'latest' in apt module)
-update_docker_package: no
+# Set to 'yes' or 'true' to enable cache updates 
 update_docker_package_cache: yes
 
 # Change these to 'present' if you're running Ubuntu 12.04-13.10 and are fine with less-than-latest packages

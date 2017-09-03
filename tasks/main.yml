@@ -115,48 +115,41 @@
     is_systemd: true
   when: ( ansible_lsb.id|lower == "ubuntu" and ansible_distribution_version|version_compare('15.04', '>=') or ansible_lsb.id|lower == "debian" )
 
-- name: Set docker daemon options
-  copy:
-    content: "DOCKER_OPTS=\"{{ docker_opts.rstrip() }}\""
-    dest: /etc/default/docker
-    owner: root
-    group: root
-    mode: 0644
-  notify:
-    - Restart docker
-  when: docker_opts != "" and not is_systemd
-
-- name: Create systemd configuration directory for Docker service (systemd)
+# https://github.com/moby/moby/issues/25471#issuecomment-263101090
+- name: Creates override directory (systemd)
   file:
-    dest: /etc/systemd/system/docker.service.d
+    path: /etc/systemd/system/docker.service.d
     state: directory
     owner: root
     group: root
     mode: 0755
-  when: docker_opts != "" and is_systemd
+  when: daemon_json != "" and is_systemd
 
-- name: Set docker daemon options (systemd)
+- name: Set docker daemon override (systemd)
   copy:
     content: |
       [Service]
-      Environment="DOCKER_OPTS={{ docker_opts.rstrip() }}"
-    dest: /etc/systemd/system/docker.service.d/env.conf
+      ExecStart=
+      ExecStart=/usr/bin/dockerd
+    dest: /etc/systemd/system/docker.service.d/override.conf
     owner: root
     group: root
     mode: 0644
   notify:
     - Reload systemd
     - Restart docker
-  when: docker_opts != "" and is_systemd
+  when: daemon_json != "" and is_systemd
 
-- name: Ensure docker daemon options used (systemd)
-  template:
-    src: docker.conf
-    dest: /etc/systemd/system/docker.service.d/docker.conf
+- name: Set /etc/docker/daemon.json
+  copy:
+    content: "{{ daemon_json | to_nice_json }}"
+    dest: /etc/docker/daemon.json
+    owner: root
+    group: root
+    mode: 0644
   notify:
-    - Reload systemd
     - Restart docker
-  when: docker_opts != "" and is_systemd
+  when: daemon_json != ""
 
 - name: Fix DNS in docker.io
   lineinfile:

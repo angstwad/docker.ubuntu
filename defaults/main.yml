@@ -1,6 +1,10 @@
 ---
+ubuntu_version: {{ansible_lsb.id|lower }}-{{ ansible_lsb.codename|lower }}
 # docker-engine is the default package name
-docker_pkg_name: docker-engine
+docker_pkg_version: 17.05.0
+docker_pkg_edition: ce
+docker_pkg_apt_version: {{ docker_pkg_version }}~{{ docker_pkg_edition }}-0~{{ ubuntu_version }}
+docker_pkg_name: docker-engine{{ '' if docker_pkg_version=='latest' else '=' + docker_pkg_apt_version }}
 docker_apt_cache_valid_time: 600
 
 # docker dns path for docker.io package ( changed at ubuntu 14.04 from docker to docker.io )
@@ -13,7 +17,7 @@ apt_key_url: hkp://p80.pool.sks-keyservers.net:80
 # apt repository key signature
 apt_key_sig: 58118E89F3A912897C070ADBF76221572C52609D
 # Name of the apt repository for docker
-apt_repository: deb https://apt.dockerproject.org/repo {{ ansible_lsb.id|lower }}-{{ ansible_lsb.codename|lower }} main
+apt_repository: deb https://apt.dockerproject.org/repo {{ ubuntu_version }} main
 # The following help expose a docker port or to add additional options when
 # running docker daemon.  The default is to not use any special options.
 #docker_opts: >
@@ -51,8 +55,8 @@ pip_version_docker_compose: latest
 # Warning: Use with caution in production environments.
 kernel_update_and_reboot_permitted: no
 
-# Set to 'yes' or 'true' to enable updates (sets 'latest' in apt module)
-update_docker_package: no
+# Set to 'yes' or 'true' to enable cache updates 
+update_docker_package_cache: yes
 
 # Change these to 'present' if you're running Ubuntu 12.04-13.10 and are fine with less-than-latest packages
 kernel_pkg_state: latest

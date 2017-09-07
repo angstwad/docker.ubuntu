@@ -69,12 +69,21 @@
     update_cache: yes
     state: present
 
-- name: Install (or update) docker package
+- name: Install (or update) docker package 12.04
+  apt:
+    name: "{{ old_docker_pkg_name }}"
+    state: "{{ 'latest' if old_docker_pkg_version=='latest' else 'present' }}"
+    update_cache: "{{ update_docker_package_cache }}"
+    cache_valid_time: "{{ docker_apt_cache_valid_time }}"
+  when: ansible_distribution_version|version_compare('12.04', '=')
+
+- name: Install (or update) docker package 14.04+
   apt:
     name: "{{ docker_pkg_name }}"
     state: "{{ 'latest' if docker_pkg_version=='latest' else 'present' }}"
     update_cache: "{{ update_docker_package_cache }}"
     cache_valid_time: "{{ docker_apt_cache_valid_time }}"
+  when: ansible_distribution_version|version_compare('12.04', '!=')
 
 - name: Set systemd playbook var
   set_fact:

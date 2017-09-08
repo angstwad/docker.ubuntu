@@ -14,6 +14,7 @@ docker_aufs_enabled: true
 # docker dns path for docker.io package ( changed at ubuntu 14.04 from docker to docker.io )
 docker_defaults_file_path: /etc/default/docker
 
+# The package name required for gnupg curl
 apt_gnupg_curl_pkg: gnupg-curl
 
 # Important if running Ubuntu 12.04-13.10 and ssh on a non-standard port

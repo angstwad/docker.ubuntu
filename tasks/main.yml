@@ -69,7 +69,7 @@
 
 - name: Ensure GNUPG-curl is available for https
   apt:
-    pkg: gnupg-curl
+    pkg: "{{ apt_gnupg_curl_pkg }}"
     state: present
     update_cache: yes
     cache_valid_time: "{{ docker_apt_cache_valid_time }}"

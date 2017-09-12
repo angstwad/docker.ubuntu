@@ -1,15 +1,15 @@
 ---
-ubuntu_version: {{ansible_lsb.id|lower }}-{{ ansible_lsb.codename|lower }}
+ubuntu_version: "{{ansible_lsb.id|lower }}-{{ ansible_lsb.codename|lower }}"
 # docker-engine is the default package name
 docker_pkg_version: 17.05.0
 docker_pkg_edition: ce
-docker_pkg_apt_version: {{ docker_pkg_version }}~{{ docker_pkg_edition }}-0~{{ ubuntu_version }}
-docker_pkg_name: docker-engine{{ '' if docker_pkg_version=='latest' else '=' + docker_pkg_apt_version }}
+docker_pkg_apt_version: "{{ docker_pkg_version }}~{{ docker_pkg_edition }}-0~{{ ubuntu_version }}"
+docker_pkg_name: "docker-engine{{ '' if docker_pkg_version=='latest' else '=' + docker_pkg_apt_version }}"
 docker_apt_cache_valid_time: 600
     
 # For 12.04
-old_docker_pkg_apt_version: 17.04.0~{{ docker_pkg_edition }}-0~{{ ubuntu_version }}
-old_docker_pkg_name: docker-engine{{ '' if docker_pkg_version=='latest' else '=' + old_docker_pkg_apt_version }}
+old_docker_pkg_apt_version: "17.04.0~{{ docker_pkg_edition }}-0~{{ ubuntu_version }}"
+old_docker_pkg_name: "docker-engine{{ '' if docker_pkg_version=='latest' else '=' + old_docker_pkg_apt_version }}"
 
 # docker dns path for docker.io package ( changed at ubuntu 14.04 from docker to docker.io )
 docker_defaults_file_path: /etc/default/docker

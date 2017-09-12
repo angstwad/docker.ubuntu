@@ -155,15 +155,13 @@
   when: "dns_fix|changed"
 
 # We must install pip via apt before we can use the pip module below
-- name: Install pip, python-dev package with apt
+- name: "Install {{ _python_packages | join(', ') }} packages with apt"
   apt:
     pkg: "{{ item }}"
     state: latest
     update_cache: yes
     cache_valid_time: "{{ docker_apt_cache_valid_time }}"
-  with_items:
-    - python-dev
-    - python-pip
+  with_items: "{{ _python_packages }}"
 
 # Display an informative message if the docker-compose version needs to be downgraded
 - name: Docker-compose version downgrade

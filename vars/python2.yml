@@ -1,0 +1,8 @@
+
+# Python2 specific variables.
+
+_python_packages:
+  - python-dev
+  - python-pip
+
+_pip_executable: pip

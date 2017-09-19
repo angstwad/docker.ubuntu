@@ -3,10 +3,10 @@
 - name: "Include proper python vars file"
   include_vars: "{{ python_vars_file }}"
 
-- name: Fail if not a new release of Ubuntu
+- name: Fail if not a supported release of Ubuntu
   fail:
     msg: "{{ ansible_distribution_version }} is not an acceptable version of Ubuntu for this role"
-  when: ansible_lsb.id|lower == "ubuntu" and ( ansible_distribution_version|version_compare('12.04', '<') or ansible_distribution_version|version_compare('12.10', '=') )
+  when: ansible_lsb.id|lower == "ubuntu" and ansible_distribution_version|version_compare('14.04', '<')
 
 - name: Fail if not a new release of Debian
   fail:

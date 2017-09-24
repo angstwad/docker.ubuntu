@@ -73,6 +73,15 @@
     state: present
     update_cache: yes
     cache_valid_time: "{{ docker_apt_cache_valid_time }}"
+  when: ansible_lsb.codename|lower != "stretch"  # Debian Stretch does not have gnupg-curl, see below to at least install curl
+
+- name: Ensure at least curl is available for https
+  apt:
+    pkg: "curl"
+    state: present
+    update_cache: yes
+    cache_valid_time: "{{ docker_apt_cache_valid_time }}"
+  when: ansible_lsb.codename|lower == "stretch"
 
 - name: Add Docker repository key
   apt_key:

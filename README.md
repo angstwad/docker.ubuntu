@@ -56,6 +56,7 @@ create some VMs:
 * Ubuntu 14.04
 * Ubuntu 16.04
 * Debian Jessie 8.5
+* Debian Stretch 9.0
 
 and it will provision them by applying this role with Ansible.
 

@@ -51,6 +51,7 @@ docker_group_members: []
 # if docker_http_proxy is undefined the role will not set/modify any ENV vars
 docker_http_proxy:
 docker_https_proxy:
+docker_no_proxy:
 
 # Flags for whether to install pip packages
 pip_install_pip: true

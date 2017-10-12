@@ -3,12 +3,15 @@ docker_ubuntu
 
 Installs Docker on:
 
-* Ubuntu 12.04+
-* Debian 8.5+
+* Ubuntu 14.04+
+* Debian Jessie (8.5+) and Stretch
 
-This role differs from other roles in that it specifically follows docker.io installation instructions for each distribution version.
+This role attempts to make every reasonable effort to follow Docker's official installation instructions for Ubuntu and Debian.  
 
 **Example Play**:
+
+Very basic install utilizing the role defaults:
+
 ```
 ---
 - name: Run docker.ubuntu
@@ -17,9 +20,7 @@ This role differs from other roles in that it specifically follows docker.io ins
     - angstwad.docker_ubuntu
 ```
 
-**Please see [this playbook](https://github.com/angstwad/ansible-docker-rackspace) as a more advanced example of how to utilize this role.**
-
-Applying the role to servers is pretty simple, as demonstrated above.  Overriding the default configration is done simply by overriding the role's default variables:
+Overriding the default configration is done by overriding the role's default variables:
 
 ```
 - name: Install Docker
@@ -56,6 +57,7 @@ create some VMs:
 * Ubuntu 14.04
 * Ubuntu 16.04
 * Debian Jessie 8.5
+* Debian Stretch 9.0
 
 and it will provision them by applying this role with Ansible.
 

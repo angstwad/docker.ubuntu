@@ -3,10 +3,10 @@
 - name: "Include proper python vars file"
   include_vars: "{{ python_vars_file }}"
 
-- name: Fail if not a new release of Ubuntu
+- name: Fail if not a supported release of Ubuntu
   fail:
     msg: "{{ ansible_distribution_version }} is not an acceptable version of Ubuntu for this role"
-  when: ansible_lsb.id|lower == "ubuntu" and ( ansible_distribution_version|version_compare('12.04', '<') or ansible_distribution_version|version_compare('12.10', '=') )
+  when: ansible_lsb.id|lower == "ubuntu" and ansible_distribution_version|version_compare('14.04', '<')
 
 - name: Fail if not a new release of Debian
   fail:
@@ -67,6 +67,22 @@
   command: dmsetup mknodes
   when: dmsetup_result.changed
 
+- name: Ensure GNUPG-curl is available for https
+  apt:
+    pkg: "{{ apt_gnupg_curl_pkg }}"
+    state: present
+    update_cache: yes
+    cache_valid_time: "{{ docker_apt_cache_valid_time }}"
+  when: ansible_lsb.codename|lower != "stretch"  # Debian Stretch does not have gnupg-curl, see below to at least install curl
+
+- name: Ensure at least curl is available for https
+  apt:
+    pkg: "curl"
+    state: present
+    update_cache: yes
+    cache_valid_time: "{{ docker_apt_cache_valid_time }}"
+  when: ansible_lsb.codename|lower == "stretch"
+
 - name: Add Docker repository key
   apt_key:
     id: "{{ apt_key_sig }}"
@@ -102,54 +118,51 @@
   set_fact:
     is_systemd: false
   changed_when: false
+  tags: always
 
 - name: Set systemd playbook var
   set_fact:
     is_systemd: true
   when: ( ansible_lsb.id|lower == "ubuntu" and ansible_distribution_version|version_compare('15.04', '>=') or ansible_lsb.id|lower == "debian" )
+  tags: always
 
-- name: Set docker daemon options
-  copy:
-    content: "DOCKER_OPTS=\"{{ docker_opts.rstrip() }}\""
-    dest: /etc/default/docker
-    owner: root
-    group: root
-    mode: 0644
-  notify:
-    - Restart docker
-  when: docker_opts != "" and not is_systemd
-
-- name: Create systemd configuration directory for Docker service (systemd)
+# https://github.com/moby/moby/issues/25471#issuecomment-263101090
+- name: Creates override directory (systemd)
   file:
-    dest: /etc/systemd/system/docker.service.d
+    path: /etc/systemd/system/docker.service.d
     state: directory
     owner: root
     group: root
     mode: 0755
-  when: (docker_opts != "" or (docker_http_proxy is defined and (docker_http_proxy != None)) or (docker_https_proxy is defined and (docker_https_proxy != None))) and is_systemd
+  when:
+    - is_systemd
+    - daemon_json != '' or (docker_http_proxy|default('')) != '' or (docker_https_proxy|default('')) != ''
 
-- name: Set docker daemon options (systemd)
+- name: Set docker daemon override (systemd)
   copy:
     content: |
       [Service]
-      Environment="DOCKER_OPTS={{ docker_opts.rstrip() }}"
-    dest: /etc/systemd/system/docker.service.d/env.conf
+      ExecStart=
+      ExecStart=/usr/bin/dockerd
+    dest: /etc/systemd/system/docker.service.d/override.conf
     owner: root
     group: root
     mode: 0644
   notify:
     - Reload systemd
     - Restart docker
-  when: docker_opts != "" and is_systemd
+  when: daemon_json != "" and is_systemd
 
-- name: Ensure docker daemon options used (systemd)
-  template:
-    src: docker.conf
-    dest: /etc/systemd/system/docker.service.d/docker.conf
+- name: Set /etc/docker/daemon.json
+  copy:
+    content: "{{ daemon_json | to_nice_json }}"
+    dest: /etc/docker/daemon.json
+    owner: root
+    group: root
+    mode: 0644
   notify:
-    - Reload systemd
     - Restart docker
-  when: docker_opts != "" and is_systemd
+  when: daemon_json != ""
 
 - name: Fix DNS in docker.io
   lineinfile:
@@ -255,7 +268,9 @@
     regexp: "^export HTTP_PROXY="
     line: "export HTTP_PROXY=\"{{docker_http_proxy}}\""
     state: present
-  when: docker_http_proxy is defined and (docker_http_proxy != None) and not is_systemd
+  when:
+    - not is_systemd
+    - (docker_http_proxy|default('')) != ''
   notify:
     - Restart docker
   tags: proxy
@@ -266,7 +281,9 @@
     regexp: "^export HTTPS_PROXY="
     line: "export HTTPS_PROXY=\"{{docker_https_proxy}}\""
     state: present
-  when: docker_https_proxy is defined and (docker_https_proxy != None) and not is_systemd
+  when:
+    - not is_systemd
+    - (docker_https_proxy|default('')) != ''
   notify:
     - Restart docker
   tags: proxy
@@ -283,7 +300,9 @@
   notify:
     - Reload systemd
     - Restart docker
-  when: ((docker_http_proxy is defined and (docker_http_proxy != None)) or (docker_https_proxy is defined and (docker_https_proxy != None))) and is_systemd
+  when:
+    - is_systemd
+    - (docker_http_proxy|default('')) != '' or (docker_https_proxy|default('')) != ''
   tags: proxy
 
 - name: Start docker

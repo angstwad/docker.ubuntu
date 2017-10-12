@@ -7,38 +7,38 @@ ENV['ANSIBLE_ROLES_PATH'] = "../"
 
 boxes = [
   {
-    :name => "ubuntu-1204",
-    :box => "ubuntu/precise64",
-    :ip => '10.0.77.11',
-    :cpu => "33",
-    :ram => "256"
-  },
-  {
     :name => "ubuntu-1404",
     :box => "ubuntu/trusty64",
     :ip => '10.0.77.12',
-    :cpu => "33",
+    :cpu => "20",
     :ram => "256"
   },
   {
     :name => "ubuntu-1604",
     :box => "ubuntu/xenial64",
     :ip => '10.0.77.13',
-    :cpu => "33",
+    :cpu => "20",
     :ram => "512"
   },
   {
     :name => "debian-jessie",
     :box => "debian/jessie64",
     :ip => '10.0.77.14',
-    :cpu => "33",
+    :cpu => "20",
+    :ram => "256"
+  },
+  {
+    :name => "debian-stretch",
+    :box => "debian/stretch64",
+    :ip => '10.0.77.16',
+    :cpu => "20",
     :ram => "256"
   },
   {
     :name => "ubuntu-1604-python3",
     :box => "ubuntu/xenial64",
     :ip => '10.0.77.15',
-    :cpu => "33",
+    :cpu => "20",
     :ram => "512"
   },
 ]

@@ -126,17 +126,27 @@
   when: ( ansible_lsb.id|lower == "ubuntu" and ansible_distribution_version|version_compare('15.04', '>=') or ansible_lsb.id|lower == "debian" )
   tags: always
 
+- name: Set docker_http_proxy_defined flag
+  set_fact:
+    docker_http_proxy_defined: "{{ docker_http_proxy is defined and docker_http_proxy is not none and docker_http_proxy != '' }}"
+  tags: proxy
+
+- name: Set docker_https_proxy_defined flag
+  set_fact:
+    docker_https_proxy_defined: "{{ docker_https_proxy is defined and docker_https_proxy is not none and docker_https_proxy != '' }}"
+  tags: proxy
+
 # https://github.com/moby/moby/issues/25471#issuecomment-263101090
 - name: Creates override directory (systemd)
   file:
     path: /etc/systemd/system/docker.service.d
-    state: directory
+    state: "{{ daemon_json is not none or docker_http_proxy_defined or docker_https_proxy_defined | ternary('directory', 'absent') }}"
     owner: root
     group: root
     mode: 0755
   when:
     - is_systemd
-    - daemon_json != '' or (docker_http_proxy|default('')) != '' or (docker_https_proxy|default('')) != ''
+  tags: proxy
 
 - name: Set docker daemon override (systemd)
   copy:
@@ -151,7 +161,7 @@
   notify:
     - Reload systemd
     - Restart docker
-  when: daemon_json != "" and is_systemd
+  when: daemon_json is not none and is_systemd
 
 - name: Set /etc/docker/daemon.json
   copy:
@@ -162,7 +172,7 @@
     mode: 0644
   notify:
     - Restart docker
-  when: daemon_json != ""
+  when: daemon_json is not none
 
 - name: Fix DNS in docker.io
   lineinfile:
@@ -265,12 +275,11 @@
 - name: Set docker HTTP_PROXY if docker_http_proxy defined
   lineinfile:
     dest: /etc/default/docker
-    regexp: "^export HTTP_PROXY="
-    line: "export HTTP_PROXY=\"{{docker_http_proxy}}\""
-    state: present
+    regexp: "^export http_proxy="
+    line: "export http_proxy=\"{{docker_http_proxy}}\""
+    state: "{{ docker_http_proxy_defined | ternary('present', 'absent') }}"
   when:
     - not is_systemd
-    - (docker_http_proxy|default('')) != ''
   notify:
     - Restart docker
   tags: proxy
@@ -278,12 +287,11 @@
 - name: Set docker HTTPS_PROXY if docker_https_proxy defined
   lineinfile:
     dest: /etc/default/docker
-    regexp: "^export HTTPS_PROXY="
-    line: "export HTTPS_PROXY=\"{{docker_https_proxy}}\""
-    state: present
+    regexp: "^export https_proxy="
+    line: "export https_proxy=\"{{docker_https_proxy}}\""
+    state: "{{ docker_https_proxy_defined | ternary('present', 'absent') }}"
   when:
     - not is_systemd
-    - (docker_https_proxy|default('')) != ''
   notify:
     - Restart docker
   tags: proxy
@@ -292,7 +300,7 @@
   copy:
     content: |
       [Service]
-      Environment="HTTP_PROXY={{ docker_http_proxy }} HTTPS_PROXY={{ docker_https_proxy | default('') }} NO_PROXY={{ docker_no_proxy | default('') }}"
+      Environment="{% if docker_http_proxy_defined %}http_proxy={{ docker_http_proxy }}{% endif %} {% if docker_https_proxy_defined %}https_proxy={{ docker_https_proxy }}{% endif %} no_proxy={{ docker_no_proxy | default('') }}"
     dest: /etc/systemd/system/docker.service.d/proxy.conf
     owner: root
     group: root
@@ -302,7 +310,19 @@
     - Restart docker
   when:
     - is_systemd
-    - (docker_http_proxy|default('')) != '' or (docker_https_proxy|default('')) != ''
+    - docker_http_proxy_defined or docker_https_proxy_defined
+  tags: proxy
+
+- name: Remove docker HTTP(S)_PROXY if docker_http(s)_proxy undefined (systemd)
+  file:
+    path: /etc/systemd/system/docker.service.d/proxy.conf
+    state: absent
+  notify:
+    - Reload systemd
+    - Restart docker
+  when:
+    - is_systemd
+    - not docker_http_proxy_defined and not docker_https_proxy_defined
   tags: proxy
 
 - name: Start docker

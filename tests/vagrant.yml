@@ -31,3 +31,9 @@
         name: foobar
         state: absent
       when: container_creation.changed
+
+    - name: Remove the dummy image
+      docker_image:
+        name: busybox
+        state: absent
+      when: container_creation.changed

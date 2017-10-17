@@ -37,7 +37,7 @@ apt_repository: "deb [arch=amd64] https://download.docker.com/linux/{{ ansible_l
 #  log-opts:
 #      max-file: "3"
 #      max-size: "10m"
-daemon_json: ""
+daemon_json:
 
 # List of users to be added to 'docker' system group (disabled by default)
 # SECURITY WARNING: 

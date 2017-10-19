@@ -140,7 +140,7 @@
 - name: Creates override directory (systemd)
   file:
     path: /etc/systemd/system/docker.service.d
-    state: "{{ daemon_json is not none or docker_http_proxy_defined or docker_https_proxy_defined | ternary('directory', 'absent') }}"
+    state: "{{ (daemon_json is not none or docker_http_proxy_defined or docker_https_proxy_defined)|ternary('directory', 'absent') }}"
     owner: root
     group: root
     mode: 0755

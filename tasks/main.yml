@@ -32,16 +32,6 @@
     - docker.io
   when: uninstall_previous_docker_versions
 
-# Fix for https://github.com/docker/docker/issues/23347
-- name: Install dmsetup for Ubuntu 16.04
-  apt:
-    pkg: dmsetup
-    state: "{{ dmsetup_pkg_state }}"
-    update_cache: "{{ 'yes' if dmsetup_pkg_state=='latest' else 'no' }}"
-    cache_valid_time: "{{ docker_apt_cache_valid_time }}"
-  register: dmsetup_result
-  when: ansible_distribution_version|version_compare('16.04', '=')
-
 - name: Install linux-image-extra-* packages to enable AuFS driver
   apt:
     pkg: "{{ item }}"
@@ -63,26 +53,13 @@
     cache_valid_time: "{{ docker_apt_cache_valid_time }}"
   when: linux_image_extra_install|failed
 
-- name: Run dmsetup for Ubuntu 16.04
-  command: dmsetup mknodes
-  when: dmsetup_result.changed
-
-- name: Ensure GNUPG-curl is available for https
+- name: Ensure dirmngr is available
   apt:
-    pkg: "{{ apt_gnupg_curl_pkg }}"
+    pkg: "{{ apt_dirmngr_pkg }}"
     state: present
     update_cache: yes
     cache_valid_time: "{{ docker_apt_cache_valid_time }}"
-  when: ansible_lsb.codename|lower != "stretch"  # Debian Stretch does not have gnupg-curl, see below to at least install curl
-
-- name: Ensure at least curl is available for https
-  apt:
-    pkg: "curl"
-    state: present
-    update_cache: yes
-    cache_valid_time: "{{ docker_apt_cache_valid_time }}"
-  when: ansible_lsb.codename|lower == "stretch"
-
+  
 - name: Add Docker repository key
   apt_key:
     id: "{{ apt_key_sig }}"
@@ -92,7 +69,7 @@
   ignore_errors: true
 
 - name: Alternative | Add Docker repository key
-  shell: "curl -sSL {{ apt_key_url }} | sudo apt-key add -"
+  shell: "apt-key adv --fetch-keys {{ apt-key-url }}"
   when: add_repository_key|failed
 
 - name: HTTPS APT transport for Docker repository
@@ -123,7 +100,7 @@
 - name: Set systemd playbook var
   set_fact:
     is_systemd: true
-  when: ( ansible_lsb.id|lower == "ubuntu" and ansible_distribution_version|version_compare('15.04', '>=') or ansible_lsb.id|lower == "debian" )
+  when: ( ansible_distribution_release == "Ubuntu" and ansible_distribution_version|version_compare('15.04', '>=') or ansible_distribution == "Debian" )
   tags: always
 
 - name: Set docker_http_proxy_defined flag

@@ -59,7 +59,7 @@
     state: present
     update_cache: yes
     cache_valid_time: "{{ docker_apt_cache_valid_time }}"
-  
+
 - name: Add Docker repository key
   apt_key:
     id: "{{ apt_key_sig }}"
@@ -100,7 +100,7 @@
 - name: Set systemd playbook var
   set_fact:
     is_systemd: true
-  when: ( ansible_distribution_release == "Ubuntu" and ansible_distribution_version|version_compare('15.04', '>=') or ansible_distribution == "Debian" )
+  when: ( ansible_distribution == "Ubuntu" and ansible_distribution_version|version_compare('15.04', '>=') or ansible_distribution == "Debian" )
   tags: always
 
 - name: Set docker_http_proxy_defined flag

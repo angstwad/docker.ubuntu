@@ -277,7 +277,9 @@
   copy:
     content: |
       [Service]
-      Environment="{% if docker_http_proxy_defined %}http_proxy={{ docker_http_proxy }}{% endif %} {% if docker_https_proxy_defined %}https_proxy={{ docker_https_proxy }}{% endif %} no_proxy={{ docker_no_proxy | default('') }}"
+      Environment="{% if docker_http_proxy_defined %}http_proxy={{ docker_http_proxy }}{% endif %}"
+      Environment="{% if docker_https_proxy_defined %}https_proxy={{ docker_https_proxy }}{% endif %}"
+      Environment="no_proxy={{ docker_no_proxy | default('') }}"
     dest: /etc/systemd/system/docker.service.d/proxy.conf
     owner: root
     group: root

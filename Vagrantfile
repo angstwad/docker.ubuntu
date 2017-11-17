@@ -62,7 +62,7 @@ Vagrant.configure("2") do |config|
         ansible.host_vars = {
           "ubuntu-1604-python3" => {
             "ansible_python_interpreter" => "/usr/bin/python3",
-            "ansible_ssh_user" => "ubuntu"
+            # "ansible_user" => "ubuntu"
           }
         }
         ansible.raw_arguments  = [

@@ -11,7 +11,7 @@
   become: yes
   vars:
     docker_group_members:
-      - "{{ ansible_ssh_user }}"
+      - "{{ ansible_user }}"
   roles:
     - role: docker.ubuntu
       kernel_update_and_reboot_permitted: yes

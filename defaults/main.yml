@@ -26,7 +26,8 @@ apt_key_sig: 9DC858229FC7DD38854AE2D88D81803C0EBFCD88
 # apt keyring file
 keyring: "/etc/apt/trusted.gpg.d/docker.gpg"
 # Name of the apt repository for Docker CE or EE
-apt_repository: "deb [arch=amd64] https://download.docker.com/linux/{{ ansible_distribution|lower }} {{ ansible_distribution_release|lower }} stable"
+apt_repository_arch: "amd64"
+apt_repository: "deb [arch={{ apt_repository_arch }}] https://download.docker.com/linux/{{ ansible_distribution|lower }} {{ ansible_distribution_release|lower }} stable"
 
 # daemon_json allows you to configure the daemon with the daemon.json file.
 # https://docs.docker.com/engine/reference/commandline/dockerd/#on-linux

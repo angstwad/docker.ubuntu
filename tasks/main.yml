@@ -69,7 +69,7 @@
   ignore_errors: true
 
 - name: Alternative | Add Docker repository key
-  shell: "apt-key adv --fetch-keys {{ apt-key-url }}"
+  shell: "apt-key adv --fetch-keys {{ apt_key_url }}"
   when: add_repository_key|failed
 
 - name: HTTPS APT transport for Docker repository

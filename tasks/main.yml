@@ -140,6 +140,14 @@
     - Restart docker
   when: daemon_json is not none and is_systemd
 
+- name: Ensure /etc/docker is present
+  file:
+    path: /etc/docker
+    state: directory
+    owner: root
+    group: root
+    mode: 0755
+
 - name: Set /etc/docker/daemon.json
   copy:
     content: "{{ daemon_json | to_nice_json }}"

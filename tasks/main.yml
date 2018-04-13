@@ -330,3 +330,19 @@
   setup:
     filter: "ansible_docker0"
   when: ansible_docker0 is not defined
+
+- name: Add different cidr for docker bridge
+  copy:
+    content: |
+      {
+        "bip": "{{ docker_bip }}"
+      }
+    dest: /etc/docker/daemon.json
+  when: docker_bip is not none
+  notify:
+    - Restart docker
+
+# Flush handlers so things like proxy settings are picked up or new bridge ip
+- name: Force handler flush so the config is picked up
+  meta: flush_handlers
+  when: docker_flush_handlers

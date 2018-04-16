@@ -316,6 +316,7 @@
   service:
     name: docker
     state: started
+  when: start_docker_daemon
 
   # ATTENTION: this task can potentially create new users!
 - name: Add users to the docker group

@@ -102,6 +102,6 @@ install_kernel_extras: false
 install_xorg_pkgs: false
 
 # Set to 'no' if docker daemon shall not be started.
-# (e.g. in case of a machine which only controlls other docker hosts via docker-machine)
+# (e.g. in case of a machine which only controls other docker hosts via docker-machine)
 start_docker_daemon: true
 

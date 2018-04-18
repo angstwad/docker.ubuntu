@@ -20,7 +20,7 @@ apt_dirmngr_pkg: dirmngr
 # Important if running Ubuntu 12.04-13.10 and ssh on a non-standard port
 ssh_port: 22
 # Place to get apt repository key
-apt_key_url: "hkp://ha.pool.sks-keyservers.net"
+apt_key_url: "http://ha.pool.sks-keyservers.net"
 # apt repository key signature
 apt_key_sig: 9DC858229FC7DD38854AE2D88D81803C0EBFCD88
 # apt keyring file

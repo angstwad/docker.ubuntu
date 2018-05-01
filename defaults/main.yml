@@ -56,13 +56,6 @@ docker_http_proxy:
 docker_https_proxy:
 docker_no_proxy:
 
-# Optionally allow the bridge IP to change, to prevent conflicts or allow more control
-docker_bip:
-
-# Flag to determine if we should flush handlers mid way through role. This is useful if we want docker to make use of our new
-# options right away
-docker_flush_handlers: true
-
 # Flags for whether to install pip packages
 pip_install_pip: true
 pip_install_setuptools: true

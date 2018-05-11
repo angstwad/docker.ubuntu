@@ -6,7 +6,9 @@ uninstall_previous_docker_versions: false
 # assume that the desired version is community edition
 docker_edition: ce
 
-# which channel to pull from the apt repository
+# Which channel to pull from the apt repository; "edge" gets releases for new OS versions before
+# "stable" does, so if your OS isn't supported in "stable" you might still be able to install by
+# changing this to "edge". Other channels include "test" and "nightly".
 docker_apt_channel: stable
 
 # docker-ce is the default package name

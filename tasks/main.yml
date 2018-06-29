@@ -113,11 +113,16 @@
     docker_https_proxy_defined: "{{ docker_https_proxy is defined and docker_https_proxy is not none and docker_https_proxy != '' }}"
   tags: proxy
 
+- name: Set docker_no_proxy_defined flag
+  set_fact:
+    docker_no_proxy_defined: "{{ docker_no_proxy is defined and docker_no_proxy is not none and docker_no_proxy != '' }}"
+  tags: proxy
+
 # https://github.com/moby/moby/issues/25471#issuecomment-263101090
 - name: Creates override directory (systemd)
   file:
     path: /etc/systemd/system/docker.service.d
-    state: "{{ (daemon_json is not none or docker_http_proxy_defined or docker_https_proxy_defined) | ternary('directory', 'absent') }}"
+    state: "{{ (daemon_json is not none or docker_http_proxy_defined or docker_https_proxy_defined or docker_no_proxy_defined) | ternary('directory', 'absent') }}"
     owner: root
     group: root
     mode: 0755
@@ -281,13 +286,25 @@
     - Restart docker
   tags: proxy
 
+- name: Set docker NO_PROXY if docker_no_proxy defined
+  lineinfile:
+    dest: /etc/default/docker
+    regexp: "^export no_proxy="
+    line: "export no_proxy=\"{{docker_no_proxy}}\""
+    state: "{{ docker_no_proxy_defined | ternary('present', 'absent') }}"
+  when:
+    - not is_systemd
+  notify:
+    - Restart docker
+  tags: proxy
+
 - name: Set docker HTTP(S)_PROXY if docker_http(s)_proxy defined (systemd)
   copy:
     content: |
       [Service]
       Environment="{% if docker_http_proxy_defined %}http_proxy={{ docker_http_proxy }}{% endif %}"
       Environment="{% if docker_https_proxy_defined %}https_proxy={{ docker_https_proxy }}{% endif %}"
-      Environment="no_proxy={{ docker_no_proxy | default('') }}"
+      Environment="{% if docker_no_proxy_defined %}no_proxy={{ docker_no_proxy }}{% endif %}"
     dest: /etc/systemd/system/docker.service.d/proxy.conf
     owner: root
     group: root
@@ -297,7 +314,7 @@
     - Restart docker
   when:
     - is_systemd
-    - docker_http_proxy_defined or docker_https_proxy_defined
+    - docker_http_proxy_defined or docker_https_proxy_defined or docker_no_proxy_defined
   tags: proxy
 
 - name: Remove docker HTTP(S)_PROXY if docker_http(s)_proxy undefined (systemd)
@@ -309,7 +326,7 @@
     - Restart docker
   when:
     - is_systemd
-    - not docker_http_proxy_defined and not docker_https_proxy_defined
+    - not docker_http_proxy_defined and not docker_https_proxy_defined and not docker_no_proxy_defined
   tags: proxy
 
 - name: Start docker

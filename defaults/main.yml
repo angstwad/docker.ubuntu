@@ -99,6 +99,9 @@ install_kernel_extras: false
 # won't need to enable this.
 install_xorg_pkgs: false
 
+# Set to 'no' or 'false' to keep the current UFW forward policy
+ufw_set_forward_policy: true
+
 # Set to 'no' if docker daemon shall not be started.
 # (e.g. in case of a machine which only controls other docker hosts via docker-machine)
 start_docker_daemon: true

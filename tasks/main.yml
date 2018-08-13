@@ -251,17 +251,19 @@
     line: 'PRUNEPATHS="/var/lib/docker \2"'
   when: updatedb_conf_exists.stat.exists
 
-- name: Check if /etc/default/ufw exists
-  stat:
-    path: /etc/default/ufw
-  register: ufw_default_exists
+- block:
+    - name: Check if /etc/default/ufw exists
+      stat:
+        path: /etc/default/ufw
+      register: ufw_default_exists
 
-- name: Change ufw default forward policy from drop to accept
-  lineinfile:
-    dest: /etc/default/ufw
-    regexp: "^DEFAULT_FORWARD_POLICY="
-    line: "DEFAULT_FORWARD_POLICY=\"ACCEPT\""
-  when: ufw_default_exists.stat.exists
+    - name: Change ufw default forward policy from drop to accept
+      lineinfile:
+        dest: /etc/default/ufw
+        regexp: "^DEFAULT_FORWARD_POLICY="
+        line: "DEFAULT_FORWARD_POLICY=\"ACCEPT\""
+      when: ufw_default_exists.stat.exists
+  when: ufw_set_forward_policy
 
 - name: Set docker HTTP_PROXY if docker_http_proxy defined
   lineinfile:

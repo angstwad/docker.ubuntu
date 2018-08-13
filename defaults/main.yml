@@ -65,7 +65,7 @@ docker_no_proxy:
 pip_install_pip: true
 pip_install_setuptools: true
 # pip_install_docker is ignored if pip_install_docker_compose is true as docker-compose as a dependency over docker.
-# See var/main.yml for more information.
+# See var/main_2.yml for more information.
 pip_install_docker: true
 pip_install_docker_compose: true
 
@@ -73,7 +73,7 @@ pip_install_docker_compose: true
 pip_version_pip: latest
 pip_version_setuptools: latest
 # pip_version_docker is ignored if pip_install_docker_compose is true as docker-compose as a dependency over docker.
-# See var/main.yml for more information.
+# See var/main_2.yml for more information.
 pip_version_docker: latest
 pip_version_docker_compose: latest
 
@@ -98,6 +98,9 @@ install_kernel_extras: false
 # where an X/Unit desktop is actively being used. If you're not using an X/Unity on 12.04, you
 # won't need to enable this.
 install_xorg_pkgs: false
+
+# Set to 'no' or 'false' to keep the current UFW forward policy
+ufw_set_forward_policy: true
 
 # Set to 'no' if docker daemon shall not be started.
 # (e.g. in case of a machine which only controls other docker hosts via docker-machine)

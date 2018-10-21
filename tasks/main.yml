@@ -341,7 +341,7 @@
     name:   "{{ item }}"
     groups: docker
     append: yes
-  with_items: "{{docker_group_members}}"
+  loop: "{{ docker_group_members|flatten(levels=1) }}"
   when: docker_group_members is defined
 
 - name: update facts if docker0 is not defined

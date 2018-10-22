@@ -3,7 +3,7 @@ galaxy_info:
   author: Paul Durivage
   description: A comprehensive and (ideally) sane way to install Docker on Ubuntu 14.04+
   license: Apache v2.0
-  min_ansible_version: 2.2
+  min_ansible_version: 2.3
   platforms:
     - name: Debian
       versions:

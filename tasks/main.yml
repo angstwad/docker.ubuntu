@@ -24,23 +24,21 @@
 
 - name: Uninstall old versions of Docker
   apt:
-    name: "{{ item }}"
+    name:
+      - docker
+      - docker-engine
+      - docker.io
     state: absent
-  with_items:
-    - docker
-    - docker-engine
-    - docker.io
   when: uninstall_previous_docker_versions
 
 - name: Install linux-image-extra-* packages to enable AuFS driver
   apt:
-    pkg: "{{ item }}"
+    pkg:
+      - linux-image-extra-{{ ansible_kernel }}
+      - linux-image-extra-virtual
     state: present
     update_cache: yes
     cache_valid_time: "{{ docker_apt_cache_valid_time }}"
-  with_items:
-    - linux-image-extra-{{ ansible_kernel }}
-    - linux-image-extra-virtual
   when: docker_aufs_enabled and ansible_distribution_version is version_compare('14.04', '==') and ansible_kernel is version_compare('4.4', '<')
 
   register: linux_image_extra_install
@@ -184,11 +182,10 @@
 # We must install pip via apt before we can use the pip module below
 - name: "Install {{ _python_packages | join(', ') }} packages with apt"
   apt:
-    pkg: "{{ item }}"
+    pkg: "{{ _python_packages }}"
     state: latest
     update_cache: yes
     cache_valid_time: "{{ docker_apt_cache_valid_time }}"
-  with_items: "{{ _python_packages }}"
 
 # Display an informative message if the docker-compose version needs to be downgraded
 - name: Docker-compose version downgrade

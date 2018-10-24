@@ -1,36 +1,33 @@
 - name: Install backported trusty kernel onto 12.04
   apt:
-    pkg: "{{ item }}"
+    pkg:
+      - linux-image-generic-lts-trusty
+      - linux-headers-generic-lts-trusty
     state: "{{ kernel_pkg_state }}"
     update_cache: yes
     cache_valid_time: 600
-  with_items:
-    - linux-image-generic-lts-trusty
-    - linux-headers-generic-lts-trusty
   register: kernel_result
   when: "ansible_distribution_version is version_compare('12.04', '=')"
 
 - name: Install Xorg packages for backported kernels (very optional)
   apt:
-    pkg: "{{ item }}"
+    pkg:
+      - xserver-xorg-lts-trusty
+      - libgl1-mesa-glx-lts-trusty
     state: installed
     update_cache: yes
     cache_valid_time: 600
-  with_items:
-    - xserver-xorg-lts-trusty
-    - libgl1-mesa-glx-lts-trusty
   register: xorg_pkg_result
   when: "install_xorg_pkgs and (kernel_result is changed or kernel_result is succeeded)"
 
 - name: Install latest kernel for Ubuntu 13.04+
   apt:
-    pkg: "{{ item }}"
+    pkg:
+      - "linux-image-extra-{{ ansible_kernel }}"
+      - linux-image-extra-virtual
     state: "{{ kernel_pkg_state }}"
     update_cache: yes
     cache_valid_time: 600
-  with_items:
-    - "linux-image-extra-{{ ansible_kernel }}"
-    - linux-image-extra-virtual
   when: "ansible_distribution_version is version_compare('13.04', '=')
       or ansible_distribution_version is version_compare('13.10', '=')
       or install_kernel_extras"

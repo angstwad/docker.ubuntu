@@ -52,14 +52,17 @@ daemon_json:
 # Be aware that granted users can easily get full root access on the docker host system!
 docker_group_members: []
 
+# Shall we have to set the docker proxies the same as those used during installation
+docker_use_install_proxies: true
+
 # configurable proxies: a reasonable default is to re-use the proxy from ansible_env:
 # docker_http_proxy: "{{ ansible_env.http_proxy|default('') }}"
 # Notes:
 # if docker_http_proxy==""   the role sets HTTP_PROXY="" (useful to 'empty' existing ENV var)
 # if docker_http_proxy is undefined the role will not set/modify any ENV vars
-docker_http_proxy:
-docker_https_proxy:
-docker_no_proxy:
+docker_http_proxy: "{{proxy_env.http_proxy if (docker_use_install_proxies and proxy_env is defined and proxy_env.http_proxy is defined) else \"\"}}"
+docker_https_proxy: "{{proxy_env.https_proxy if (docker_use_install_proxies and proxy_env is defined and proxy_env.https_proxy is defined) else \"\"}}"
+docker_no_proxy: "{{proxy_env.no_proxy if (docker_use_install_proxies and proxy_env is defined and proxy_env.no_proxy is defined) else \"\"}}"
 
 # Flags for whether to install pip packages
 pip_install_pip: true
@@ -105,3 +108,9 @@ ufw_set_forward_policy: true
 # Set to 'no' if docker daemon shall not be started.
 # (e.g. in case of a machine which only controls other docker hosts via docker-machine)
 start_docker_daemon: true
+
+# Specify here the proxies config to use for installation
+#proxy_env:
+#  http_proxy: 'http://192.168.0.10'
+#  https_proxy: 'http://192.168.0.10'
+#  no_proxy: '192.168.0.20'

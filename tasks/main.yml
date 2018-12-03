@@ -39,6 +39,7 @@
     state: present
     update_cache: yes
     cache_valid_time: "{{ docker_apt_cache_valid_time }}"
+  environment: "{{proxy_env if proxy_env is defined else {}}}"
   when: docker_aufs_enabled and ansible_distribution_version is version_compare('14.04', '==') and ansible_kernel is version_compare('4.4', '<')
 
   register: linux_image_extra_install
@@ -50,6 +51,7 @@
     state: present
     update_cache: yes
     cache_valid_time: "{{ docker_apt_cache_valid_time }}"
+  environment: "{{proxy_env if proxy_env is defined else {}}}"
   when: linux_image_extra_install is failed
 
 - name: Ensure dirmngr is available
@@ -58,6 +60,7 @@
     state: present
     update_cache: yes
     cache_valid_time: "{{ docker_apt_cache_valid_time }}"
+  environment: "{{proxy_env if proxy_env is defined else {}}}"
 
 - name: Add Docker repository key
   apt_key:
@@ -65,16 +68,19 @@
     keyserver: "{{ apt_key_url }}"
     state: present
   register: add_repository_key
+  environment: "{{proxy_env if proxy_env is defined else {}}}"
   ignore_errors: true
 
 - name: Alternative | Add Docker repository key
   shell: "apt-key adv --fetch-keys {{ apt_key_url }}"
+  environment: "{{proxy_env if proxy_env is defined else {}}}"
   when: add_repository_key is failed
 
 - name: HTTPS APT transport for Docker repository
   apt:
     name: apt-transport-https
     state: present
+  environment: "{{proxy_env if proxy_env is defined else {}}}"
 
 - name: Add Docker repository and update apt cache
   apt_repository:
@@ -82,6 +88,7 @@
     mode: '644'
     update_cache: yes
     state: present
+  environment: "{{proxy_env if proxy_env is defined else {}}}"
 
 - name: Install (or update) docker package
   apt:
@@ -89,6 +96,7 @@
     state: "{{ 'latest' if update_docker_package else 'present' }}"
     update_cache: "{{ update_docker_package }}"
     cache_valid_time: "{{ docker_apt_cache_valid_time }}"
+  environment: "{{proxy_env if proxy_env is defined else {}}}"
 
 - name: Set systemd playbook var
   set_fact:
@@ -186,6 +194,7 @@
     state: latest
     update_cache: yes
     cache_valid_time: "{{ docker_apt_cache_valid_time }}"
+  environment: "{{proxy_env if proxy_env is defined else {}}}"
 
 # Display an informative message if the docker-compose version needs to be downgraded
 - name: Docker-compose version downgrade
@@ -232,6 +241,7 @@
     - name: docker-compose
       version: "{{ _pip_version_docker_compose }}"
       install: "{{ pip_install_docker_compose }}"
+  environment: "{{proxy_env if proxy_env is defined else {}}}"
   when: item.install|bool
 
 - name: Check if /etc/updatedb.conf exists

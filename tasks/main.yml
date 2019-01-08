@@ -31,11 +31,10 @@
     state: absent
   when: uninstall_previous_docker_versions
 
-- name: Install linux-image-extra-* packages to enable AuFS driver
+- name: Install linux-image-extra package to enable AuFS driver
   apt:
     pkg:
       - linux-image-extra-{{ ansible_kernel }}
-      - linux-image-extra-virtual
     state: present
     update_cache: yes
     cache_valid_time: "{{ docker_apt_cache_valid_time }}"

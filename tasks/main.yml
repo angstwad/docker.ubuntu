@@ -181,7 +181,6 @@
   when: docker_pkg_name == 'docker.io'
 
 - meta: flush_handlers
-  when: "dns_fix is changed"
 
 - pause:
     seconds: 1

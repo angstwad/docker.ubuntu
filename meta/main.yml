@@ -14,7 +14,7 @@ galaxy_info:
         - trusty
         - xenial
         - zesty
-  categories:
+  galaxy_tags:
     - development
     - packaging
     - system

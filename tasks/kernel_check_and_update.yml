@@ -51,12 +51,12 @@
 
 - name: Wait for instance to come online (10 minute timeout)
   become: no
-  local_action:
-    module: wait_for
+  wait_for:
     host: "{{ ansible_ssh_host|default(inventory_hostname) }}"
     port: "{{ ansible_ssh_port|default(ssh_port) }}"
     delay: 30
     timeout: 600
     state: started
+  delegate_to: localhost
   when: "(ansible_distribution_version is version_compare('12.04', '=') and reboot_result is changed)
       or (ansible_distribution_version is version_compare('13.10', '=') and cgroup_lite_result is changed)"

@@ -11,9 +11,11 @@ before_install:
 install:
   # Install Ansible.
   - sudo pip install $ANSIBLE_VERSION
+  - sudo pip install ansible-lint
 script:
   - ansible --version
   - export ANSIBLE_ROLES_PATH="../"
+  - ansible-lint ./
 #  - echo localhost > inventory
   - ansible-playbook -i hosts --syntax-check docker.yml
   - ansible-playbook -i hosts --connection=local --sudo -vvvv docker.yml

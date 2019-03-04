@@ -35,7 +35,7 @@ Overriding the default configration is done by overriding the role's default var
 Requirements
 ------------
 
-Requires python-pycurl for apt modules.
+Requires Ansible 2.3+; python-pycurl for apt modules.
 
 Role Variables
 --------------

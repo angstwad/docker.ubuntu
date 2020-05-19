@@ -90,6 +90,14 @@
     state: present
   environment: "{{ proxy_env if proxy_env is defined else {} }}"
 
+- name: Install (or update) docker-cli package
+  apt:
+    name: "{{ docker_cli_pkg_name }}"
+    state: "{{ 'latest' if update_docker_package else 'present' }}"
+    update_cache: "{{ update_docker_package }}"
+    cache_valid_time: "{{ docker_apt_cache_valid_time }}"
+  environment: "{{ proxy_env if proxy_env is defined else {} }}"
+
 - name: Install (or update) docker package
   apt:
     name: "{{ docker_pkg_name }}"

@@ -13,6 +13,7 @@ docker_apt_channel: stable
 
 # docker-ce is the default package name
 docker_pkg_name: "{{ 'docker-ee' if docker_edition == 'ee' else 'docker-ce' }}"
+docker_cli_pkg_name: "{{ 'docker-ee-cli' if docker_edition == 'ee' else 'docker-ce-cli' }}"
 docker_apt_cache_valid_time: 600
 docker_aufs_enabled: true
 

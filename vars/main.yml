@@ -3,6 +3,8 @@
 python_vars_file: >-
   {{ 'python3.yml' if ansible_python_interpreter is defined
                           and 'python3' in ansible_python_interpreter
+                   elif ansible_python_version is defined
+                          and ansible_python_version.startswith('3.')
                        else 'python2.yml' }}
 
 # To use Docker Ansible modules, managed nodes require some Docker Python packages :

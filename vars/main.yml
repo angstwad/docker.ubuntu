@@ -20,15 +20,15 @@ python_vars_file: >-
 #   * you have to use docker-compose<=1.9.0 due to docker-compose>1.9.0 using newer versions of docker-py.
 
 # Compute Ansible version or latest
-_ansible_version_latest: "{{ ansible_version.full is version_compare('2.3', '<') }}"
+_ansible_version_latest: "{{ ansible_version.full is version('2.3', '<') }}"
 
 # Compute Python Docker component version or latest
 _pip_version_docker_latest: >-
-  {{ pip_version_docker=='latest' or (pip_version_docker is version_compare('1.10.6', '>')) }}
+  {{ pip_version_docker=='latest' or (pip_version_docker is version('1.10.6', '>')) }}
 
 # Compute Python Docker-compose component version or latest
 _pip_version_docker_compose_latest: >-
-  {{ pip_version_docker_compose=='latest' or (pip_version_docker_compose is version_compare('1.9.0', '>')) }}
+  {{ pip_version_docker_compose=='latest' or (pip_version_docker_compose is version('1.9.0', '>')) }}
 
 # Compute the `docker` Python package's version to use.
 _pip_version_docker: >-

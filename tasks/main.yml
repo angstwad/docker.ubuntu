@@ -6,17 +6,17 @@
 - name: Fail if not a supported release of Ubuntu
   fail:
     msg: "{{ ansible_distribution_version }} is not an acceptable version of Ubuntu for this role"
-  when: ansible_lsb.id|lower == "ubuntu" and ansible_distribution_version is version_compare('14.04', '<')
+  when: ansible_lsb.id|lower == "ubuntu" and ansible_distribution_version is version('14.04', '<')
 
 - name: Fail if not a new release of Debian
   fail:
     msg: "{{ ansible_distribution_version }} is not an acceptable version of Debian for this role"
-  when: ansible_lsb.id|lower == "debian" and ansible_distribution_version is version_compare('8.5', '<')
+  when: ansible_lsb.id|lower == "debian" and ansible_distribution_version is version('8.5', '<')
 
 - name: Fail if using python3 with Ansible<2.3
   fail:
     msg: "Ansible 2.3+ is required to use Python3 interpreter."
-  when: ansible_version.full is version_compare('2.3', '<') and ansible_python_interpreter is defined and 'python3' in ansible_python_interpreter
+  when: ansible_version.full is version('2.3', '<') and ansible_python_interpreter is defined and 'python3' in ansible_python_interpreter
 
 - name: Update kernel, kernel extras, Xorg pkgs, and related tasks
   include: kernel_check_and_update.yml
@@ -40,7 +40,7 @@
     update_cache: yes
     cache_valid_time: "{{ docker_apt_cache_valid_time }}"
   environment: "{{ proxy_env if proxy_env is defined else {} }}"
-  when: docker_aufs_enabled and ansible_distribution_version is version_compare('14.04', '==') and ansible_kernel is version_compare('4.4', '<')
+  when: docker_aufs_enabled and ansible_distribution_version is version('14.04', '==') and ansible_kernel is version('4.4', '<')
 
   register: linux_image_extra_install
   ignore_errors: yes
@@ -115,7 +115,7 @@
 - name: Set systemd playbook var
   set_fact:
     is_systemd: true
-  when: ( ansible_distribution == "Ubuntu" and ansible_distribution_version is version_compare('15.04', '>=') or ansible_distribution == "Debian" )
+  when: ( ansible_distribution == "Ubuntu" and ansible_distribution_version is version('15.04', '>=') or ansible_distribution == "Debian" )
   tags: always
 
 - name: Set docker_http_proxy_defined flag

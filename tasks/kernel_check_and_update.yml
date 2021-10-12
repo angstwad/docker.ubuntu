@@ -7,7 +7,7 @@
     update_cache: yes
     cache_valid_time: 600
   register: kernel_result
-  when: "ansible_distribution_version is version_compare('12.04', '=')"
+  when: "ansible_distribution_version is version('12.04', '=')"
 
 - name: Install Xorg packages for backported kernels (very optional)
   apt:
@@ -28,8 +28,8 @@
     state: "{{ kernel_pkg_state }}"
     update_cache: yes
     cache_valid_time: 600
-  when: "ansible_distribution_version is version_compare('13.04', '=')
-      or ansible_distribution_version is version_compare('13.10', '=')
+  when: "ansible_distribution_version is version('13.04', '=')
+      or ansible_distribution_version is version('13.10', '=')
       or install_kernel_extras"
 
 # Fix for https://github.com/dotcloud/docker/issues/4568
@@ -40,13 +40,13 @@
     update_cache: yes
     cache_valid_time: 600
   register: cgroup_lite_result
-  when: "ansible_distribution_version is version_compare('13.10', '=')"
+  when: "ansible_distribution_version is version('13.10', '=')"
 
 - name: Reboot instance
   command: /sbin/shutdown -r now
   register: reboot_result
-  when: "(ansible_distribution_version is version_compare('12.04', '=') and kernel_result is changed)
-      or (ansible_distribution_version is version_compare('13.10', '=') and cgroup_lite_result is changed)
+  when: "(ansible_distribution_version is version('12.04', '=') and kernel_result is changed)
+      or (ansible_distribution_version is version('13.10', '=') and cgroup_lite_result is changed)
       or xorg_pkg_result is changed"
 
 - name: Wait for instance to come online (10 minute timeout)
@@ -58,5 +58,5 @@
     timeout: 600
     state: started
   delegate_to: localhost
-  when: "(ansible_distribution_version is version_compare('12.04', '=') and reboot_result is changed)
-      or (ansible_distribution_version is version_compare('13.10', '=') and cgroup_lite_result is changed)"
+  when: "(ansible_distribution_version is version('12.04', '=') and reboot_result is changed)
+      or (ansible_distribution_version is version('13.10', '=') and cgroup_lite_result is changed)"
